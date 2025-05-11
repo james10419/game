@@ -245,7 +245,8 @@
     <div id="superCriticalHitMessage" class="damage-indicator">SUPER CRITICAL!</div>
     <div id="roundTransitionMessage"></div>
     <div id="shieldStatusMessage"></div> 
-    <div id="machineGunStatusMessage"></div> <div id="messageBox">
+    <div id="machineGunStatusMessage"></div> 
+    <div id="messageBox">
         <div id="messageText">사이버펑크 슈터</div>
         <button id="startButton" class="button">게임 시작</button>
     </div>
@@ -1390,7 +1391,16 @@
                         } else {
                              enemy.material.color.setHex(0xffffff); 
                              setTimeout(() => {
-                                 if(enemy.material) enemy.material.color.setHex(0xff3333); // 적 종류에 따라 원래 색으로 변경 필요
+                                 if(enemy.material) { // 적의 원래 색상으로 되돌리는 로직 (개선 필요)
+                                    let originalColor = 0xff3333; // 기본값
+                                    switch (currentRound) { // 라운드별 색상 다시 적용
+                                        case 2: originalColor = 0x33ff33; break;
+                                        case 3: originalColor = 0x3333ff; break;
+                                        case 4: originalColor = 0xffff33; break;
+                                        case 5: originalColor = 0xff00ff; break;
+                                    }
+                                    enemy.material.color.setHex(originalColor); 
+                                 }
                              }, 100);
                         }
                         scene.remove(bullet);
@@ -1439,7 +1449,7 @@
                 shieldStatusMessageElement.style.display = 'none';
             }, duration);
         }
-        function showMachineGunStatusMessage(message, duration = 1500) { // 함수 내부에서 machineGunStatusMessageElement 사용
+        function showMachineGunStatusMessage(message, duration = 1500) { 
             machineGunStatusMessageElement.textContent = message; 
             machineGunStatusMessageElement.style.color = "#FF00FF"; 
             machineGunStatusMessageElement.style.display = 'block';
@@ -1583,7 +1593,7 @@
                 if (shieldHealth <= 0) {
                     isShieldActive = false;
                     if(shieldMesh) shieldMesh.visible = false;
-                    if(shieldBreakSound && audioContextStarted) shieldBreakSound.start(); // 수정됨
+                    if(shieldBreakSound && audioContextStarted) shieldBreakSound.start(); 
                 }
                 updateHUD();
                 if (actualDamage === 0) return; 
@@ -1593,7 +1603,7 @@
             playerHealth -= actualDamage;
             if (playerHealth < 0) playerHealth = 0;
 
-            if (playerHurtSound && audioContextStarted) { // 수정됨
+            if (playerHurtSound && audioContextStarted) { 
                 playerHurtSound.start().catch(e => console.error("플레이어 피격음 재생 오류:", e));
             }
             updateHUD();
@@ -1638,7 +1648,7 @@
                 const remainingCooldown = Math.ceil((shieldCooldownEndTime - now) / 1000);
                  shieldInfoElement.innerHTML = `방패: 쿨 (${remainingCooldown}초)<br>내구도: -`;
             } else if (shieldUsedThisRound && shieldCooldownEndTime <= now) { 
-                 shieldInfoElement.innerHTML = `방패: 사용됨<br>내구도: -`; // 라운드당 1회 사용 후 쿨타임 없어도 '사용됨'으로 표시
+                 shieldInfoElement.innerHTML = `방패: 사용됨<br>내구도: -`; 
             }
              else if (isShieldActive) {
                 shieldInfoElement.innerHTML = `방패: 활성<br>내구도: ${shieldHealth}`;
@@ -1668,7 +1678,7 @@
             if (isMachineGunModeActive) { 
                 if (machineGunCurrentAmmo === machineGunTotalMaxAmmo) return;
                 isReloading = true;
-                if (reloadSound && audioContextStarted) reloadSound.triggerAttackRelease("C2", "0.1"); // 수정됨
+                if (reloadSound && audioContextStarted) reloadSound.triggerAttackRelease("C2", "0.1"); 
                 setTimeout(() => {
                     machineGunCurrentAmmo = machineGunTotalMaxAmmo;
                     isReloading = false;
@@ -1680,7 +1690,7 @@
             if (playerAmmo === maxPlayerAmmo) return; 
 
             isReloading = true;
-            if (reloadSound && audioContextStarted) { // 수정됨
+            if (reloadSound && audioContextStarted) { 
                 reloadSound.triggerAttackRelease("C2", "0.1").catch(e => console.error("재장전 소리 재생 오류:", e));
             }
             
@@ -1724,7 +1734,7 @@
             
             showMachineGunStatusMessage("MACHINE GUN MODE!", 2000);
 
-            if (machineGunActivateSound && audioContextStarted) { // 수정됨
+            if (machineGunActivateSound && audioContextStarted) { 
                 machineGunActivateSound.triggerAttackRelease("E4", "0.2");
             }
             if (playerGunMesh) {
@@ -1741,7 +1751,7 @@
             updateHUD();
         }
 
-        function updateMachineGunMode(time) { // 함수명 변경됨: updateAkimbo -> updateMachineGunMode
+        function updateMachineGunMode(time) { 
             if (isMachineGunModeActive && time >= machineGunModeEndTime) {
                 isMachineGunModeActive = false;
                 if (playerGunMesh && originalGunMaterial) {
@@ -1790,7 +1800,7 @@
             isShieldActive = true;
             shieldHealth = maxShieldHealth;
             if (shieldMesh) shieldMesh.visible = true;
-            if (shieldActivateSound && audioContextStarted) shieldActivateSound.triggerAttackRelease("A4", "0.1"); // 수정됨
+            if (shieldActivateSound && audioContextStarted) shieldActivateSound.triggerAttackRelease("A4", "0.1"); 
             showShieldStatusMessage("SHIELD ACTIVATED!", 1000);
             updateHUD();
         }
@@ -1808,7 +1818,7 @@
             if (isShieldActive && shieldHealth <= 0) {
                 isShieldActive = false;
                 if (shieldMesh) shieldMesh.visible = false;
-                if (shieldBreakSound && audioContextStarted) shieldBreakSound.start(); // 수정됨
+                if (shieldBreakSound && audioContextStarted) shieldBreakSound.start(); 
                 shieldCooldownEndTime = time + shieldCooldown; 
                 shieldUsedThisRound = true; 
             }
@@ -1847,7 +1857,7 @@
                 case 'ShiftRight': 
                     if (gameRunning && !isSprinting && !isSliding) { 
                         isSprinting = true;
-                        if (sprintWindSound && audioContextStarted) sprintWindSound.start(); // 수정됨
+                        if (sprintWindSound && audioContextStarted) sprintWindSound.start(); 
                     }
                     break;
                 case 'Space':
@@ -1858,14 +1868,14 @@
                             isSlideJumpBoosting = true;
                             slideJumpBoostEndTime = performance.now() + slideJumpBoostDuration;
                             
-                            if (slideSound && audioContextStarted) slideSound.triggerAttackRelease("C3", "0.1s"); // 수정됨
+                            if (slideSound && audioContextStarted) slideSound.triggerAttackRelease("C3", "0.1s"); 
                             slideJumpCooldownEndTime = performance.now() + slideJumpCooldownDuration;
                             isSliding = false; 
 
                         } else if (!isSliding) { 
                             canPlayerJump = false;
                             playerVelocityY = playerJumpForce;
-                            if (jumpSound && audioContextStarted) jumpSound.triggerAttackRelease("C5", "8n"); // 수정됨
+                            if (jumpSound && audioContextStarted) jumpSound.triggerAttackRelease("C5", "8n"); 
                         }
                     }
                     break;
@@ -1875,7 +1885,7 @@
                 case 'KeyC':
                     if (gameRunning && !isSprinting && canPlayerJump) { 
                         isSliding = true;
-                        if (slideSound && audioContextStarted) slideSound.triggerAttackRelease("A2", "0.2s"); // 수정됨
+                        if (slideSound && audioContextStarted) slideSound.triggerAttackRelease("A2", "0.2s"); 
                     }
                     break;
             }
@@ -1890,7 +1900,7 @@
                 case 'ShiftLeft':
                 case 'ShiftRight':
                     isSprinting = false;
-                    if (sprintWindSound && sprintWindSound.state === "started" && audioContextStarted) sprintWindSound.stop(); // 수정됨
+                    if (sprintWindSound && sprintWindSound.state === "started" && audioContextStarted) sprintWindSound.stop(); 
                     break;
                 case 'KeyC':
                     isSliding = false;
@@ -1902,18 +1912,16 @@
             currentRound = 1;
             maxPlayerHealth = 100; 
             enemiesToKillForNextRound = 20; 
-            totalKilledEnemies = 0; // 이전 게임의 총 처치 수는 유지하지 않고 초기화
-            score = 0; // 점수도 초기화
+            totalKilledEnemies = 0; 
+            score = 0; 
             gameStartTime = performance.now(); 
             machineGunCooldownEndTime = 0; 
             shieldCooldownEndTime = 0;
             slideJumpCooldownEndTime = 0;
-            resetGameRound(); // resetGameRound에서 playerHealth, playerAmmo 등 설정
+            resetGameRound(); 
         }
         
         function resetGameRound() { 
-            // playerHealth, playerAmmo는 startNewRound에서 설정됨
-            // score는 resetGameFull에서 초기화됨
             isReloading = false; 
             isMachineGunModeActive = false; 
             isShieldActive = false;
@@ -1936,14 +1944,14 @@
             impactSparks.forEach(p => scene.remove(p)); impactSparks = [];
             explosionParticles.forEach(p => scene.remove(p)); explosionParticles = [];
 
-            startNewRound(); // 여기서 playerHealth, playerAmmo, 적 스폰 등이 이루어짐
+            startNewRound(); 
 
             const startPos = findStartPosition(); 
             if (controls && controls.getObject()) {
                 controls.getObject().position.set(startPos.x, playerHeight, startPos.z);
                 controls.getObject().rotation.set(0,0,0); 
             }
-            if(camera) camera.rotation.set(0,0,0); // 카메라 회전도 초기화
+            if(camera) camera.rotation.set(0,0,0); 
 
             messageTextElement.textContent = "사이버펑크 슈터";
             startButton.textContent = "게임 시작";
@@ -1967,8 +1975,8 @@
             if(playerGunMesh) playerGunMesh.visible = false;
             if(shieldMesh) shieldMesh.visible = false;
             if (Tone.Transport.state === "started" && audioContextStarted) Tone.Transport.stop(); 
-            if(gameClearSound && audioContextStarted) gameClearSound.triggerAttackRelease("C4", "1n"); // 수정됨
-            currentRound = maxRounds + 1; // 게임 클리어 상태 표시
+            if(gameClearSound && audioContextStarted) gameClearSound.triggerAttackRelease("C4", "1n"); 
+            currentRound = maxRounds + 1; 
         }
 
 
@@ -1990,5 +1998,5 @@
         init();
 
     </script>
-</body>
+    </body>
 </html>
