@@ -1,0 +1,3992 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 사이버펑크 슈터</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a1a; 
+            font-family: 'Orbitron', sans-serif; 
+            color: #00ffff; 
+            cursor: crosshair; 
+        }
+        #gameCanvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        .hud {
+            position: absolute;
+            padding: 7px 10px; 
+            background-color: rgba(10, 20, 40, 0.8); 
+            border: 1px solid #00ffff; 
+            border-radius: 3px; 
+            font-size: 12px; 
+            text-shadow: 0 0 3px #00ffff, 0 0 5px #00ffff; 
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5); 
+        }
+        #score { 
+            top: 15px;
+            left: 15px;
+            font-size: 14px; 
+        }
+        #health { 
+            top: 15px;
+            right: 15px;
+            color: #ff4500; 
+            text-shadow: 0 0 3px #ff4500, 0 0 5px #ff4500;
+            border-color: #ff4500;
+            box-shadow: 0 0 8px rgba(255, 69, 0, 0.5);
+            font-size: 14px; 
+        }
+        #ammo { 
+            bottom: 15px;
+            left: 15px;
+        }
+        #playerDamageHUD { 
+            bottom: 45px; 
+            left: 15px;
+        }
+        #roundInfo { 
+            top: 50px; 
+            left: 15px;
+        }
+        #machineGunInfo { /* ID 변경 */
+            top: 95px; /* 간격 조정 */
+            left: 15px;
+            color: #FF00FF; 
+            text-shadow: 0 0 3px #FF00FF, 0 0 5px #FF00FF;
+            border-color: #FF00FF;
+            box-shadow: 0 0 8px rgba(255, 0, 255, 0.5);
+        }
+        #shieldInfo { 
+            top: 150px; /* 간격 조정 */
+            left: 15px;
+            color: #40C4FF; 
+            text-shadow: 0 0 3px #40C4FF, 0 0 5px #40C4FF;
+            border-color: #40C4FF;
+            box-shadow: 0 0 8px rgba(64, 196, 255, 0.5);
+        }
+        #slideJumpInfo { 
+            top: 200px; /* 간격 조정 */
+            left: 15px;
+            color: #FFFF00; 
+            text-shadow: 0 0 3px #FFFF00, 0 0 5px #FFFF00;
+            border-color: #FFFF00;
+            box-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
+        }
+        #elapsedTimeHUD { 
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            background-color: rgba(10, 20, 40, 0.6);
+            border: 1px solid #00ffff;
+        }
+        #messageBox { 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 30px;
+            background-color: rgba(0,0,10,0.9);
+            border: 2px solid #FF00FF;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 24px;
+            z-index: 1000;
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(255,0,255,0.7);
+        }
+        #messageText { 
+            margin-bottom: 20px;
+            color: #00FF00;
+            text-shadow: 0 0 5px #00FF00;
+        }
+        #roundTransitionMessage, #shieldStatusMessage, #machineGunStatusMessage { 
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            color: #00FF00; 
+            text-shadow: 0 0 7px #00FF00, 0 0 10px #00FF00;
+            padding: 15px;
+            background-color: rgba(0,30,0,0.7);
+            border-radius: 5px;
+            border: 1px solid #00FF00;
+            display: none;
+            z-index: 1001;
+        }
+        #tacticalReloadMessage { 
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            color: yellow;
+            text-shadow: 0 0 5px yellow, 0 0 8px yellow;
+            padding: 10px;
+            background-color: rgba(50,50,0,0.7);
+            border-radius: 5px;
+            border: 1px solid yellow;
+            display: none;
+            z-index: 1001;
+        }
+        .damage-indicator { 
+            position: absolute;
+            top: 30%; 
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif; 
+            font-weight: 700; 
+            padding: 15px;
+            display: none;
+            z-index: 1002;
+            text-align: center;
+        }
+        #criticalHitMessage { 
+            font-size: 42px; 
+            color: #FF00FF; 
+            text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF, 0 0 15px #FF00FF, 0 0 20px #FFF, 2px 2px 2px #000; 
+            animation: criticalHitAnimation 0.7s ease-out forwards;
+        }
+        #superCriticalHitMessage { 
+            font-size: 52px; 
+            color: #FFD700; 
+            text-shadow: 0 0 7px #FFD700, 0 0 12px #FFD700, 0 0 18px #FFF, 0 0 25px #FFF, 3px 3px 3px #000;
+            animation: superCriticalHitAnimation 1s ease-out forwards; 
+        }
+
+        @keyframes criticalHitAnimation { 
+            0% { transform: translateX(-50%) scale(0.5) rotate(-5deg); opacity: 0; }
+            70% { transform: translateX(-50%) scale(1.2) rotate(5deg); opacity: 1; }
+            100% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes superCriticalHitAnimation {
+            0% { transform: translateX(-50%) scale(0.6) rotate(0deg); opacity: 0; }
+            25% { transform: translateX(-50%) scale(1.3) rotate(-3deg); opacity: 1; }
+            50% { transform: translateX(-50%) scale(1.1) rotate(3deg); opacity: 1; }
+            75% { transform: translateX(-50%) scale(1.25) rotate(-2deg); opacity: 1; }
+            100% { transform: translateX(-50%) scale(1.15) rotate(0deg); opacity: 1; }
+        }
+
+
+        .button { 
+            padding: 12px 25px;
+            background-color: #8A2BE2; 
+            color: #00ffff;
+            border: 2px solid #00ffff;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 20px;
+            font-family: 'Orbitron', sans-serif;
+            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 10px rgba(0,255,255,0.5);
+            text-transform: uppercase;
+        }
+        .button:hover {
+            background-color: #9932CC;
+            border-color: #FFF;
+            box-shadow: 0 0 15px rgba(255,255,255,0.8);
+        }
+        .button:active {
+            transform: translateY(2px);
+            box-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+        #crosshair { 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px; 
+            height: 20px; 
+            background-color: #00ffff;
+            transform: translate(-50%, -50%);
+            border-radius: 1px;
+            box-shadow: 0 0 5px #00ffff;
+            z-index: 999;
+            display: none; 
+        }
+        #crosshair::before { 
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 4px;
+            background-color: #00ffff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 1px;
+            box-shadow: 0 0 5px #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="score" class="hud">점수: 0</div>
+    <div id="health" class="hud">체력: 100 / 100</div>
+    <div id="ammo" class="hud">탄약: 30 / 30</div>
+    <div id="playerDamageHUD" class="hud">데미지: 0</div>
+    <div id="roundInfo" class="hud">라운드: 1<br>처치 목표: 20</div>
+    <div id="machineGunInfo" class="hud">머신건: 준비<br>탄약: -</div> {/* HTML ID 변경 */}
+    <div id="shieldInfo" class="hud">방패: 준비<br>내구도: -</div>
+    <div id="slideJumpInfo" class="hud">슬라이딩 점프: 가능</div>
+    <div id="elapsedTimeHUD" class="hud">시간: 00:00</div>
+    <div id="crosshair"></div>
+    <div id="tacticalReloadMessage">전술 재장전!</div>
+    <div id="criticalHitMessage" class="damage-indicator">CRITICAL!</div>
+    <div id="superCriticalHitMessage" class="damage-indicator">SUPER CRITICAL!</div>
+    <div id="roundTransitionMessage"></div>
+    <div id="shieldStatusMessage"></div> 
+    <div id="akimboStatusMessage"></div> 
+
+
+    <div id="messageBox">
+        <div id="messageText">사이버펑크 슈터</div>
+        <button id="startButton" class="button">게임 시작</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script> 
+        // --- 전역 변수 ---
+        let scene, camera, renderer, controls;
+        let playerBoundingBox;
+        const playerHeight = 1.8; 
+        const playerRadius = 0.4; 
+        let walls = []; 
+        let enemies = []; 
+        let enemyBullets = []; 
+        let playerBullets = []; 
+        let muzzleSmokeParticles = []; 
+        let impactSparks = []; 
+        let explosionParticles = []; 
+        
+        let gameRunning = false; 
+        let score = 0; 
+        let maxPlayerHealth = 100; 
+        let playerHealth = maxPlayerHealth; 
+        
+        const maxPlayerAmmo = 30; 
+        let playerAmmo = maxPlayerAmmo; 
+        let isReloading = false; 
+        let isSprinting = false; 
+
+        const moveSpeed = 5.0; 
+        const sprintMultiplier = 1.3; 
+        let currentMoveSpeed = moveSpeed;
+        const defaultFOV = 75; 
+        const sprintFOV = 80; 
+
+        let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false; 
+        let canPlayerJump = true; 
+        let playerVelocityY = 0; 
+        const playerJumpForce = 7; 
+        const gravity = -18; 
+
+        let isSliding = false;
+        const slideHeight = playerHeight * 0.6; 
+        const slideFOV = 80;
+        const slideJumpBoost = 5; 
+        let slideJumpCooldownEndTime = 0;
+        const slideJumpCooldownDuration = 1500; 
+        let isSlideJumpBoosting = false; 
+        let slideJumpBoostEndTime = 0;
+        const slideJumpBoostDuration = 5000; 
+
+
+        let currentPlayerDamage = 50; 
+        let lastDamageUpdateTime = 0;
+        const damageUpdateInterval = 3000; 
+
+        let playerGunMesh;
+        let gunTip; 
+        let originalGunMaterial; 
+
+        // 머신건 모드 관련 변수
+        let isMachineGunModeActive = false;
+        let machineGunModeEndTime = 0;
+        const machineGunModeDuration = 15000; 
+        const machineGunTotalMaxAmmo = 120; 
+        let machineGunCurrentAmmo = 0; 
+        let machineGunCooldownEndTime = 0;
+        const machineGunCooldown = 180000; 
+        let isMouseDown = false; 
+        let lastMachineGunShootTime = 0;
+        const machineGunShootInterval = 100; 
+        // let cameraShakeIntensity = 0.01; // 머신건 카메라 흔들림 강도 -> 제거됨
+        let originalCameraPosition = new THREE.Vector3(); 
+
+
+        let isShieldActive = false;
+        let shieldHealth = 0;
+        const maxShieldHealth = 15; 
+        let shieldCooldownEndTime = 0;
+        const shieldCooldown = 15000; 
+        let shieldUsedThisRound = false; 
+        let shieldMesh;
+
+
+        let shootSound, enemyHitSound, enemyDieSound, playerHurtSound, enemyShootSound, 
+            ricochetSound, reloadSound, sprintWindSound, roundSuccessSound, gameClearSound, 
+            jumpSound, landSound, machineGunActivateSound, explosionSound, shieldActivateSound, shieldBreakSound, slideSound, cyberpunkSynth; 
+        let audioContextStarted = false; 
+
+        let currentRound = 1;
+        const maxRounds = 5;
+        let enemiesToKillForNextRound = 20;
+        let killedEnemiesThisRound = 0;
+        let totalKilledEnemies = 0;
+        let gameStartTime = 0;
+        let baseEnemySpeed = 1.2; 
+        let baseEnemyBulletSpeed = 15;
+
+
+        const scoreElement = document.getElementById('score');
+        const healthElement = document.getElementById('health');
+        const ammoElement = document.getElementById('ammo');
+        const playerDamageHUDElement = document.getElementById('playerDamageHUD');
+        const roundInfoElement = document.getElementById('roundInfo');
+        const machineGunInfoElement = document.getElementById('machineGunInfo'); // JS 변수명 변경
+        const shieldInfoElement = document.getElementById('shieldInfo'); 
+        const slideJumpInfoElement = document.getElementById('slideJumpInfo');
+        const elapsedTimeHUDElement = document.getElementById('elapsedTimeHUD');
+        const messageBoxElement = document.getElementById('messageBox');
+        const messageTextElement = document.getElementById('messageText');
+        const roundTransitionMessageElement = document.getElementById('roundTransitionMessage');
+        const shieldStatusMessageElement = document.getElementById('shieldStatusMessage'); 
+        const akimboStatusMessageElement = document.getElementById('akimboStatusMessage');
+        const tacticalReloadMessageElement = document.getElementById('tacticalReloadMessage');
+        const criticalHitMessageElement = document.getElementById('criticalHitMessage'); 
+        const superCriticalHitMessageElement = document.getElementById('superCriticalHitMessage');
+        const startButton = document.getElementById('startButton');
+        const crosshairElement = document.getElementById('crosshair');
+        const gameCanvas = document.getElementById('gameCanvas');
+
+        let initialMapLayout = [ 
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1], 
+            [1,0,1,0,1,0,1,1,1,0,1,0,1,0,1],
+            [1,0,1,0,0,0,0,0,0,0,0,0,1,0,1],
+            [1,0,1,1,1,1,0,1,1,1,1,0,1,0,1],
+            [1,0,0,0,0,1,0,0,0,0,1,0,0,0,1],
+            [1,1,1,0,1,1,1,0,1,0,1,1,1,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        ];
+        initialMapLayout = initialMapLayout.map(row => 
+            row.map(cell => (cell === 2 || cell === 3 ? 0 : cell))
+        );
+
+        let currentMapData = []; 
+
+        const wallSize = 4; 
+        const ENEMY_BULLET_SPEED_BASE = 15; 
+        const PLAYER_BULLET_SPEED = 50; 
+
+        // --- 초기화 함수 ---
+        function init() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a2a); 
+            scene.fog = new THREE.Fog(0x0a0a2a, 15, 65); 
+
+            camera = new THREE.PerspectiveCamera(defaultFOV, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+            renderer = new THREE.WebGLRenderer({ canvas: gameCanvas, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true; 
+            renderer.toneMapping = THREE.ACESFilmicToneMapping; 
+            renderer.toneMappingExposure = 1.0;
+
+
+            const ambientLight = new THREE.AmbientLight(0x404080, 0.6); 
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0x8888ff, 0.4); 
+            directionalLight.position.set(30, 50, 20);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048; 
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+
+            const neonLight1 = new THREE.PointLight(0x00ffff, 0.8, 40, 2); 
+            neonLight1.position.set(wallSize * 2.5, wallSize * 0.8, wallSize * 3.5);
+            scene.add(neonLight1);
+            const neonLight2 = new THREE.PointLight(0xff00ff, 0.8, 40, 2); 
+            neonLight2.position.set(-wallSize * 3.5, wallSize * 0.8, -wallSize * 2.5);
+            scene.add(neonLight2);
+            const neonLight3 = new THREE.RectAreaLight(0x00ff00, 5, wallSize*2, wallSize*0.2); 
+            neonLight3.position.set(0, wallSize * 1.4, -wallSize * 4);
+            neonLight3.lookAt(0,0, -wallSize*4);
+            scene.add(neonLight3);
+
+
+            controls = new THREE.PointerLockControls(camera, document.body); 
+            scene.add(controls.getObject()); 
+            controls.getObject().position.y = playerHeight; 
+
+            controls.addEventListener('lock', () => { 
+                messageBoxElement.style.display = 'none';
+                crosshairElement.style.display = 'block';
+                if (playerGunMesh) playerGunMesh.visible = true; 
+                if (!gameRunning && (!startButton.textContent.includes("도전") && !startButton.textContent.includes("플레이"))) { 
+                    startGameFlow();
+                } else if (startButton.textContent.includes("계속하기")) { 
+                     gameRunning = true;
+                     if (Tone.Transport.state !== "started") Tone.Transport.start();
+                }
+            });
+            controls.addEventListener('unlock', () => { 
+                if (playerHealth > 0 && currentRound <= maxRounds) { 
+                    messageTextElement.textContent = "일시정지됨. 클릭하여 계속하기.";
+                    startButton.textContent = "계속하기";
+                    messageBoxElement.style.display = 'flex';
+                }
+                crosshairElement.style.display = 'none';
+                if (playerGunMesh) playerGunMesh.visible = false; 
+                if (shieldMesh) shieldMesh.visible = false; 
+                gameRunning = false; 
+                isMouseDown = false; 
+                if (Tone.Transport.state === "started") Tone.Transport.pause(); 
+            });
+
+            playerBoundingBox = new THREE.Box3();
+            generateMapForRound(currentRound); 
+            const startPos = findStartPosition();
+            controls.getObject().position.set(startPos.x, playerHeight, startPos.z);
+            originalCameraPosition.copy(camera.position); 
+
+
+            createPlayerGun(); 
+            createShieldMesh(); 
+            updateHUD(); 
+            lastDamageUpdateTime = performance.now(); 
+            updatePlayerDamage(); 
+
+            window.addEventListener('resize', onWindowResize, false); 
+            document.addEventListener('keydown', onKeyDown, false); 
+            document.addEventListener('keyup', onKeyUp, false); 
+            
+            window.addEventListener('mousedown', (event) => {
+                if (!controls.isLocked) {
+                    controls.lock();
+                } else if (gameRunning) {
+                    if (event.button === 0) { 
+                        isMouseDown = true;
+                        if (!isMachineGunModeActive) shoot(); 
+                    } else if (event.button === 2) { 
+                        activateShield();
+                    }
+                }
+            });
+             window.addEventListener('mouseup', (event) => { 
+                if (event.button === 0) {
+                    isMouseDown = false;
+                }
+                if (gameRunning && event.button === 2) {
+                    deactivateShield();
+                }
+            });
+            gameCanvas.addEventListener('contextmenu', (event) => event.preventDefault());
+
+
+            startButton.addEventListener('click', () => { 
+                if (!audioContextStarted) { 
+                     initAudio().then(proceedWithStartButton);
+                } else { 
+                    proceedWithStartButton();
+                }
+            });
+
+            messageTextElement.textContent = "사이버펑크 슈터";
+            messageBoxElement.style.display = 'flex';
+            messageBoxElement.style.flexDirection = 'column';
+            messageBoxElement.style.alignItems = 'center';
+
+            renderer.render(scene, camera);
+        }
+
+        function findStartPosition() {
+            for (let r = 0; r < currentMapData.length; r++) { 
+                for (let c = 0; c < currentMapData[r].length; c++) {
+                    if (currentMapData[r][c] === 0) { 
+                        return {
+                            x: (c - currentMapData[r].length / 2) * wallSize + wallSize / 2,
+                            z: (r - currentMapData.length / 2) * wallSize + wallSize / 2
+                        };
+                    }
+                }
+            }
+            console.warn("유효한 시작 위치(0)를 찾지 못했습니다. 중앙에 배치합니다.");
+            return { x: 0, z: 0 }; 
+        }
+
+        async function initAudio() {
+            if (typeof Tone !== 'undefined' && Tone.context.state !== 'running') {
+                await Tone.start(); 
+                audioContextStarted = true;
+                console.log("오디오 컨텍스트 시작됨.");
+            }
+
+            if (audioContextStarted) {
+                shootSound = new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 }, volume: -15 }).toDestination();
+                enemyHitSound = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -18 }).toDestination();
+                enemyDieSound = new Tone.NoiseSynth({ noise: {type: "brown"}, envelope: {attack: 0.01, decay: 0.3, sustain: 0.1, release: 0.2}, volume: -12}).toDestination(); 
+                explosionSound = new Tone.NoiseSynth({ noise: {type: "pink", playbackRate: 0.5}, envelope: {attack: 0.005, decay: 0.4, sustain: 0.01, release: 0.3}, volume: -10}).toDestination(); 
+                playerHurtSound = new Tone.NoiseSynth({ noise: { type: 'brown' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0 }, volume: -12 }).toDestination();
+                enemyShootSound = new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.002, decay: 0.06, sustain: 0 }, volume: -20 }).toDestination();
+                ricochetSound = new Tone.MetalSynth({ frequency: 100, envelope: { attack: 0.001, decay: 0.1, release: 0.05 }, harmonicity: 3.1, modulationIndex: 16, resonance: 2000, octaves: 0.5, volume: -18 }).toDestination();
+                reloadSound = new Tone.MetalSynth({ frequency: 60, envelope: { attack: 0.005, decay: 0.15, release: 0.05 }, harmonicity: 5.1, modulationIndex: 32, resonance: 1000, octaves: 1.5, volume: -12 }).toDestination();
+                sprintWindSound = new Tone.NoiseSynth({ noise: { type: 'white', playbackRate: 2 }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -28 }).toDestination();
+                roundSuccessSound = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 }, volume: -12 }).toDestination();
+                gameClearSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.1, decay: 0.5, sustain: 0.3, release: 0.5 }, volume: -10 }).toDestination();
+                jumpSound = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0, release: 0.1 }, volume: -18 }).toDestination();
+                landSound = new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 2, envelope: { attack: 0.001, decay: 0.1, sustain: 0 }, volume: -20 }).toDestination();
+                machineGunActivateSound = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.1 }, volume: -15 }).toDestination();
+                shieldActivateSound = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -15 }).toDestination();
+                shieldBreakSound = new Tone.NoiseSynth({ noise: { type: "white" }, envelope: { attack: 0.001, decay: 0.2, sustain: 0 }, volume: -12 }).toDestination();
+                slideSound = new Tone.NoiseSynth({ noise: { type: 'white', playbackRate: 0.8 }, envelope: { attack: 0.005, decay: 0.15, sustain: 0.05, release: 0.1 }, volume: -22 }).toDestination();
+
+                cyberpunkSynth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: "fatsawtooth", count: 3, spread: 30 },
+                    envelope: { attack: 0.01, decay: 1.5, sustain: 0.3, release: 1 },
+                    volume: -18, 
+                }).toDestination();
+                cyberpunkSynth.set({
+                    "filter" : { "type" : "lowpass", "frequency": 1500, "Q": 2 },
+                    "filterEnvelope" : { "attack" : 0.5, "decay" : 1, "sustain" : 0.1, "release" : 1.5, "baseFrequency" : 300, "octaves" : 3 }
+                });
+                const cyberpunkNotes = [
+                    ["C2", "G2", "A#2"], null, ["F2", "C3"], null,
+                    ["G#2", "D#3"], null, ["D2", "A2"], null
+                ];
+                new Tone.Sequence((time, noteGroup) => {
+                    if (noteGroup) cyberpunkSynth.triggerAttackRelease(noteGroup, "2n", time);
+                }, cyberpunkNotes, "1n").start(0);
+                Tone.Transport.bpm.value = 90; 
+                
+                try {
+                    await Tone.loaded(); 
+                    console.log("모든 사운드 로드 완료");
+                } catch (error) {
+                    console.error("사운드 로딩 중 오류 발생:", error);
+                }
+            } else {
+                console.warn("Tone.js가 로드되지 않았거나 오디오 컨텍스트 시작에 실패했습니다. 사운드 효과가 비활성화됩니다.");
+            }
+        }
+        
+        function proceedWithStartButton() {
+            if ((playerHealth <= 0 || currentRound > maxRounds) && (startButton.textContent.includes("도전") || startButton.textContent.includes("플레이") )) { 
+                resetGameFull(); 
+            }
+            controls.lock(); 
+        }
+
+        function startGameFlow() {
+            if (!gameStartTime) gameStartTime = performance.now(); 
+            if (Tone.Transport.state !== "started") { 
+                Tone.Transport.start();
+            }
+            gameRunning = true;
+            lastDamageUpdateTime = performance.now(); 
+            updatePlayerDamage(); 
+            startNewRound(); 
+            animate(); 
+        }
+
+        function startNewRound() {
+            if (currentRound > 1) {
+                maxPlayerHealth *= 2;
+            } else {
+                maxPlayerHealth = 100;
+            }
+            playerHealth = maxPlayerHealth; 
+
+            isReloading = false; 
+            machineGunCooldownEndTime = 0; 
+            isMachineGunModeActive = false; 
+            shieldCooldownEndTime = 0; 
+            shieldUsedThisRound = false; 
+            isShieldActive = false;
+            if (shieldMesh) shieldMesh.visible = false;
+
+
+            walls.forEach(wall => scene.remove(wall));
+            walls = [];
+            enemies.forEach(enemy => scene.remove(enemy));
+            enemies = [];
+            enemyBullets.forEach(bullet => scene.remove(bullet));
+            enemyBullets = [];
+            playerBullets.forEach(bullet => scene.remove(bullet));
+            playerBullets = [];
+            muzzleSmokeParticles.forEach(p => scene.remove(p));
+            muzzleSmokeParticles = [];
+            impactSparks.forEach(p => scene.remove(p));
+            impactSparks = [];
+            explosionParticles.forEach(p => scene.remove(p));
+            explosionParticles = [];
+
+
+            generateMapForRound(currentRound); 
+            createEnvironmentFromMapData(); 
+
+            killedEnemiesThisRound = 0;
+            if (currentRound > 1) {
+                 enemiesToKillForNextRound = Math.max(enemiesToKillForNextRound + 2, Math.floor(enemiesToKillForNextRound * 1.6)); 
+            } else {
+                enemiesToKillForNextRound = 20; 
+            }
+            
+            const speedMultiplier = 1 + (currentRound - 1) * 0.1; 
+            const bulletSpeedMultiplier = 1 + (currentRound - 1) * 0.25; 
+            baseEnemySpeed = moveSpeed; 
+            baseEnemyBulletSpeed = ENEMY_BULLET_SPEED_BASE * bulletSpeedMultiplier;
+
+            spawnEnemiesForRound(enemiesToKillForNextRound + Math.floor(Math.random() * 11)); 
+            updateHUD();
+        }
+        
+        function generateMapForRound(round) {
+            currentMapData = JSON.parse(JSON.stringify(initialMapLayout)); 
+
+            // 벽 변경 로직: 스폰 가능 지역(0)은 유지하면서 벽을 추가/제거
+            const changes = Math.min(round * 3, 15); 
+            let attempts = 0; 
+            for (let i = 0; i < changes && attempts < 100; attempts++) {
+                const r = Math.floor(Math.random() * (currentMapData.length - 2)) + 1; 
+                const c = Math.floor(Math.random() * (currentMapData[0].length - 2)) + 1;
+                if (currentMapData[r][c] !== 0) { // 이미 0으로 설정된 스폰 가능 지역은 건드리지 않음
+                    currentMapData[r][c] = Math.random() < 0.4 ? 1 : 0; 
+                    i++; 
+                }
+            }
+        }
+
+        function createEnvironmentFromMapData() {
+            const floorGeometry = new THREE.PlaneGeometry(200, 200);
+            const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a3a, roughness: 0.7, metalness: 0.3 }); 
+            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.rotation.x = -Math.PI / 2; 
+            floor.receiveShadow = true; 
+            scene.add(floor);
+
+            const ceilingMaterial = new THREE.MeshStandardMaterial({ color: 0x050515, roughness: 0.9 }); 
+            const ceiling = new THREE.Mesh(floorGeometry, ceilingMaterial);
+            ceiling.rotation.x = Math.PI / 2;
+            ceiling.position.y = wallSize * 1.5; 
+            scene.add(ceiling);
+
+            const wallGeometry = new THREE.BoxGeometry(wallSize, wallSize * 1.5, wallSize); 
+            const wallTexture = createCyberWallTexture(); 
+            const wallMaterial = new THREE.MeshStandardMaterial({ map: wallTexture, roughness: 0.6, metalness: 0.4 }); 
+
+            for (let r = 0; r < currentMapData.length; r++) {
+                for (let c = 0; c < currentMapData[r].length; c++) {
+                    if (currentMapData[r][c] === 1) { 
+                        const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+                        wall.position.x = (c - currentMapData[r].length / 2 + 0.5) * wallSize;
+                        wall.position.y = (wallSize * 1.5) / 2; 
+                        wall.position.z = (r - currentMapData.length / 2 + 0.5) * wallSize;
+                        wall.castShadow = true;
+                        wall.receiveShadow = true;
+                        wall.userData.boundingBox = new THREE.Box3().setFromObject(wall); 
+                        walls.push(wall);
+                        scene.add(wall);
+                    }
+                }
+            }
+        }
+        
+        function spawnEnemiesForRound(count) {
+            const spawnPoints = getValidSpawnPoints(count); 
+            const numToSpawn = Math.min(count, spawnPoints.length); 
+            console.log(`Spawning ${numToSpawn} enemies for round ${currentRound}. Target: ${enemiesToKillForNextRound}, Available points: ${spawnPoints.length}`);
+            for (let i = 0; i < numToSpawn; i++) {
+                const pointIndex = Math.floor(Math.random() * spawnPoints.length);
+                const point = spawnPoints.splice(pointIndex, 1)[0]; 
+                spawnSingleEnemy(point.x, point.z);
+            }
+        }
+
+        function getValidSpawnPoints(neededPoints) {
+            const points = [];
+            const playerPos = controls.getObject().position;
+            for (let r = 0; r < currentMapData.length; r++) {
+                for (let c = 0; c < currentMapData[r].length; c++) {
+                    if (currentMapData[r][c] === 0) { 
+                        const x = (c - currentMapData[r].length / 2 + 0.5) * wallSize;
+                        const z = (r - currentMapData.length / 2 + 0.5) * wallSize;
+                        
+                        let overlapsWithWall = false;
+                        const enemyRadius = playerRadius * 0.7;
+                        const enemyHeight = playerRadius * 2.2;
+                        const tempEnemyPos = new THREE.Vector3(x, enemyHeight / 2, z); 
+                        const tempEnemyCollider = new THREE.Box3().setFromCenterAndSize(
+                            tempEnemyPos,
+                            new THREE.Vector3(enemyRadius * 2, enemyHeight, enemyRadius * 2)
+                        );
+                        for (const wall of walls) { 
+                            if (tempEnemyCollider.intersectsBox(wall.userData.boundingBox)) {
+                                overlapsWithWall = true;
+                                break;
+                            }
+                        }
+
+                        if (!overlapsWithWall && playerPos.distanceTo(new THREE.Vector3(x, playerHeight, z)) > wallSize * 2.5) { 
+                            points.push({ x, z });
+                        }
+                    }
+                }
+            }
+            if (points.length < neededPoints && points.length > 0) { 
+                console.warn(`요청한 스폰 포인트(${neededPoints})보다 적은 수(${points.length})의 유효 지점만 찾았습니다.`);
+                return points;
+            } else if (points.length === 0) { 
+                console.error("유효한 스폰 지점을 전혀 찾을 수 없습니다! 맵 데이터 또는 로직 확인 필요.");
+                for(let i=0; i<neededPoints; i++){ 
+                    points.push({x: (Math.random()-0.5) * wallSize * (currentMapData[0].length/2 - 2), z: (Math.random()-0.5) * wallSize * (currentMapData.length/2 - 2)});
+                }
+            }
+            return points;
+        }
+
+
+        function createPlayerGun() {
+            playerGunMesh = new THREE.Group();
+            const gunBodyMaterial = new THREE.MeshStandardMaterial({ color: 0x222233, metalness: 0.7, roughness: 0.3, emissive: 0x111122, emissiveIntensity: 0.5 });
+            const gunAccentMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff, metalness: 0.8, roughness: 0.2, emissive: 0x00ffff, emissiveIntensity: 0.8 });
+
+
+            const barrelGeometry = new THREE.CylinderGeometry(0.03, 0.03, 0.6, 16);
+            const barrel = new THREE.Mesh(barrelGeometry, gunBodyMaterial);
+            barrel.position.set(0, -0.05, -0.4);
+            barrel.rotation.x = Math.PI / 2;
+            playerGunMesh.add(barrel);
+
+            gunTip = new THREE.Object3D();
+            gunTip.position.set(0, -0.05, -0.7); 
+            playerGunMesh.add(gunTip);
+
+            const bodyGeometry = new THREE.BoxGeometry(0.1, 0.12, 0.4);
+            const body = new THREE.Mesh(bodyGeometry, gunBodyMaterial);
+            body.position.set(0, -0.1, 0);
+            playerGunMesh.add(body);
+
+            const stockGeometry = new THREE.BoxGeometry(0.08, 0.1, 0.3);
+            const stock = new THREE.Mesh(stockGeometry, gunBodyMaterial);
+            stock.position.set(0, -0.08, 0.3);
+            playerGunMesh.add(stock);
+            
+            const gripGeometry = new THREE.BoxGeometry(0.06, 0.2, 0.06);
+            const grip = new THREE.Mesh(gripGeometry, new THREE.MeshStandardMaterial({color: 0x111118, metalness:0.4, roughness: 0.6}));
+            grip.position.set(0, -0.2, -0.05);
+            grip.rotation.x = -0.2; 
+            playerGunMesh.add(grip);
+
+            const lineGeo = new THREE.BoxGeometry(0.01, 0.01, 0.35);
+            const line1 = new THREE.Mesh(lineGeo, gunAccentMaterial);
+            line1.position.set(0.04, -0.05, -0.1);
+            playerGunMesh.add(line1);
+            const line2 = new THREE.Mesh(lineGeo, gunAccentMaterial);
+            line2.position.set(-0.04, -0.05, -0.1);
+            playerGunMesh.add(line2);
+
+            originalGunMaterial = { 
+                body: gunBodyMaterial.clone(),
+                accent: gunAccentMaterial.clone()
+            };
+
+
+            playerGunMesh.position.set(0.25, -0.3, -0.7); 
+            playerGunMesh.rotation.y = -0.1; 
+            playerGunMesh.visible = false; 
+            camera.add(playerGunMesh); 
+        }
+        
+        function createCyberWallTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 128; 
+            canvas.height = 128;
+            const context = canvas.getContext('2d');
+            context.fillStyle = '#1a1a2a'; 
+            context.fillRect(0, 0, 128, 128);
+
+            context.strokeStyle = '#0055aa'; 
+            context.lineWidth = 1;
+            for (let i = 0; i < 8; i++) {
+                context.beginPath();
+                context.moveTo(Math.random() * 128, Math.random() * 128);
+                context.lineTo(Math.random() * 128, Math.random() * 128);
+                context.stroke();
+                if (Math.random() < 0.5) { 
+                    context.lineTo(Math.random() * 128, Math.random() * 128);
+                    context.stroke();
+                }
+            }
+            context.fillStyle = '#00aaff';
+            for (let i = 0; i < 30; i++) {
+                context.fillRect(Math.random() * 128, Math.random() * 128, 2, 2);
+            }
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(1, 1); 
+            return texture;
+        }
+        
+        function spawnSingleEnemy(x, z) {
+            const enemyRadius = playerRadius * 0.7; 
+            const enemyHeight = playerRadius * 2.2; 
+            let enemyGeometry;
+            let enemyColor = 0xff3333; 
+            let enemyEmissive = 0x550000;
+
+            switch (currentRound) {
+                case 1:
+                    enemyGeometry = new THREE.CylinderGeometry(enemyRadius, enemyRadius, enemyHeight, 12);
+                    enemyColor = 0xff3333; enemyEmissive = 0x550000; 
+                    break;
+                case 2:
+                    enemyGeometry = new THREE.BoxGeometry(enemyRadius * 1.5, enemyHeight, enemyRadius * 1.5);
+                    enemyColor = 0x33ff33; enemyEmissive = 0x005500; 
+                    break;
+                case 3:
+                    enemyGeometry = new THREE.SphereGeometry(enemyRadius * 1.2, 16, 12);
+                    enemyColor = 0x3333ff; enemyEmissive = 0x000055; 
+                    break;
+                case 4:
+                    enemyGeometry = new THREE.ConeGeometry(enemyRadius, enemyHeight, 16);
+                    enemyColor = 0xffff33; enemyEmissive = 0x555500; 
+                    break;
+                case 5:
+                    enemyGeometry = new THREE.TorusKnotGeometry(enemyRadius * 0.8, enemyRadius * 0.3, 64, 8);
+                    enemyColor = 0xff00ff; enemyEmissive = 0x550055; 
+                    break;
+                default:
+                    enemyGeometry = new THREE.CylinderGeometry(enemyRadius, enemyRadius, enemyHeight, 12);
+            }
+
+            const enemyMaterial = new THREE.MeshStandardMaterial({ 
+                color: enemyColor, 
+                emissive: enemyEmissive, 
+                roughness: 0.4, 
+                metalness: 0.3 
+            }); 
+
+            const enemy = new THREE.Mesh(enemyGeometry, enemyMaterial);
+            enemy.position.set(x, enemyHeight / 2, z); 
+            enemy.castShadow = true;
+            enemy.userData = { 
+                health: 80, 
+                speed: moveSpeed, 
+                originalSpeed: moveSpeed,
+                boundingBox: new THREE.Box3(), 
+                id: `enemy_${Math.random().toString(36).substring(2,15)}`, 
+                shootCooldown: Math.random() * 1 + 1.5, 
+                shootInterval: Math.max(1.0, (3.5 - currentRound * 0.2)), 
+                canSeePlayer: false,
+                targetPosition: new THREE.Vector3(x, enemyHeight / 2, z), 
+                isMovingToTarget: false,
+                moveTimer: 0,
+                jumpCooldown: Math.random() * 3 + 2, 
+                isJumping: false,
+                velocityY: 0,
+                originalY: enemyHeight / 2,
+            };
+            enemy.userData.boundingBox.setFromObject(enemy); 
+            enemies.push(enemy);
+            scene.add(enemy);
+        }
+        
+        function updatePlayerDamage() {
+            const rand = Math.random() * 100;
+            if (rand < 70) { 
+                currentPlayerDamage = Math.floor(Math.random() * 49) + 1; 
+            } else if (rand < 90) { 
+                currentPlayerDamage = Math.floor(Math.random() * 10) + 50; 
+            } else { 
+                currentPlayerDamage = Math.floor(Math.random() * 11) + 60; 
+            }
+            playerDamageHUDElement.textContent = `데미지: ${currentPlayerDamage}`;
+        }
+
+        let prevTime = performance.now(); 
+        function animate() {
+            if (!gameRunning && playerHealth > 0 && !startButton.textContent.includes("도전") && !startButton.textContent.includes("플레이")) { 
+                requestAnimationFrame(animate); 
+                renderer.render(scene, camera); 
+                return;
+            }
+             if (!gameRunning && (playerHealth <= 0 || currentRound > maxRounds)) { 
+                return;
+            }
+
+
+            requestAnimationFrame(animate); 
+
+            const time = performance.now();
+            const delta = (time - prevTime) / 1000; 
+
+            if (time - lastDamageUpdateTime > damageUpdateInterval) {
+                updatePlayerDamage();
+                lastDamageUpdateTime = time;
+            }
+
+            applyPlayerGravity(delta);
+
+            currentMoveSpeed = isSprinting ? moveSpeed * sprintMultiplier : moveSpeed;
+            if (isMachineGunModeActive) {
+                currentMoveSpeed *= 0.7; 
+            }
+            if (isSlideJumpBoosting && time < slideJumpBoostEndTime) {
+                currentMoveSpeed = moveSpeed + slideJumpBoost;
+            } else if (isSlideJumpBoosting && time >= slideJumpBoostEndTime) {
+                isSlideJumpBoosting = false;
+            }
+
+
+            let currentFOV = isSliding ? slideFOV : (isSprinting ? sprintFOV : defaultFOV);
+            camera.fov += (currentFOV - camera.fov) * 0.1; 
+            camera.updateProjectionMatrix();
+
+
+            const playerObject = controls.getObject(); 
+            
+            let intendedDeltaX = 0;
+            let intendedDeltaZ = 0;
+            const camDirection = new THREE.Vector3();
+            camera.getWorldDirection(camDirection);
+            
+            if (!isSliding) {
+                camDirection.y = 0;
+            }
+            camDirection.normalize();
+
+
+            const rightDirection = new THREE.Vector3();
+            rightDirection.crossVectors(camDirection, camera.up); 
+
+            if (moveForward) {
+                intendedDeltaX += camDirection.x * currentMoveSpeed * delta;
+                intendedDeltaZ += camDirection.z * currentMoveSpeed * delta;
+            }
+            if (moveBackward) {
+                intendedDeltaX -= camDirection.x * currentMoveSpeed * delta;
+                intendedDeltaZ -= camDirection.z * currentMoveSpeed * delta;
+            }
+            if (moveLeft) { 
+                intendedDeltaX -= rightDirection.x * currentMoveSpeed * delta; 
+                intendedDeltaZ -= rightDirection.z * currentMoveSpeed * delta;
+            }
+            if (moveRight) { 
+                intendedDeltaX += rightDirection.x * currentMoveSpeed * delta;
+                intendedDeltaZ += rightDirection.z * currentMoveSpeed * delta;
+            }
+            
+            const tempPlayerPos = playerObject.position.clone();
+            const prevPlayerPos = playerObject.position.clone(); 
+
+
+            tempPlayerPos.x += intendedDeltaX;
+            if (!checkWallCollision(tempPlayerPos)) {
+                playerObject.position.x = tempPlayerPos.x;
+            } else { 
+                playerObject.position.x = prevPlayerPos.x + Math.sign(intendedDeltaX) * 0.01; 
+            }
+            tempPlayerPos.x = playerObject.position.x; 
+
+            tempPlayerPos.z += intendedDeltaZ;
+            if (!checkWallCollision(tempPlayerPos)) {
+                playerObject.position.z = tempPlayerPos.z;
+            } else { 
+                 playerObject.position.z = prevPlayerPos.z + Math.sign(intendedDeltaZ) * 0.01; 
+            }
+            
+            playerBoundingBox.setFromCenterAndSize(
+                playerObject.position,
+                new THREE.Vector3(playerRadius * 2, playerHeight, playerRadius * 2)
+            );
+
+            if (isMouseDown && isMachineGunModeActive && !isReloading && gameRunning) {
+                if (time - lastMachineGunShootTime > machineGunShootInterval) {
+                    shoot(); 
+                    lastMachineGunShootTime = time;
+                }
+            }
+            
+            // 머신건 모드 시 카메라 흔들림 제거 (사용자 요청)
+
+
+            updateEnemies(delta, time); 
+            updateEnemyBullets(delta);
+            updatePlayerBullets(delta); 
+            updateMuzzleSmoke(delta); 
+            updateImpactSparks(delta); 
+            updateExplosions(delta); 
+            updateAkimbo(time); 
+            updateShield(time); 
+            updateElapsedTime(time); 
+            updateSlideJumpInfo(time);
+
+            prevTime = time;
+            renderer.render(scene, camera);
+        }
+
+        function applyPlayerGravity(delta) {
+            const playerObject = controls.getObject();
+            const targetPlayerY = isSliding ? slideHeight : playerHeight;
+
+            if (!canPlayerJump || playerObject.position.y > targetPlayerY) { 
+                playerVelocityY += gravity * delta;
+                playerObject.position.y += playerVelocityY * delta;
+
+                if (playerObject.position.y <= targetPlayerY) { 
+                    playerObject.position.y = targetPlayerY;
+                    playerVelocityY = 0;
+                    if (!isSliding) { 
+                         canPlayerJump = true;
+                         if (landSound && landSound.loaded) landSound.triggerAttackRelease("C2", "8n");
+                    }
+                }
+            } else if (playerObject.position.y < targetPlayerY) { 
+                 playerObject.position.y = targetPlayerY;
+                 playerVelocityY = 0;
+                 canPlayerJump = true;
+            }
+        }
+        
+        function checkWallCollision(proposedPosition, objectRadius = playerRadius) {
+            const objectHeight = isSliding ? slideHeight : ((objectRadius === playerRadius) ? playerHeight : objectRadius * 2.2); 
+            const objectCenterY = isSliding ? slideHeight / 2 : ((objectRadius === playerRadius) ? proposedPosition.y - playerHeight/2 + objectHeight/2 : proposedPosition.y); 
+            
+            const objectCollider = new THREE.Box3().setFromCenterAndSize(
+                new THREE.Vector3(proposedPosition.x, objectCenterY, proposedPosition.z), 
+                new THREE.Vector3(objectRadius * 2, objectHeight, objectRadius * 2) 
+            );
+
+            for (const wall of walls) {
+                if (objectCollider.intersectsBox(wall.userData.boundingBox)) {
+                    return true; 
+                }
+            }
+            return false; 
+        }
+
+        function updateEnemies(delta, time) {
+            const playerPos = controls.getObject().position;
+            enemies.forEach((enemy, index) => { 
+                if (!enemy.userData || enemy.userData.health <= 0) return; 
+
+                const enemyPos = enemy.position; 
+                const directionToPlayer = playerPos.clone().sub(enemyPos);
+                const distanceToPlayer = directionToPlayer.length();
+                directionToPlayer.normalize();
+
+                const raycaster = new THREE.Raycaster(new THREE.Vector3(enemyPos.x, playerHeight * 0.8, enemyPos.z), directionToPlayer); 
+                const intersects = raycaster.intersectObjects(walls, false); 
+                enemy.userData.canSeePlayer = false;
+                if (intersects.length === 0 || intersects[0].distance > distanceToPlayer - playerRadius) { 
+                    if (distanceToPlayer < 30) { 
+                         enemy.userData.canSeePlayer = true;
+                    }
+                }
+                
+                enemy.userData.jumpCooldown -= delta;
+                if (!enemy.userData.isJumping && enemy.userData.jumpCooldown <= 0 && Math.random() < 0.01) { 
+                    enemy.userData.isJumping = true;
+                    enemy.userData.velocityY = playerJumpForce * 0.7; 
+                    enemy.userData.jumpCooldown = Math.random() * 4 + 3; 
+                }
+                if (enemy.userData.isJumping) {
+                    enemy.userData.velocityY += gravity * delta * 0.8; 
+                    enemy.position.y += enemy.userData.velocityY * delta;
+                    if (enemy.position.y <= enemy.userData.originalY) {
+                        enemy.position.y = enemy.userData.originalY;
+                        enemy.userData.isJumping = false;
+                        enemy.userData.velocityY = 0;
+                    }
+                }
+
+
+                if (enemy.userData.canSeePlayer) {
+                    const targetRotation = Math.atan2(directionToPlayer.x, directionToPlayer.z);
+                    enemy.rotation.y += (targetRotation - enemy.rotation.y) * 0.1; 
+
+                    if (distanceToPlayer > wallSize * 1.5) { 
+                        const enemyMoveSpeed = enemy.userData.speed * delta;
+                        const potentialMove = directionToPlayer.clone().multiplyScalar(enemyMoveSpeed); 
+                        
+                        const oldPos = enemy.position.clone();
+                        let canMoveX = true;
+                        let canMoveZ = true;
+                        
+                        const enemyRadiusForCollision = playerRadius * 0.7; 
+
+                        enemy.position.x += potentialMove.x;
+                        if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveX = false;
+                        if (!canMoveX) enemy.position.x = oldPos.x; 
+
+                        enemy.position.z += potentialMove.z;
+                        if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveZ = false;
+                        if (!canMoveZ) enemy.position.z = oldPos.z; 
+                    }
+                    
+                    enemy.userData.shootCooldown -= delta;
+                    if (enemy.userData.shootCooldown <= 0 && distanceToPlayer < 25) { 
+                        fireEnemyBullet(enemy, directionToPlayer.clone()); 
+                        enemy.userData.shootCooldown = enemy.userData.shootInterval;
+                    }
+                } else { 
+                    enemy.userData.moveTimer -= delta;
+                    if (enemy.userData.moveTimer <= 0) {
+                        const randomAngle = Math.random() * Math.PI * 2;
+                        const randomDist = Math.random() * wallSize * 2 + wallSize; 
+                        enemy.userData.targetPosition.set(
+                            enemyPos.x + Math.sin(randomAngle) * randomDist,
+                            enemy.userData.originalY,
+                            enemyPos.z + Math.cos(randomAngle) * randomDist
+                        );
+                        enemy.userData.isMovingToTarget = true;
+                        enemy.userData.moveTimer = Math.random() * 3 + 2; 
+                    }
+
+                    if (enemy.userData.isMovingToTarget) {
+                        const directionToTarget = enemy.userData.targetPosition.clone().sub(enemyPos).normalize();
+                        const distanceToTarget = enemy.userData.targetPosition.distanceTo(enemyPos);
+                        if (distanceToTarget > 0.5) {
+                            const enemyMoveSpeed = enemy.userData.speed * 0.7 * delta; 
+                            const potentialMove = directionToTarget.multiplyScalar(enemyMoveSpeed);
+                            
+                            const oldPos = enemy.position.clone();
+                            let canMoveX = true;
+                            let canMoveZ = true;
+                            const enemyRadiusForCollision = playerRadius * 0.7;
+
+                            enemy.position.x += potentialMove.x;
+                            if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveX = false;
+                            if (!canMoveX) enemy.position.x = oldPos.x; 
+
+                            enemy.position.z += potentialMove.z;
+                            if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveZ = false;
+                            if (!canMoveZ) enemy.position.z = oldPos.z; 
+                            
+                            const targetRotation = Math.atan2(directionToTarget.x, directionToTarget.z);
+                            enemy.rotation.y += (targetRotation - enemy.rotation.y) * 0.05; 
+                        } else {
+                            enemy.userData.isMovingToTarget = false;
+                        }
+                    }
+                }
+                enemy.userData.boundingBox.setFromObject(enemy); 
+
+                const collisionDistance = playerRadius + (playerRadius * 0.7); 
+                if (distanceToPlayer < collisionDistance && !enemy.userData.isJumping) { 
+                    takeDamage(5); 
+                    const knockbackDirection = playerPos.clone().sub(enemyPos).normalize(); 
+                    controls.getObject().position.addScaledVector(knockbackDirection, 0.2); 
+                    enemy.position.addScaledVector(knockbackDirection.negate(), 0.3); 
+                }
+            });
+        }
+        
+        function fireEnemyBullet(enemy, direction) {
+            if (enemyShootSound && enemyShootSound.loaded) {
+                enemyShootSound.start().catch(e => console.error("적 발사음 재생 오류:", e));
+            }
+
+            const bulletGeometry = new THREE.SphereGeometry(0.15, 8, 8); 
+            const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xffaa00 }); 
+            const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
+
+            const spreadAngle = Math.PI / 24; 
+            direction.applyAxisAngle(new THREE.Vector3(0,1,0), (Math.random() - 0.5) * spreadAngle);
+            direction.applyAxisAngle(new THREE.Vector3(1,0,0), (Math.random() - 0.5) * spreadAngle);
+
+
+            const bulletOffset = direction.clone().multiplyScalar(playerRadius * 1.0); 
+            bullet.position.copy(enemy.position).add(bulletOffset);
+            bullet.position.y = enemy.position.y; 
+
+            let maxDamageForRound = 5; 
+            if (currentRound > 1) {
+                for (let i = 0; i < currentRound - 1; i++) {
+                    maxDamageForRound = Math.floor(maxDamageForRound * 1.3); 
+                }
+            }
+            maxDamageForRound = Math.max(1, maxDamageForRound); 
+
+            bullet.userData = {
+                velocity: direction.normalize().multiplyScalar(baseEnemyBulletSpeed), 
+                damage: Math.max(1, Math.floor(Math.random() * maxDamageForRound) + 1),
+                spawnTime: performance.now()
+            };
+            enemyBullets.push(bullet);
+            scene.add(bullet);
+        }
+
+        function updateEnemyBullets(delta) {
+            for (let i = enemyBullets.length - 1; i >= 0; i--) {
+                const bullet = enemyBullets[i];
+                bullet.position.addScaledVector(bullet.userData.velocity, delta);
+
+                if (performance.now() - bullet.userData.spawnTime > 5000) {
+                    scene.remove(bullet);
+                    enemyBullets.splice(i, 1);
+                    continue;
+                }
+
+                const bulletSphere = new THREE.Sphere(bullet.position, 0.15);
+                if (playerBoundingBox.intersectsSphere(bulletSphere)) {
+                    takeDamage(bullet.userData.damage);
+                    scene.remove(bullet);
+                    enemyBullets.splice(i, 1);
+                    continue;
+                }
+
+                for (const wall of walls) {
+                    if (wall.userData.boundingBox.intersectsSphere(bulletSphere)) {
+                        scene.remove(bullet);
+                        enemyBullets.splice(i, 1);
+                        break; 
+                    }
+                }
+            }
+        }
+
+        function shoot() {
+            if (isReloading || !gameRunning) return;  
+            
+            let damageToDeal = currentPlayerDamage;
+
+            if (isMachineGunModeActive) {
+                if (machineGunCurrentAmmo <= 0) {
+                    isMachineGunModeActive = false; 
+                    updateHUD();
+                    if (playerAmmo < maxPlayerAmmo) handleReload(); 
+                    return;
+                }
+                machineGunCurrentAmmo--;
+                damageToDeal = 15; 
+            } else {
+                if (playerAmmo <= 0) {
+                    handleReload(); 
+                    return;
+                }
+                playerAmmo--;
+            }
+
+
+            updateHUD();
+            if (shootSound && shootSound.loaded) {
+                shootSound.start().catch(e => console.error("플레이어 발사음 재생 오류:", e));
+            }
+
+            const gunTipWorldPosition = new THREE.Vector3();
+            const cameraDirection = new THREE.Vector3();
+            camera.getWorldDirection(cameraDirection);
+            
+            gunTip.getWorldPosition(gunTipWorldPosition);
+
+
+            createMuzzleSmoke(gunTipWorldPosition, isMachineGunModeActive); 
+
+            const bulletGeometry = new THREE.SphereGeometry(0.08, 6, 6); 
+            const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 1.5 }); 
+            const playerBullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
+
+            playerBullet.position.copy(gunTipWorldPosition); 
+            playerBullet.userData = {
+                velocity: cameraDirection.clone().multiplyScalar(PLAYER_BULLET_SPEED),
+                spawnTime: performance.now(),
+                damage: damageToDeal 
+            };
+            playerBullets.push(playerBullet);
+            scene.add(playerBullet);
+        }
+
+        function updatePlayerBullets(delta) {
+            for (let i = playerBullets.length - 1; i >= 0; i--) {
+                const bullet = playerBullets[i];
+                bullet.position.addScaledVector(bullet.userData.velocity, delta);
+
+                if (performance.now() - bullet.userData.spawnTime > 2000) { 
+                    scene.remove(bullet);
+                    playerBullets.splice(i, 1);
+                    continue;
+                }
+
+                const bulletSphere = new THREE.Sphere(bullet.position, 0.08);
+                for (const wall of walls) {
+                    if (wall.userData.boundingBox.intersectsSphere(bulletSphere)) {
+                        createImpactSpark(bullet.position); 
+                        if (ricochetSound && ricochetSound.loaded) ricochetSound.triggerAttackRelease().catch(e => console.error("도탄음 재생 오류:", e));
+                        scene.remove(bullet);
+                        playerBullets.splice(i, 1);
+                        i = -1; 
+                        break;
+                    }
+                }
+                if (i === -1) continue;
+
+                for (const enemy of enemies) { 
+                    if (enemy.userData.health > 0 && enemy.userData.boundingBox.intersectsSphere(bulletSphere)) {
+                        let damageDealt = bullet.userData.damage;
+                        let scoreMultiplier = 1;
+
+                        if (damageDealt >= 60) { 
+                            showSuperCriticalHitMessage();
+                            damageDealt = enemy.userData.health; 
+                            scoreMultiplier = 2; 
+                        } else if (damageDealt >= 50) { 
+                            showCriticalHitMessage();
+                        }
+
+                        enemy.userData.health -= damageDealt;
+                        if (enemyHitSound && enemyHitSound.loaded) {
+                             enemyHitSound.triggerAttackRelease("C4", "8n").catch(e => console.error("적 피격음 재생 오류:", e));
+                        }
+
+                        if (enemy.userData.health <= 0) {
+                            createExplosionEffect(enemy.position); 
+                            if (explosionSound && explosionSound.loaded) explosionSound.start(); 
+                            
+                            scene.remove(enemy); 
+                            const enemyIndex = enemies.findIndex(e => e.userData.id === enemy.userData.id);
+                            if (enemyIndex > -1) enemies.splice(enemyIndex, 1);
+                            
+                            score += (10 * scoreMultiplier); 
+                            killedEnemiesThisRound++;
+                            totalKilledEnemies++;
+                            updateHUD();
+                            
+                            if (killedEnemiesThisRound >= enemiesToKillForNextRound) {
+                                if (currentRound < maxRounds) {
+                                    showRoundTransitionMessage(`${currentRound} 라운드 성공!`);
+                                    if(roundSuccessSound && roundSuccessSound.loaded) roundSuccessSound.triggerAttackRelease("G5", "4n");
+                                    gameRunning = false; 
+                                    setTimeout(() => {
+                                        currentRound++;
+                                        startNewRound();
+                                        if (controls.isLocked) gameRunning = true; 
+                                    }, 2000); 
+                                } else {
+                                    gameClear();
+                                }
+                            } else {
+                                const maxAdditionalSpawns = 6; 
+                                const currentEnemyCount = enemies.filter(e => e.userData.health > 0).length; 
+                                const maxAllowedEnemiesThisRound = enemiesToKillForNextRound + 10; 
+                                const enemiesToActuallySpawn = Math.min(maxAdditionalSpawns, maxAllowedEnemiesThisRound - currentEnemyCount);
+
+
+                                if (enemiesToActuallySpawn > 0) {
+                                    spawnEnemiesForRound(enemiesToActuallySpawn);
+                                }
+                            }
+                        } else {
+                             enemy.material.color.setHex(0xffffff); 
+                             setTimeout(() => {
+                                 if(enemy.material) enemy.material.color.setHex(0xff3333); 
+                             }, 100);
+                        }
+                        scene.remove(bullet);
+                        playerBullets.splice(i, 1);
+                        i = -1; 
+                        break;
+                    }
+                }
+                 if (i === -1) continue;
+            }
+        }
+
+        function showCriticalHitMessage() {
+            criticalHitMessageElement.style.display = 'block';
+            criticalHitMessageElement.style.animation = 'none'; 
+            criticalHitMessageElement.offsetHeight; 
+            criticalHitMessageElement.style.animation = 'criticalHitAnimation 0.7s ease-out forwards';
+            setTimeout(() => {
+                criticalHitMessageElement.style.display = 'none';
+            }, 700); 
+        }
+        function showSuperCriticalHitMessage() {
+            superCriticalHitMessageElement.style.display = 'block';
+            superCriticalHitMessageElement.style.animation = 'none';
+            superCriticalHitMessageElement.offsetHeight; 
+            superCriticalHitMessageElement.style.animation = 'superCriticalHitAnimation 1s ease-out forwards'; 
+            setTimeout(() => {
+                superCriticalHitMessageElement.style.display = 'none';
+            }, 1000); 
+        }
+
+
+        function showRoundTransitionMessage(message) {
+            roundTransitionMessageElement.textContent = message;
+            roundTransitionMessageElement.style.display = 'block';
+            setTimeout(() => {
+                roundTransitionMessageElement.style.display = 'none';
+            }, 1800); 
+        }
+        
+        function showShieldStatusMessage(message, duration = 1000) {
+            shieldStatusMessageElement.textContent = message;
+            shieldStatusMessageElement.style.color = "#40C4FF"; 
+            shieldStatusMessageElement.style.display = 'block';
+            setTimeout(() => {
+                shieldStatusMessageElement.style.display = 'none';
+            }, duration);
+        }
+        function showMachineGunStatusMessage(message, duration = 1500) {
+            akimboStatusMessageElement.textContent = message; 
+            akimboStatusMessageElement.style.color = "#FF00FF"; 
+            akimboStatusMessageElement.style.display = 'block';
+            setTimeout(() => {
+                akimboStatusMessageElement.style.display = 'none';
+            }, duration);
+        }
+
+
+
+        function createMuzzleSmoke(position, isMachineGun = false) {
+            const smokeColor = isMachineGun ? 0xff8800 : 0x00ffff; 
+            const smokeSize = isMachineGun ? 0.3 : 0.2;
+            const smokeLife = isMachineGun ? 0.5 : 0.4;
+            const particleCount = isMachineGun ? 10 : 7;
+
+            const smokeMaterial = new THREE.PointsMaterial({
+                color: smokeColor, size: smokeSize, transparent: true, opacity: 0.6, sizeAttenuation: true, 
+                blending: THREE.AdditiveBlending 
+            });
+            for (let i = 0; i < particleCount; i++) { 
+                const particleGeometry = new THREE.BufferGeometry();
+                particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
+                const particle = new THREE.Points(particleGeometry, smokeMaterial.clone()); 
+                particle.position.copy(position);
+                particle.userData = {
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.6, (Math.random() - 0.5) * 0.6, (Math.random() - 0.5) * 0.6 
+                    ).multiplyScalar(isMachineGun ? 0.4 : 0.3), 
+                    life: smokeLife 
+                };
+                muzzleSmokeParticles.push(particle);
+                scene.add(particle);
+            }
+        }
+
+        function updateMuzzleSmoke(delta) {
+            for (let i = muzzleSmokeParticles.length - 1; i >= 0; i--) {
+                const particle = muzzleSmokeParticles[i];
+                particle.userData.life -= delta;
+                if (particle.userData.life <= 0) {
+                    scene.remove(particle);
+                    muzzleSmokeParticles.splice(i, 1);
+                } else {
+                    particle.position.addScaledVector(particle.userData.velocity, delta);
+                    particle.material.opacity = particle.userData.life * 2.5; 
+                    particle.material.size = particle.userData.life * 0.5; 
+                }
+            }
+        }
+
+        function createImpactSpark(position) {
+            const sparkMaterial = new THREE.PointsMaterial({
+                color: 0x00ffff, size: 0.25, transparent: true, opacity: 0.9, sizeAttenuation: true,
+                blending: THREE.AdditiveBlending
+            });
+            for (let i = 0; i < 10; i++) { 
+                const particleGeometry = new THREE.BufferGeometry();
+                particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
+                const particle = new THREE.Points(particleGeometry, sparkMaterial.clone());
+                particle.position.copy(position);
+                particle.userData = {
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)
+                    ).normalize().multiplyScalar(Math.random() * 4 + 3), 
+                    life: 0.25 
+                };
+                impactSparks.push(particle);
+                scene.add(particle);
+            }
+        }
+        
+        function updateImpactSparks(delta) {
+            for (let i = impactSparks.length - 1; i >= 0; i--) {
+                const particle = impactSparks[i];
+                particle.userData.life -= delta;
+                if (particle.userData.life <= 0) {
+                    scene.remove(particle);
+                    impactSparks.splice(i, 1);
+                } else {
+                    particle.position.addScaledVector(particle.userData.velocity, delta);
+                    particle.userData.velocity.y -= 9.8 * delta * 0.1; 
+                    particle.material.opacity = particle.userData.life * 4; 
+                    particle.material.size = particle.userData.life * 0.6; 
+                }
+            }
+        }
+
+        function createExplosionEffect(position) {
+            const explosionMaterial = new THREE.PointsMaterial({
+                color: 0xff00ff, 
+                size: 0.6,
+                transparent: true,
+                opacity: 0.9,
+                sizeAttenuation: true,
+                blending: THREE.AdditiveBlending
+            });
+            for (let i = 0; i < 25; i++) { 
+                const particleGeometry = new THREE.BufferGeometry();
+                particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
+                const particle = new THREE.Points(particleGeometry, explosionMaterial.clone());
+                particle.position.copy(position);
+                particle.userData = {
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)
+                    ).normalize().multiplyScalar(Math.random() * 6 + 4), 
+                    life: 0.7 
+                };
+                explosionParticles.push(particle);
+                scene.add(particle);
+            }
+        }
+
+        function updateExplosions(delta) {
+            for (let i = explosionParticles.length - 1; i >= 0; i--) {
+                const particle = explosionParticles[i];
+                particle.userData.life -= delta;
+                if (particle.userData.life <= 0) {
+                    scene.remove(particle);
+                    explosionParticles.splice(i, 1);
+                } else {
+                    particle.position.addScaledVector(particle.userData.velocity, delta);
+                    particle.material.opacity = particle.userData.life * 1.3; 
+                    particle.material.size = particle.userData.life * 0.9; 
+                }
+            }
+        }
+        
+        function takeDamage(amount) {
+            if (!gameRunning || playerHealth <=0) return; 
+
+            let actualDamage = amount;
+            if (isShieldActive && shieldHealth > 0) {
+                if (shieldHealth >= amount) {
+                    shieldHealth -= amount;
+                    actualDamage = 0;
+                } else {
+                    actualDamage = amount - shieldHealth;
+                    shieldHealth = 0;
+                }
+                if (shieldHealth <= 0) {
+                    isShieldActive = false;
+                    if(shieldMesh) shieldMesh.visible = false;
+                    if(shieldBreakSound && shieldBreakSound.loaded) shieldBreakSound.start();
+                }
+                updateHUD();
+                if (actualDamage === 0) return; 
+            }
+
+
+            playerHealth -= actualDamage;
+            if (playerHealth < 0) playerHealth = 0;
+
+            if (playerHurtSound && playerHurtSound.loaded) {
+                playerHurtSound.start().catch(e => console.error("플레이어 피격음 재생 오류:", e));
+            }
+            updateHUD();
+
+            document.body.style.transition = 'background-color 0.05s';
+            document.body.style.backgroundColor = 'rgba(200,0,0,0.4)'; 
+            setTimeout(() => {
+                document.body.style.backgroundColor = '#0a0a1a'; 
+            }, 50);
+
+            if (playerHealth <= 0) { 
+                gameOver("사망했습니다! 게임 오버.");
+            }
+        }
+
+        function updateHUD() {
+            scoreElement.textContent = `점수: ${score}`;
+            healthElement.textContent = `체력: ${playerHealth} / ${maxPlayerHealth}`; 
+            
+            if (isMachineGunModeActive) { 
+                ammoElement.textContent = `머신건: ${machineGunCurrentAmmo} / ${machineGunTotalMaxAmmo}`;
+            } else {
+                ammoElement.textContent = `탄약: ${playerAmmo} / ${maxPlayerAmmo}`; 
+            }
+            
+            playerDamageHUDElement.textContent = `데미지: ${currentPlayerDamage}`;
+            roundInfoElement.innerHTML = `라운드: ${currentRound > maxRounds ? maxRounds : currentRound} / ${maxRounds}<br>처치 목표: ${killedEnemiesThisRound} / ${enemiesToKillForNextRound}`;
+
+            const now = performance.now();
+            if (machineGunCooldownEndTime > now) {
+                const remainingCooldown = Math.ceil((machineGunCooldownEndTime - now) / 1000);
+                machineGunInfoElement.innerHTML = `머신건: 쿨 (${remainingCooldown}초)<br>탄약: -`;
+            } else if (isMachineGunModeActive) {
+                const remainingDuration = Math.ceil((machineGunModeEndTime - now) / 1000);
+                machineGunInfoElement.innerHTML = `머신건: 활성 (${remainingDuration}초)<br>탄약: ${machineGunCurrentAmmo}`;
+            }
+            else {
+                machineGunInfoElement.innerHTML = `머신건: 준비 (H)<br>탄약: -`;
+            }
+
+            if (shieldUsedThisRound && shieldCooldownEndTime > now) { 
+                const remainingCooldown = Math.ceil((shieldCooldownEndTime - now) / 1000);
+                 shieldInfoElement.innerHTML = `방패: 쿨 (${remainingCooldown}초)<br>내구도: -`;
+            } else if (shieldUsedThisRound && shieldCooldownEndTime <= now) { 
+                 shieldInfoElement.innerHTML = `방패: 사용됨<br>내구도: -`;
+            }
+             else if (isShieldActive) {
+                shieldInfoElement.innerHTML = `방패: 활성<br>내구도: ${shieldHealth}`;
+            } else { 
+                shieldInfoElement.innerHTML = `방패: 준비 (우클릭)<br>내구도: -`;
+            }
+            
+            if (slideJumpCooldownEndTime > now) {
+                const remainingCooldown = ((slideJumpCooldownEndTime - now) / 1000).toFixed(1);
+                slideJumpInfoElement.innerHTML = `슬라이딩 점프: 쿨 (${remainingCooldown}초)`;
+            } else {
+                 slideJumpInfoElement.innerHTML = `슬라이딩 점프: 가능`;
+            }
+        }
+        
+        function updateElapsedTime(time) {
+            if (!gameStartTime) return; 
+            const elapsedSecondsTotal = Math.floor((time - gameStartTime) / 1000);
+            const minutes = Math.floor(elapsedSecondsTotal / 60);
+            const seconds = elapsedSecondsTotal % 60;
+            elapsedTimeHUDElement.textContent = `시간: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function handleReload() {
+            if (isReloading) return;
+
+            if (isMachineGunModeActive) { 
+                if (machineGunCurrentAmmo === machineGunTotalMaxAmmo) return;
+                isReloading = true;
+                if (reloadSound && reloadSound.loaded) reloadSound.triggerAttackRelease("C2", "0.1");
+                setTimeout(() => {
+                    machineGunCurrentAmmo = machineGunTotalMaxAmmo;
+                    isReloading = false;
+                    updateHUD();
+                }, 500); 
+                return;
+            }
+
+            if (playerAmmo === maxPlayerAmmo) return; 
+
+            isReloading = true;
+            if (reloadSound && reloadSound.loaded) {
+                reloadSound.triggerAttackRelease("C2", "0.1").catch(e => console.error("재장전 소리 재생 오류:", e));
+            }
+            
+            let reloadTime = 1200; 
+
+            if (playerAmmo > 0 && playerAmmo < maxPlayerAmmo) { 
+                tacticalReloadMessageElement.style.display = 'block';
+                let blinkCount = 0;
+                const blinkInterval = setInterval(() => {
+                    tacticalReloadMessageElement.style.visibility = (tacticalReloadMessageElement.style.visibility === 'hidden' ? 'visible' : 'hidden');
+                    blinkCount++;
+                    if (blinkCount >= 4) { 
+                        clearInterval(blinkInterval);
+                        tacticalReloadMessageElement.style.display = 'none';
+                        tacticalReloadMessageElement.style.visibility = 'visible';
+                    }
+                }, 125);
+                reloadTime = 500; 
+                 setTimeout(() => {
+                    playerAmmo = maxPlayerAmmo;
+                    isReloading = false;
+                    updateHUD();
+                }, reloadTime);
+            } else { 
+                 setTimeout(() => {
+                    playerAmmo = maxPlayerAmmo;
+                    isReloading = false;
+                    updateHUD();
+                }, reloadTime);
+            }
+        }
+        
+        function activateMachineGunMode() { 
+            const now = performance.now();
+            if (isMachineGunModeActive || machineGunCooldownEndTime > now) return;
+
+            isMachineGunModeActive = true;
+            machineGunModeEndTime = now + machineGunModeDuration;
+            machineGunCurrentAmmo = machineGunTotalMaxAmmo; 
+            machineGunCooldownEndTime = now + machineGunCooldown + machineGunModeDuration; 
+            
+            showMachineGunStatusMessage("MACHINE GUN MODE!", 2000);
+
+            if (machineGunActivateSound && machineGunActivateSound.loaded) {
+                machineGunActivateSound.triggerAttackRelease("E4", "0.2");
+            }
+            if (playerGunMesh) {
+                playerGunMesh.traverse((child) => {
+                    if (child.isMesh) {
+                        if (child.material === originalGunMaterial.body || child.material.color.equals(originalGunMaterial.body.color)) {
+                            child.material = new THREE.MeshStandardMaterial({ color: 0xAA00AA, metalness: 0.8, roughness: 0.2, emissive: 0x770077, emissiveIntensity: 0.9 });
+                        } else if (child.material === originalGunMaterial.accent || child.material.color.equals(originalGunMaterial.accent.color)) {
+                            child.material = new THREE.MeshStandardMaterial({ color: 0xFF00FF, metalness: 0.9, roughness: 0.1, emissive: 0xFF00FF, emissiveIntensity: 1.2 });
+                        }
+                    }
+                });
+            }
+            updateHUD();
+        }
+
+        function updateAkimbo(time) { 
+            if (isMachineGunModeActive && time >= machineGunModeEndTime) {
+                isMachineGunModeActive = false;
+                if (playerGunMesh && originalGunMaterial) {
+                    playerGunMesh.traverse((child) => {
+                        if (child.isMesh) {
+                             if (child.material.color.getHex() === 0xAA00AA) { 
+                                child.material = originalGunMaterial.body.clone();
+                            } else if (child.material.color.getHex() === 0xFF00FF) { 
+                                child.material = originalGunMaterial.accent.clone();
+                            }
+                        }
+                    });
+                }
+                updateHUD();
+            }
+        }
+        
+        function createShieldMesh() {
+            const shieldShape = new THREE.Shape();
+            const radius = playerRadius * 1.2;
+            const sides = 6; 
+            shieldShape.moveTo(radius * Math.cos(0), radius * Math.sin(0));
+            for (let i = 1; i <= sides; i++) {
+                shieldShape.lineTo(radius * Math.cos(i * 2 * Math.PI / sides), radius * Math.sin(i * 2 * Math.PI / sides));
+            }
+            const shieldGeometry = new THREE.ShapeGeometry(shieldShape);
+            const shieldMaterial = new THREE.MeshBasicMaterial({
+                color: 0x40C4FF,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.DoubleSide,
+                blending: THREE.AdditiveBlending,
+                wireframe: true 
+            });
+            shieldMesh = new THREE.Mesh(shieldGeometry, shieldMaterial);
+            shieldMesh.position.set(0, 0, -playerRadius * 1.2); 
+            shieldMesh.scale.set(1.5, 2, 1); 
+            shieldMesh.visible = false;
+            camera.add(shieldMesh); 
+        }
+
+        function activateShield() {
+            const now = performance.now();
+            if (isShieldActive || shieldCooldownEndTime > now || shieldUsedThisRound) return;
+
+            isShieldActive = true;
+            shieldHealth = maxShieldHealth;
+            if (shieldMesh) shieldMesh.visible = true;
+            if (shieldActivateSound && shieldActivateSound.loaded) shieldActivateSound.triggerAttackRelease("A4", "0.1");
+            showShieldStatusMessage("SHIELD ACTIVATED!", 1000);
+            updateHUD();
+        }
+        function deactivateShield() {
+            if (!isShieldActive) return;
+            isShieldActive = false;
+            if (shieldMesh) shieldMesh.visible = false;
+            shieldUsedThisRound = true; 
+            shieldCooldownEndTime = performance.now() + shieldCooldown; 
+            updateHUD();
+        }
+
+
+        function updateShield(time) {
+            if (isShieldActive && shieldHealth <= 0) {
+                isShieldActive = false;
+                if (shieldMesh) shieldMesh.visible = false;
+                if (shieldBreakSound && shieldBreakSound.loaded) shieldBreakSound.start();
+                shieldCooldownEndTime = time + shieldCooldown; 
+                shieldUsedThisRound = true; 
+            }
+            if (shieldMesh) { 
+                shieldMesh.material.opacity = isShieldActive ? 0.1 + (shieldHealth / maxShieldHealth) * 0.5 : 0; 
+                if (isShieldActive) { 
+                    shieldMesh.rotation.z += 0.05;
+                }
+            }
+        }
+        
+        function updateSlideJumpInfo(time) {
+            if (slideJumpCooldownEndTime > time) {
+                const remainingCooldown = ((slideJumpCooldownEndTime - time) / 1000).toFixed(1);
+                slideJumpInfoElement.innerHTML = `슬라이딩 점프: 쿨 (${remainingCooldown}초)`;
+            } else {
+                 slideJumpInfoElement.innerHTML = `슬라이딩 점프: 가능`;
+            }
+        }
+
+
+        function onWindowResize() { 
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onKeyDown(event) { 
+            switch (event.code) {
+                case 'ArrowUp': case 'KeyW': moveForward = true; break;
+                case 'ArrowLeft': case 'KeyA': moveLeft = true; break;
+                case 'ArrowDown': case 'KeyS': moveBackward = true; break;
+                case 'ArrowRight': case 'KeyD': moveRight = true; break;
+                case 'KeyR': if(gameRunning) handleReload(); break; 
+                case 'ShiftLeft': 
+                case 'ShiftRight': 
+                    if (gameRunning && !isSprinting && !isSliding) { 
+                        isSprinting = true;
+                        if (sprintWindSound && sprintWindSound.loaded) sprintWindSound.start();
+                    }
+                    break;
+                case 'Space':
+                    if (gameRunning && canPlayerJump) {
+                        if (isSliding && performance.now() > slideJumpCooldownEndTime) { 
+                            canPlayerJump = false;
+                            playerVelocityY = playerJumpForce * 1.2; 
+                            isSlideJumpBoosting = true;
+                            slideJumpBoostEndTime = performance.now() + slideJumpBoostDuration;
+                            
+                            if (slideSound && slideSound.loaded) slideSound.triggerAttackRelease("C3", "0.1s"); 
+                            slideJumpCooldownEndTime = performance.now() + slideJumpCooldownDuration;
+                            isSliding = false; 
+
+                        } else if (!isSliding) { 
+                            canPlayerJump = false;
+                            playerVelocityY = playerJumpForce;
+                            if (jumpSound && jumpSound.loaded) jumpSound.triggerAttackRelease("C5", "8n");
+                        }
+                    }
+                    break;
+                case 'KeyH':
+                    if (gameRunning) activateMachineGunMode(); 
+                    break;
+                case 'KeyC':
+                    if (gameRunning && !isSprinting && canPlayerJump) { 
+                        isSliding = true;
+                        if (slideSound && slideSound.loaded) slideSound.triggerAttackRelease("A2", "0.2s");
+                    }
+                    break;
+            }
+        }
+
+        function onKeyUp(event) { 
+            switch (event.code) {
+                case 'ArrowUp': case 'KeyW': moveForward = false; break;
+                case 'ArrowLeft': case 'KeyA': moveLeft = false; break;
+                case 'ArrowDown': case 'KeyS': moveBackward = false; break;
+                case 'ArrowRight': case 'KeyD': moveRight = false; break;
+                case 'ShiftLeft':
+                case 'ShiftRight':
+                    isSprinting = false;
+                    if (sprintWindSound && sprintWindSound.state === "started") sprintWindSound.stop();
+                    break;
+                case 'KeyC':
+                    isSliding = false;
+                    break;
+            }
+        }
+        
+        function resetGameFull() {
+            currentRound = 1;
+            maxPlayerHealth = 100; 
+            enemiesToKillForNextRound = 20; 
+            totalKilledEnemies = 0;
+            gameStartTime = performance.now(); 
+            machineGunCooldownEndTime = 0; 
+            shieldCooldownEndTime = 0;
+            slideJumpCooldownEndTime = 0;
+            resetGameRound(); 
+        }
+        
+        function resetGameRound() { 
+            playerAmmo = maxPlayerAmmo; 
+            score = totalKilledEnemies; 
+            isReloading = false; 
+            isMachineGunModeActive = false; 
+            isShieldActive = false;
+            shieldUsedThisRound = false; 
+            if(shieldMesh) shieldMesh.visible = false;
+
+
+            tacticalReloadMessageElement.style.display = 'none'; 
+            criticalHitMessageElement.style.display = 'none'; 
+            superCriticalHitMessageElement.style.display = 'none';
+
+
+            updatePlayerDamage(); 
+
+            walls.forEach(wall => scene.remove(wall)); walls = [];
+            enemies.forEach(enemy => scene.remove(enemy)); enemies = [];
+            enemyBullets.forEach(bullet => scene.remove(bullet)); enemyBullets = [];
+            playerBullets.forEach(bullet => scene.remove(bullet)); playerBullets = [];
+            muzzleSmokeParticles.forEach(p => scene.remove(p)); muzzleSmokeParticles = [];
+            impactSparks.forEach(p => scene.remove(p)); impactSparks = [];
+            explosionParticles.forEach(p => scene.remove(p)); explosionParticles = [];
+
+            startNewRound(); 
+
+            const startPos = findStartPosition(); 
+            if (controls && controls.getObject()) {
+                controls.getObject().position.set(startPos.x, playerHeight, startPos.z);
+                controls.getObject().rotation.set(0,0,0); 
+            }
+            if(camera) camera.rotation.set(0,0,0);
+
+            messageTextElement.textContent = "사이버펑크 슈터";
+            startButton.textContent = "게임 시작";
+            if (Tone.Transport.state === "stopped") { 
+                Tone.Transport.start();
+            }
+        }
+
+        function gameClear() {
+            gameRunning = false;
+            controls.unlock();
+            const playTimeSeconds = Math.floor((performance.now() - gameStartTime) / 1000);
+            const minutes = Math.floor(playTimeSeconds / 60);
+            const seconds = playTimeSeconds % 60;
+            messageTextElement.innerHTML = `생존! 모든 라운드 클리어!<br>총 처치 수: ${totalKilledEnemies}<br>플레이 시간: ${minutes}분 ${seconds}초`;
+            startButton.textContent = "다시 도전";
+            messageBoxElement.style.display = 'flex';
+            criticalHitMessageElement.style.display = 'none';
+            superCriticalHitMessageElement.style.display = 'none';
+            tacticalReloadMessageElement.style.display = 'none';
+            if(playerGunMesh) playerGunMesh.visible = false;
+            if(shieldMesh) shieldMesh.visible = false;
+            if (Tone.Transport.state === "started") Tone.Transport.stop(); 
+            if(gameClearSound && gameClearSound.loaded) gameClearSound.triggerAttackRelease("C4", "1n");
+            currentRound = maxRounds + 1; 
+        }
+
+
+        function gameOver(message) { 
+            gameRunning = false;
+            controls.unlock(); 
+            messageTextElement.textContent = message;
+            startButton.textContent = "다시 플레이";
+            messageBoxElement.style.display = 'flex';
+            crosshairElement.style.display = 'none';
+            if(playerGunMesh) playerGunMesh.visible = false;
+            if(shieldMesh) shieldMesh.visible = false;
+            if (Tone.Transport.state === "started") { 
+                 Tone.Transport.stop();
+            }
+        }
+
+        init();
+
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 사이버펑크 슈터</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a1a; 
+            font-family: 'Orbitron', sans-serif; 
+            color: #00ffff; 
+            cursor: crosshair; 
+        }
+        #gameCanvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        .hud {
+            position: absolute;
+            padding: 7px 10px; 
+            background-color: rgba(10, 20, 40, 0.8); 
+            border: 1px solid #00ffff; 
+            border-radius: 3px; 
+            font-size: 12px; 
+            text-shadow: 0 0 3px #00ffff, 0 0 5px #00ffff; 
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5); 
+        }
+        #score { 
+            top: 15px;
+            left: 15px;
+            font-size: 14px; 
+        }
+        #health { 
+            top: 15px;
+            right: 15px;
+            color: #ff4500; 
+            text-shadow: 0 0 3px #ff4500, 0 0 5px #ff4500;
+            border-color: #ff4500;
+            box-shadow: 0 0 8px rgba(255, 69, 0, 0.5);
+            font-size: 14px; 
+        }
+        #ammo { 
+            bottom: 15px;
+            left: 15px;
+        }
+        #playerDamageHUD { 
+            bottom: 45px; 
+            left: 15px;
+        }
+        #roundInfo { 
+            top: 50px; 
+            left: 15px;
+        }
+        #machineGunInfo { /* ID 변경 */
+            top: 95px; /* 간격 조정 */
+            left: 15px;
+            color: #FF00FF; 
+            text-shadow: 0 0 3px #FF00FF, 0 0 5px #FF00FF;
+            border-color: #FF00FF;
+            box-shadow: 0 0 8px rgba(255, 0, 255, 0.5);
+        }
+        #shieldInfo { 
+            top: 150px; /* 간격 조정 */
+            left: 15px;
+            color: #40C4FF; 
+            text-shadow: 0 0 3px #40C4FF, 0 0 5px #40C4FF;
+            border-color: #40C4FF;
+            box-shadow: 0 0 8px rgba(64, 196, 255, 0.5);
+        }
+        #slideJumpInfo { 
+            top: 200px; /* 간격 조정 */
+            left: 15px;
+            color: #FFFF00; 
+            text-shadow: 0 0 3px #FFFF00, 0 0 5px #FFFF00;
+            border-color: #FFFF00;
+            box-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
+        }
+        #elapsedTimeHUD { 
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            background-color: rgba(10, 20, 40, 0.6);
+            border: 1px solid #00ffff;
+        }
+        #messageBox { 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 30px;
+            background-color: rgba(0,0,10,0.9);
+            border: 2px solid #FF00FF;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 24px;
+            z-index: 1000;
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(255,0,255,0.7);
+        }
+        #messageText { 
+            margin-bottom: 20px;
+            color: #00FF00;
+            text-shadow: 0 0 5px #00FF00;
+        }
+        #roundTransitionMessage, #shieldStatusMessage, #machineGunStatusMessage { 
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            color: #00FF00; 
+            text-shadow: 0 0 7px #00FF00, 0 0 10px #00FF00;
+            padding: 15px;
+            background-color: rgba(0,30,0,0.7);
+            border-radius: 5px;
+            border: 1px solid #00FF00;
+            display: none;
+            z-index: 1001;
+        }
+        #tacticalReloadMessage { 
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            color: yellow;
+            text-shadow: 0 0 5px yellow, 0 0 8px yellow;
+            padding: 10px;
+            background-color: rgba(50,50,0,0.7);
+            border-radius: 5px;
+            border: 1px solid yellow;
+            display: none;
+            z-index: 1001;
+        }
+        .damage-indicator { 
+            position: absolute;
+            top: 30%; 
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif; 
+            font-weight: 700; 
+            padding: 15px;
+            display: none;
+            z-index: 1002;
+            text-align: center;
+        }
+        #criticalHitMessage { 
+            font-size: 42px; 
+            color: #FF00FF; 
+            text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF, 0 0 15px #FF00FF, 0 0 20px #FFF, 2px 2px 2px #000; 
+            animation: criticalHitAnimation 0.7s ease-out forwards;
+        }
+        #superCriticalHitMessage { 
+            font-size: 52px; 
+            color: #FFD700; 
+            text-shadow: 0 0 7px #FFD700, 0 0 12px #FFD700, 0 0 18px #FFF, 0 0 25px #FFF, 3px 3px 3px #000;
+            animation: superCriticalHitAnimation 1s ease-out forwards; 
+        }
+
+        @keyframes criticalHitAnimation { 
+            0% { transform: translateX(-50%) scale(0.5) rotate(-5deg); opacity: 0; }
+            70% { transform: translateX(-50%) scale(1.2) rotate(5deg); opacity: 1; }
+            100% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes superCriticalHitAnimation {
+            0% { transform: translateX(-50%) scale(0.6) rotate(0deg); opacity: 0; }
+            25% { transform: translateX(-50%) scale(1.3) rotate(-3deg); opacity: 1; }
+            50% { transform: translateX(-50%) scale(1.1) rotate(3deg); opacity: 1; }
+            75% { transform: translateX(-50%) scale(1.25) rotate(-2deg); opacity: 1; }
+            100% { transform: translateX(-50%) scale(1.15) rotate(0deg); opacity: 1; }
+        }
+
+
+        .button { 
+            padding: 12px 25px;
+            background-color: #8A2BE2; 
+            color: #00ffff;
+            border: 2px solid #00ffff;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 20px;
+            font-family: 'Orbitron', sans-serif;
+            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 10px rgba(0,255,255,0.5);
+            text-transform: uppercase;
+        }
+        .button:hover {
+            background-color: #9932CC;
+            border-color: #FFF;
+            box-shadow: 0 0 15px rgba(255,255,255,0.8);
+        }
+        .button:active {
+            transform: translateY(2px);
+            box-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+        #crosshair { 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px; 
+            height: 20px; 
+            background-color: #00ffff;
+            transform: translate(-50%, -50%);
+            border-radius: 1px;
+            box-shadow: 0 0 5px #00ffff;
+            z-index: 999;
+            display: none; 
+        }
+        #crosshair::before { 
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 4px;
+            background-color: #00ffff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 1px;
+            box-shadow: 0 0 5px #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="score" class="hud">점수: 0</div>
+    <div id="health" class="hud">체력: 100 / 100</div>
+    <div id="ammo" class="hud">탄약: 30 / 30</div>
+    <div id="playerDamageHUD" class="hud">데미지: 0</div>
+    <div id="roundInfo" class="hud">라운드: 1<br>처치 목표: 20</div>
+    <div id="machineGunInfo" class="hud">머신건: 준비<br>탄약: -</div> {/* HTML ID 변경 */}
+    <div id="shieldInfo" class="hud">방패: 준비<br>내구도: -</div>
+    <div id="slideJumpInfo" class="hud">슬라이딩 점프: 가능</div>
+    <div id="elapsedTimeHUD" class="hud">시간: 00:00</div>
+    <div id="crosshair"></div>
+    <div id="tacticalReloadMessage">전술 재장전!</div>
+    <div id="criticalHitMessage" class="damage-indicator">CRITICAL!</div>
+    <div id="superCriticalHitMessage" class="damage-indicator">SUPER CRITICAL!</div>
+    <div id="roundTransitionMessage"></div>
+    <div id="shieldStatusMessage"></div> 
+    <div id="akimboStatusMessage"></div> 
+
+
+    <div id="messageBox">
+        <div id="messageText">사이버펑크 슈터</div>
+        <button id="startButton" class="button">게임 시작</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script> 
+        // --- 전역 변수 ---
+        let scene, camera, renderer, controls;
+        let playerBoundingBox;
+        const playerHeight = 1.8; 
+        const playerRadius = 0.4; 
+        let walls = []; 
+        let enemies = []; 
+        let enemyBullets = []; 
+        let playerBullets = []; 
+        let muzzleSmokeParticles = []; 
+        let impactSparks = []; 
+        let explosionParticles = []; 
+        
+        let gameRunning = false; 
+        let score = 0; 
+        let maxPlayerHealth = 100; 
+        let playerHealth = maxPlayerHealth; 
+        
+        const maxPlayerAmmo = 30; 
+        let playerAmmo = maxPlayerAmmo; 
+        let isReloading = false; 
+        let isSprinting = false; 
+
+        const moveSpeed = 5.0; 
+        const sprintMultiplier = 1.3; 
+        let currentMoveSpeed = moveSpeed;
+        const defaultFOV = 75; 
+        const sprintFOV = 80; 
+
+        let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false; 
+        let canPlayerJump = true; 
+        let playerVelocityY = 0; 
+        const playerJumpForce = 7; 
+        const gravity = -18; 
+
+        let isSliding = false;
+        const slideHeight = playerHeight * 0.6; 
+        const slideFOV = 80;
+        const slideJumpBoost = 5; 
+        let slideJumpCooldownEndTime = 0;
+        const slideJumpCooldownDuration = 1500; 
+        let isSlideJumpBoosting = false; 
+        let slideJumpBoostEndTime = 0;
+        const slideJumpBoostDuration = 5000; 
+
+
+        let currentPlayerDamage = 50; 
+        let lastDamageUpdateTime = 0;
+        const damageUpdateInterval = 3000; 
+
+        let playerGunMesh;
+        let gunTip; 
+        let originalGunMaterial; 
+
+        // 머신건 모드 관련 변수
+        let isMachineGunModeActive = false;
+        let machineGunModeEndTime = 0;
+        const machineGunModeDuration = 15000; 
+        const machineGunTotalMaxAmmo = 120; 
+        let machineGunCurrentAmmo = 0; 
+        let machineGunCooldownEndTime = 0;
+        const machineGunCooldown = 180000; 
+        let isMouseDown = false; 
+        let lastMachineGunShootTime = 0;
+        const machineGunShootInterval = 100; 
+        // let cameraShakeIntensity = 0.01; // 머신건 카메라 흔들림 강도 -> 제거됨
+        let originalCameraPosition = new THREE.Vector3(); 
+
+
+        let isShieldActive = false;
+        let shieldHealth = 0;
+        const maxShieldHealth = 15; 
+        let shieldCooldownEndTime = 0;
+        const shieldCooldown = 15000; 
+        let shieldUsedThisRound = false; 
+        let shieldMesh;
+
+
+        let shootSound, enemyHitSound, enemyDieSound, playerHurtSound, enemyShootSound, 
+            ricochetSound, reloadSound, sprintWindSound, roundSuccessSound, gameClearSound, 
+            jumpSound, landSound, machineGunActivateSound, explosionSound, shieldActivateSound, shieldBreakSound, slideSound, cyberpunkSynth; 
+        let audioContextStarted = false; 
+
+        let currentRound = 1;
+        const maxRounds = 5;
+        let enemiesToKillForNextRound = 20;
+        let killedEnemiesThisRound = 0;
+        let totalKilledEnemies = 0;
+        let gameStartTime = 0;
+        let baseEnemySpeed = 1.2; 
+        let baseEnemyBulletSpeed = 15;
+
+
+        const scoreElement = document.getElementById('score');
+        const healthElement = document.getElementById('health');
+        const ammoElement = document.getElementById('ammo');
+        const playerDamageHUDElement = document.getElementById('playerDamageHUD');
+        const roundInfoElement = document.getElementById('roundInfo');
+        const machineGunInfoElement = document.getElementById('machineGunInfo'); // JS 변수명 변경
+        const shieldInfoElement = document.getElementById('shieldInfo'); 
+        const slideJumpInfoElement = document.getElementById('slideJumpInfo');
+        const elapsedTimeHUDElement = document.getElementById('elapsedTimeHUD');
+        const messageBoxElement = document.getElementById('messageBox');
+        const messageTextElement = document.getElementById('messageText');
+        const roundTransitionMessageElement = document.getElementById('roundTransitionMessage');
+        const shieldStatusMessageElement = document.getElementById('shieldStatusMessage'); 
+        const akimboStatusMessageElement = document.getElementById('akimboStatusMessage');
+        const tacticalReloadMessageElement = document.getElementById('tacticalReloadMessage');
+        const criticalHitMessageElement = document.getElementById('criticalHitMessage'); 
+        const superCriticalHitMessageElement = document.getElementById('superCriticalHitMessage');
+        const startButton = document.getElementById('startButton');
+        const crosshairElement = document.getElementById('crosshair');
+        const gameCanvas = document.getElementById('gameCanvas');
+
+        let initialMapLayout = [ 
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1], 
+            [1,0,1,0,1,0,1,1,1,0,1,0,1,0,1],
+            [1,0,1,0,0,0,0,0,0,0,0,0,1,0,1],
+            [1,0,1,1,1,1,0,1,1,1,1,0,1,0,1],
+            [1,0,0,0,0,1,0,0,0,0,1,0,0,0,1],
+            [1,1,1,0,1,1,1,0,1,0,1,1,1,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        ];
+        initialMapLayout = initialMapLayout.map(row => 
+            row.map(cell => (cell === 2 || cell === 3 ? 0 : cell))
+        );
+
+        let currentMapData = []; 
+
+        const wallSize = 4; 
+        const ENEMY_BULLET_SPEED_BASE = 15; 
+        const PLAYER_BULLET_SPEED = 50; 
+
+        // --- 초기화 함수 ---
+        function init() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a2a); 
+            scene.fog = new THREE.Fog(0x0a0a2a, 15, 65); 
+
+            camera = new THREE.PerspectiveCamera(defaultFOV, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+            renderer = new THREE.WebGLRenderer({ canvas: gameCanvas, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true; 
+            renderer.toneMapping = THREE.ACESFilmicToneMapping; 
+            renderer.toneMappingExposure = 1.0;
+
+
+            const ambientLight = new THREE.AmbientLight(0x404080, 0.6); 
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0x8888ff, 0.4); 
+            directionalLight.position.set(30, 50, 20);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048; 
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+
+            const neonLight1 = new THREE.PointLight(0x00ffff, 0.8, 40, 2); 
+            neonLight1.position.set(wallSize * 2.5, wallSize * 0.8, wallSize * 3.5);
+            scene.add(neonLight1);
+            const neonLight2 = new THREE.PointLight(0xff00ff, 0.8, 40, 2); 
+            neonLight2.position.set(-wallSize * 3.5, wallSize * 0.8, -wallSize * 2.5);
+            scene.add(neonLight2);
+            const neonLight3 = new THREE.RectAreaLight(0x00ff00, 5, wallSize*2, wallSize*0.2); 
+            neonLight3.position.set(0, wallSize * 1.4, -wallSize * 4);
+            neonLight3.lookAt(0,0, -wallSize*4);
+            scene.add(neonLight3);
+
+
+            controls = new THREE.PointerLockControls(camera, document.body); 
+            scene.add(controls.getObject()); 
+            controls.getObject().position.y = playerHeight; 
+
+            controls.addEventListener('lock', () => { 
+                messageBoxElement.style.display = 'none';
+                crosshairElement.style.display = 'block';
+                if (playerGunMesh) playerGunMesh.visible = true; 
+                if (!gameRunning && (!startButton.textContent.includes("도전") && !startButton.textContent.includes("플레이"))) { 
+                    startGameFlow();
+                } else if (startButton.textContent.includes("계속하기")) { 
+                     gameRunning = true;
+                     if (Tone.Transport.state !== "started") Tone.Transport.start();
+                }
+            });
+            controls.addEventListener('unlock', () => { 
+                if (playerHealth > 0 && currentRound <= maxRounds) { 
+                    messageTextElement.textContent = "일시정지됨. 클릭하여 계속하기.";
+                    startButton.textContent = "계속하기";
+                    messageBoxElement.style.display = 'flex';
+                }
+                crosshairElement.style.display = 'none';
+                if (playerGunMesh) playerGunMesh.visible = false; 
+                if (shieldMesh) shieldMesh.visible = false; 
+                gameRunning = false; 
+                isMouseDown = false; 
+                if (Tone.Transport.state === "started") Tone.Transport.pause(); 
+            });
+
+            playerBoundingBox = new THREE.Box3();
+            generateMapForRound(currentRound); 
+            const startPos = findStartPosition();
+            controls.getObject().position.set(startPos.x, playerHeight, startPos.z);
+            originalCameraPosition.copy(camera.position); 
+
+
+            createPlayerGun(); 
+            createShieldMesh(); 
+            updateHUD(); 
+            lastDamageUpdateTime = performance.now(); 
+            updatePlayerDamage(); 
+
+            window.addEventListener('resize', onWindowResize, false); 
+            document.addEventListener('keydown', onKeyDown, false); 
+            document.addEventListener('keyup', onKeyUp, false); 
+            
+            window.addEventListener('mousedown', (event) => {
+                if (!controls.isLocked) {
+                    controls.lock();
+                } else if (gameRunning) {
+                    if (event.button === 0) { 
+                        isMouseDown = true;
+                        if (!isMachineGunModeActive) shoot(); 
+                    } else if (event.button === 2) { 
+                        activateShield();
+                    }
+                }
+            });
+             window.addEventListener('mouseup', (event) => { 
+                if (event.button === 0) {
+                    isMouseDown = false;
+                }
+                if (gameRunning && event.button === 2) {
+                    deactivateShield();
+                }
+            });
+            gameCanvas.addEventListener('contextmenu', (event) => event.preventDefault());
+
+
+            startButton.addEventListener('click', () => { 
+                if (!audioContextStarted) { 
+                     initAudio().then(proceedWithStartButton);
+                } else { 
+                    proceedWithStartButton();
+                }
+            });
+
+            messageTextElement.textContent = "사이버펑크 슈터";
+            messageBoxElement.style.display = 'flex';
+            messageBoxElement.style.flexDirection = 'column';
+            messageBoxElement.style.alignItems = 'center';
+
+            renderer.render(scene, camera);
+        }
+
+        function findStartPosition() {
+            for (let r = 0; r < currentMapData.length; r++) { 
+                for (let c = 0; c < currentMapData[r].length; c++) {
+                    if (currentMapData[r][c] === 0) { 
+                        return {
+                            x: (c - currentMapData[r].length / 2) * wallSize + wallSize / 2,
+                            z: (r - currentMapData.length / 2) * wallSize + wallSize / 2
+                        };
+                    }
+                }
+            }
+            console.warn("유효한 시작 위치(0)를 찾지 못했습니다. 중앙에 배치합니다.");
+            return { x: 0, z: 0 }; 
+        }
+
+        async function initAudio() {
+            if (typeof Tone !== 'undefined' && Tone.context.state !== 'running') {
+                await Tone.start(); 
+                audioContextStarted = true;
+                console.log("오디오 컨텍스트 시작됨.");
+            }
+
+            if (audioContextStarted) {
+                shootSound = new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 }, volume: -15 }).toDestination();
+                enemyHitSound = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -18 }).toDestination();
+                enemyDieSound = new Tone.NoiseSynth({ noise: {type: "brown"}, envelope: {attack: 0.01, decay: 0.3, sustain: 0.1, release: 0.2}, volume: -12}).toDestination(); 
+                explosionSound = new Tone.NoiseSynth({ noise: {type: "pink", playbackRate: 0.5}, envelope: {attack: 0.005, decay: 0.4, sustain: 0.01, release: 0.3}, volume: -10}).toDestination(); 
+                playerHurtSound = new Tone.NoiseSynth({ noise: { type: 'brown' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0 }, volume: -12 }).toDestination();
+                enemyShootSound = new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.002, decay: 0.06, sustain: 0 }, volume: -20 }).toDestination();
+                ricochetSound = new Tone.MetalSynth({ frequency: 100, envelope: { attack: 0.001, decay: 0.1, release: 0.05 }, harmonicity: 3.1, modulationIndex: 16, resonance: 2000, octaves: 0.5, volume: -18 }).toDestination();
+                reloadSound = new Tone.MetalSynth({ frequency: 60, envelope: { attack: 0.005, decay: 0.15, release: 0.05 }, harmonicity: 5.1, modulationIndex: 32, resonance: 1000, octaves: 1.5, volume: -12 }).toDestination();
+                sprintWindSound = new Tone.NoiseSynth({ noise: { type: 'white', playbackRate: 2 }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -28 }).toDestination();
+                roundSuccessSound = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 }, volume: -12 }).toDestination();
+                gameClearSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.1, decay: 0.5, sustain: 0.3, release: 0.5 }, volume: -10 }).toDestination();
+                jumpSound = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0, release: 0.1 }, volume: -18 }).toDestination();
+                landSound = new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 2, envelope: { attack: 0.001, decay: 0.1, sustain: 0 }, volume: -20 }).toDestination();
+                machineGunActivateSound = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.1 }, volume: -15 }).toDestination();
+                shieldActivateSound = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -15 }).toDestination();
+                shieldBreakSound = new Tone.NoiseSynth({ noise: { type: "white" }, envelope: { attack: 0.001, decay: 0.2, sustain: 0 }, volume: -12 }).toDestination();
+                slideSound = new Tone.NoiseSynth({ noise: { type: 'white', playbackRate: 0.8 }, envelope: { attack: 0.005, decay: 0.15, sustain: 0.05, release: 0.1 }, volume: -22 }).toDestination();
+
+                cyberpunkSynth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: "fatsawtooth", count: 3, spread: 30 },
+                    envelope: { attack: 0.01, decay: 1.5, sustain: 0.3, release: 1 },
+                    volume: -18, 
+                }).toDestination();
+                cyberpunkSynth.set({
+                    "filter" : { "type" : "lowpass", "frequency": 1500, "Q": 2 },
+                    "filterEnvelope" : { "attack" : 0.5, "decay" : 1, "sustain" : 0.1, "release" : 1.5, "baseFrequency" : 300, "octaves" : 3 }
+                });
+                const cyberpunkNotes = [
+                    ["C2", "G2", "A#2"], null, ["F2", "C3"], null,
+                    ["G#2", "D#3"], null, ["D2", "A2"], null
+                ];
+                new Tone.Sequence((time, noteGroup) => {
+                    if (noteGroup) cyberpunkSynth.triggerAttackRelease(noteGroup, "2n", time);
+                }, cyberpunkNotes, "1n").start(0);
+                Tone.Transport.bpm.value = 90; 
+                
+                try {
+                    await Tone.loaded(); 
+                    console.log("모든 사운드 로드 완료");
+                } catch (error) {
+                    console.error("사운드 로딩 중 오류 발생:", error);
+                }
+            } else {
+                console.warn("Tone.js가 로드되지 않았거나 오디오 컨텍스트 시작에 실패했습니다. 사운드 효과가 비활성화됩니다.");
+            }
+        }
+        
+        function proceedWithStartButton() {
+            if ((playerHealth <= 0 || currentRound > maxRounds) && (startButton.textContent.includes("도전") || startButton.textContent.includes("플레이") )) { 
+                resetGameFull(); 
+            }
+            controls.lock(); 
+        }
+
+        function startGameFlow() {
+            if (!gameStartTime) gameStartTime = performance.now(); 
+            if (Tone.Transport.state !== "started") { 
+                Tone.Transport.start();
+            }
+            gameRunning = true;
+            lastDamageUpdateTime = performance.now(); 
+            updatePlayerDamage(); 
+            startNewRound(); 
+            animate(); 
+        }
+
+        function startNewRound() {
+            if (currentRound > 1) {
+                maxPlayerHealth *= 2;
+            } else {
+                maxPlayerHealth = 100;
+            }
+            playerHealth = maxPlayerHealth; 
+
+            isReloading = false; 
+            machineGunCooldownEndTime = 0; 
+            isMachineGunModeActive = false; 
+            shieldCooldownEndTime = 0; 
+            shieldUsedThisRound = false; 
+            isShieldActive = false;
+            if (shieldMesh) shieldMesh.visible = false;
+
+
+            walls.forEach(wall => scene.remove(wall));
+            walls = [];
+            enemies.forEach(enemy => scene.remove(enemy));
+            enemies = [];
+            enemyBullets.forEach(bullet => scene.remove(bullet));
+            enemyBullets = [];
+            playerBullets.forEach(bullet => scene.remove(bullet));
+            playerBullets = [];
+            muzzleSmokeParticles.forEach(p => scene.remove(p));
+            muzzleSmokeParticles = [];
+            impactSparks.forEach(p => scene.remove(p));
+            impactSparks = [];
+            explosionParticles.forEach(p => scene.remove(p));
+            explosionParticles = [];
+
+
+            generateMapForRound(currentRound); 
+            createEnvironmentFromMapData(); 
+
+            killedEnemiesThisRound = 0;
+            if (currentRound > 1) {
+                 enemiesToKillForNextRound = Math.max(enemiesToKillForNextRound + 2, Math.floor(enemiesToKillForNextRound * 1.6)); 
+            } else {
+                enemiesToKillForNextRound = 20; 
+            }
+            
+            const speedMultiplier = 1 + (currentRound - 1) * 0.1; 
+            const bulletSpeedMultiplier = 1 + (currentRound - 1) * 0.25; 
+            baseEnemySpeed = moveSpeed; 
+            baseEnemyBulletSpeed = ENEMY_BULLET_SPEED_BASE * bulletSpeedMultiplier;
+
+            spawnEnemiesForRound(enemiesToKillForNextRound + Math.floor(Math.random() * 11)); 
+            updateHUD();
+        }
+        
+        function generateMapForRound(round) {
+            currentMapData = JSON.parse(JSON.stringify(initialMapLayout)); 
+
+            // 벽 변경 로직: 스폰 가능 지역(0)은 유지하면서 벽을 추가/제거
+            const changes = Math.min(round * 3, 15); 
+            let attempts = 0; 
+            for (let i = 0; i < changes && attempts < 100; attempts++) {
+                const r = Math.floor(Math.random() * (currentMapData.length - 2)) + 1; 
+                const c = Math.floor(Math.random() * (currentMapData[0].length - 2)) + 1;
+                if (currentMapData[r][c] !== 0) { // 이미 0으로 설정된 스폰 가능 지역은 건드리지 않음
+                    currentMapData[r][c] = Math.random() < 0.4 ? 1 : 0; 
+                    i++; 
+                }
+            }
+        }
+
+        function createEnvironmentFromMapData() {
+            const floorGeometry = new THREE.PlaneGeometry(200, 200);
+            const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a3a, roughness: 0.7, metalness: 0.3 }); 
+            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.rotation.x = -Math.PI / 2; 
+            floor.receiveShadow = true; 
+            scene.add(floor);
+
+            const ceilingMaterial = new THREE.MeshStandardMaterial({ color: 0x050515, roughness: 0.9 }); 
+            const ceiling = new THREE.Mesh(floorGeometry, ceilingMaterial);
+            ceiling.rotation.x = Math.PI / 2;
+            ceiling.position.y = wallSize * 1.5; 
+            scene.add(ceiling);
+
+            const wallGeometry = new THREE.BoxGeometry(wallSize, wallSize * 1.5, wallSize); 
+            const wallTexture = createCyberWallTexture(); 
+            const wallMaterial = new THREE.MeshStandardMaterial({ map: wallTexture, roughness: 0.6, metalness: 0.4 }); 
+
+            for (let r = 0; r < currentMapData.length; r++) {
+                for (let c = 0; c < currentMapData[r].length; c++) {
+                    if (currentMapData[r][c] === 1) { 
+                        const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+                        wall.position.x = (c - currentMapData[r].length / 2 + 0.5) * wallSize;
+                        wall.position.y = (wallSize * 1.5) / 2; 
+                        wall.position.z = (r - currentMapData.length / 2 + 0.5) * wallSize;
+                        wall.castShadow = true;
+                        wall.receiveShadow = true;
+                        wall.userData.boundingBox = new THREE.Box3().setFromObject(wall); 
+                        walls.push(wall);
+                        scene.add(wall);
+                    }
+                }
+            }
+        }
+        
+        function spawnEnemiesForRound(count) {
+            const spawnPoints = getValidSpawnPoints(count); 
+            const numToSpawn = Math.min(count, spawnPoints.length); 
+            console.log(`Spawning ${numToSpawn} enemies for round ${currentRound}. Target: ${enemiesToKillForNextRound}, Available points: ${spawnPoints.length}`);
+            for (let i = 0; i < numToSpawn; i++) {
+                const pointIndex = Math.floor(Math.random() * spawnPoints.length);
+                const point = spawnPoints.splice(pointIndex, 1)[0]; 
+                spawnSingleEnemy(point.x, point.z);
+            }
+        }
+
+        function getValidSpawnPoints(neededPoints) {
+            const points = [];
+            const playerPos = controls.getObject().position;
+            for (let r = 0; r < currentMapData.length; r++) {
+                for (let c = 0; c < currentMapData[r].length; c++) {
+                    if (currentMapData[r][c] === 0) { 
+                        const x = (c - currentMapData[r].length / 2 + 0.5) * wallSize;
+                        const z = (r - currentMapData.length / 2 + 0.5) * wallSize;
+                        
+                        let overlapsWithWall = false;
+                        const enemyRadius = playerRadius * 0.7;
+                        const enemyHeight = playerRadius * 2.2;
+                        const tempEnemyPos = new THREE.Vector3(x, enemyHeight / 2, z); 
+                        const tempEnemyCollider = new THREE.Box3().setFromCenterAndSize(
+                            tempEnemyPos,
+                            new THREE.Vector3(enemyRadius * 2, enemyHeight, enemyRadius * 2)
+                        );
+                        for (const wall of walls) { 
+                            if (tempEnemyCollider.intersectsBox(wall.userData.boundingBox)) {
+                                overlapsWithWall = true;
+                                break;
+                            }
+                        }
+
+                        if (!overlapsWithWall && playerPos.distanceTo(new THREE.Vector3(x, playerHeight, z)) > wallSize * 2.5) { 
+                            points.push({ x, z });
+                        }
+                    }
+                }
+            }
+            if (points.length < neededPoints && points.length > 0) { 
+                console.warn(`요청한 스폰 포인트(${neededPoints})보다 적은 수(${points.length})의 유효 지점만 찾았습니다.`);
+                return points;
+            } else if (points.length === 0) { 
+                console.error("유효한 스폰 지점을 전혀 찾을 수 없습니다! 맵 데이터 또는 로직 확인 필요.");
+                for(let i=0; i<neededPoints; i++){ 
+                    points.push({x: (Math.random()-0.5) * wallSize * (currentMapData[0].length/2 - 2), z: (Math.random()-0.5) * wallSize * (currentMapData.length/2 - 2)});
+                }
+            }
+            return points;
+        }
+
+
+        function createPlayerGun() {
+            playerGunMesh = new THREE.Group();
+            const gunBodyMaterial = new THREE.MeshStandardMaterial({ color: 0x222233, metalness: 0.7, roughness: 0.3, emissive: 0x111122, emissiveIntensity: 0.5 });
+            const gunAccentMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff, metalness: 0.8, roughness: 0.2, emissive: 0x00ffff, emissiveIntensity: 0.8 });
+
+
+            const barrelGeometry = new THREE.CylinderGeometry(0.03, 0.03, 0.6, 16);
+            const barrel = new THREE.Mesh(barrelGeometry, gunBodyMaterial);
+            barrel.position.set(0, -0.05, -0.4);
+            barrel.rotation.x = Math.PI / 2;
+            playerGunMesh.add(barrel);
+
+            gunTip = new THREE.Object3D();
+            gunTip.position.set(0, -0.05, -0.7); 
+            playerGunMesh.add(gunTip);
+
+            const bodyGeometry = new THREE.BoxGeometry(0.1, 0.12, 0.4);
+            const body = new THREE.Mesh(bodyGeometry, gunBodyMaterial);
+            body.position.set(0, -0.1, 0);
+            playerGunMesh.add(body);
+
+            const stockGeometry = new THREE.BoxGeometry(0.08, 0.1, 0.3);
+            const stock = new THREE.Mesh(stockGeometry, gunBodyMaterial);
+            stock.position.set(0, -0.08, 0.3);
+            playerGunMesh.add(stock);
+            
+            const gripGeometry = new THREE.BoxGeometry(0.06, 0.2, 0.06);
+            const grip = new THREE.Mesh(gripGeometry, new THREE.MeshStandardMaterial({color: 0x111118, metalness:0.4, roughness: 0.6}));
+            grip.position.set(0, -0.2, -0.05);
+            grip.rotation.x = -0.2; 
+            playerGunMesh.add(grip);
+
+            const lineGeo = new THREE.BoxGeometry(0.01, 0.01, 0.35);
+            const line1 = new THREE.Mesh(lineGeo, gunAccentMaterial);
+            line1.position.set(0.04, -0.05, -0.1);
+            playerGunMesh.add(line1);
+            const line2 = new THREE.Mesh(lineGeo, gunAccentMaterial);
+            line2.position.set(-0.04, -0.05, -0.1);
+            playerGunMesh.add(line2);
+
+            originalGunMaterial = { 
+                body: gunBodyMaterial.clone(),
+                accent: gunAccentMaterial.clone()
+            };
+
+
+            playerGunMesh.position.set(0.25, -0.3, -0.7); 
+            playerGunMesh.rotation.y = -0.1; 
+            playerGunMesh.visible = false; 
+            camera.add(playerGunMesh); 
+        }
+        
+        function createCyberWallTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 128; 
+            canvas.height = 128;
+            const context = canvas.getContext('2d');
+            context.fillStyle = '#1a1a2a'; 
+            context.fillRect(0, 0, 128, 128);
+
+            context.strokeStyle = '#0055aa'; 
+            context.lineWidth = 1;
+            for (let i = 0; i < 8; i++) {
+                context.beginPath();
+                context.moveTo(Math.random() * 128, Math.random() * 128);
+                context.lineTo(Math.random() * 128, Math.random() * 128);
+                context.stroke();
+                if (Math.random() < 0.5) { 
+                    context.lineTo(Math.random() * 128, Math.random() * 128);
+                    context.stroke();
+                }
+            }
+            context.fillStyle = '#00aaff';
+            for (let i = 0; i < 30; i++) {
+                context.fillRect(Math.random() * 128, Math.random() * 128, 2, 2);
+            }
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(1, 1); 
+            return texture;
+        }
+        
+        function spawnSingleEnemy(x, z) {
+            const enemyRadius = playerRadius * 0.7; 
+            const enemyHeight = playerRadius * 2.2; 
+            let enemyGeometry;
+            let enemyColor = 0xff3333; 
+            let enemyEmissive = 0x550000;
+
+            switch (currentRound) {
+                case 1:
+                    enemyGeometry = new THREE.CylinderGeometry(enemyRadius, enemyRadius, enemyHeight, 12);
+                    enemyColor = 0xff3333; enemyEmissive = 0x550000; 
+                    break;
+                case 2:
+                    enemyGeometry = new THREE.BoxGeometry(enemyRadius * 1.5, enemyHeight, enemyRadius * 1.5);
+                    enemyColor = 0x33ff33; enemyEmissive = 0x005500; 
+                    break;
+                case 3:
+                    enemyGeometry = new THREE.SphereGeometry(enemyRadius * 1.2, 16, 12);
+                    enemyColor = 0x3333ff; enemyEmissive = 0x000055; 
+                    break;
+                case 4:
+                    enemyGeometry = new THREE.ConeGeometry(enemyRadius, enemyHeight, 16);
+                    enemyColor = 0xffff33; enemyEmissive = 0x555500; 
+                    break;
+                case 5:
+                    enemyGeometry = new THREE.TorusKnotGeometry(enemyRadius * 0.8, enemyRadius * 0.3, 64, 8);
+                    enemyColor = 0xff00ff; enemyEmissive = 0x550055; 
+                    break;
+                default:
+                    enemyGeometry = new THREE.CylinderGeometry(enemyRadius, enemyRadius, enemyHeight, 12);
+            }
+
+            const enemyMaterial = new THREE.MeshStandardMaterial({ 
+                color: enemyColor, 
+                emissive: enemyEmissive, 
+                roughness: 0.4, 
+                metalness: 0.3 
+            }); 
+
+            const enemy = new THREE.Mesh(enemyGeometry, enemyMaterial);
+            enemy.position.set(x, enemyHeight / 2, z); 
+            enemy.castShadow = true;
+            enemy.userData = { 
+                health: 80, 
+                speed: moveSpeed, 
+                originalSpeed: moveSpeed,
+                boundingBox: new THREE.Box3(), 
+                id: `enemy_${Math.random().toString(36).substring(2,15)}`, 
+                shootCooldown: Math.random() * 1 + 1.5, 
+                shootInterval: Math.max(1.0, (3.5 - currentRound * 0.2)), 
+                canSeePlayer: false,
+                targetPosition: new THREE.Vector3(x, enemyHeight / 2, z), 
+                isMovingToTarget: false,
+                moveTimer: 0,
+                jumpCooldown: Math.random() * 3 + 2, 
+                isJumping: false,
+                velocityY: 0,
+                originalY: enemyHeight / 2,
+            };
+            enemy.userData.boundingBox.setFromObject(enemy); 
+            enemies.push(enemy);
+            scene.add(enemy);
+        }
+        
+        function updatePlayerDamage() {
+            const rand = Math.random() * 100;
+            if (rand < 70) { 
+                currentPlayerDamage = Math.floor(Math.random() * 49) + 1; 
+            } else if (rand < 90) { 
+                currentPlayerDamage = Math.floor(Math.random() * 10) + 50; 
+            } else { 
+                currentPlayerDamage = Math.floor(Math.random() * 11) + 60; 
+            }
+            playerDamageHUDElement.textContent = `데미지: ${currentPlayerDamage}`;
+        }
+
+        let prevTime = performance.now(); 
+        function animate() {
+            if (!gameRunning && playerHealth > 0 && !startButton.textContent.includes("도전") && !startButton.textContent.includes("플레이")) { 
+                requestAnimationFrame(animate); 
+                renderer.render(scene, camera); 
+                return;
+            }
+             if (!gameRunning && (playerHealth <= 0 || currentRound > maxRounds)) { 
+                return;
+            }
+
+
+            requestAnimationFrame(animate); 
+
+            const time = performance.now();
+            const delta = (time - prevTime) / 1000; 
+
+            if (time - lastDamageUpdateTime > damageUpdateInterval) {
+                updatePlayerDamage();
+                lastDamageUpdateTime = time;
+            }
+
+            applyPlayerGravity(delta);
+
+            currentMoveSpeed = isSprinting ? moveSpeed * sprintMultiplier : moveSpeed;
+            if (isMachineGunModeActive) {
+                currentMoveSpeed *= 0.7; 
+            }
+            if (isSlideJumpBoosting && time < slideJumpBoostEndTime) {
+                currentMoveSpeed = moveSpeed + slideJumpBoost;
+            } else if (isSlideJumpBoosting && time >= slideJumpBoostEndTime) {
+                isSlideJumpBoosting = false;
+            }
+
+
+            let currentFOV = isSliding ? slideFOV : (isSprinting ? sprintFOV : defaultFOV);
+            camera.fov += (currentFOV - camera.fov) * 0.1; 
+            camera.updateProjectionMatrix();
+
+
+            const playerObject = controls.getObject(); 
+            
+            let intendedDeltaX = 0;
+            let intendedDeltaZ = 0;
+            const camDirection = new THREE.Vector3();
+            camera.getWorldDirection(camDirection);
+            
+            if (!isSliding) {
+                camDirection.y = 0;
+            }
+            camDirection.normalize();
+
+
+            const rightDirection = new THREE.Vector3();
+            rightDirection.crossVectors(camDirection, camera.up); 
+
+            if (moveForward) {
+                intendedDeltaX += camDirection.x * currentMoveSpeed * delta;
+                intendedDeltaZ += camDirection.z * currentMoveSpeed * delta;
+            }
+            if (moveBackward) {
+                intendedDeltaX -= camDirection.x * currentMoveSpeed * delta;
+                intendedDeltaZ -= camDirection.z * currentMoveSpeed * delta;
+            }
+            if (moveLeft) { 
+                intendedDeltaX -= rightDirection.x * currentMoveSpeed * delta; 
+                intendedDeltaZ -= rightDirection.z * currentMoveSpeed * delta;
+            }
+            if (moveRight) { 
+                intendedDeltaX += rightDirection.x * currentMoveSpeed * delta;
+                intendedDeltaZ += rightDirection.z * currentMoveSpeed * delta;
+            }
+            
+            const tempPlayerPos = playerObject.position.clone();
+            const prevPlayerPos = playerObject.position.clone(); 
+
+
+            tempPlayerPos.x += intendedDeltaX;
+            if (!checkWallCollision(tempPlayerPos)) {
+                playerObject.position.x = tempPlayerPos.x;
+            } else { 
+                playerObject.position.x = prevPlayerPos.x + Math.sign(intendedDeltaX) * 0.01; 
+            }
+            tempPlayerPos.x = playerObject.position.x; 
+
+            tempPlayerPos.z += intendedDeltaZ;
+            if (!checkWallCollision(tempPlayerPos)) {
+                playerObject.position.z = tempPlayerPos.z;
+            } else { 
+                 playerObject.position.z = prevPlayerPos.z + Math.sign(intendedDeltaZ) * 0.01; 
+            }
+            
+            playerBoundingBox.setFromCenterAndSize(
+                playerObject.position,
+                new THREE.Vector3(playerRadius * 2, playerHeight, playerRadius * 2)
+            );
+
+            if (isMouseDown && isMachineGunModeActive && !isReloading && gameRunning) {
+                if (time - lastMachineGunShootTime > machineGunShootInterval) {
+                    shoot(); 
+                    lastMachineGunShootTime = time;
+                }
+            }
+            
+            // 머신건 모드 시 카메라 흔들림 제거 (사용자 요청)
+
+
+            updateEnemies(delta, time); 
+            updateEnemyBullets(delta);
+            updatePlayerBullets(delta); 
+            updateMuzzleSmoke(delta); 
+            updateImpactSparks(delta); 
+            updateExplosions(delta); 
+            updateAkimbo(time); 
+            updateShield(time); 
+            updateElapsedTime(time); 
+            updateSlideJumpInfo(time);
+
+            prevTime = time;
+            renderer.render(scene, camera);
+        }
+
+        function applyPlayerGravity(delta) {
+            const playerObject = controls.getObject();
+            const targetPlayerY = isSliding ? slideHeight : playerHeight;
+
+            if (!canPlayerJump || playerObject.position.y > targetPlayerY) { 
+                playerVelocityY += gravity * delta;
+                playerObject.position.y += playerVelocityY * delta;
+
+                if (playerObject.position.y <= targetPlayerY) { 
+                    playerObject.position.y = targetPlayerY;
+                    playerVelocityY = 0;
+                    if (!isSliding) { 
+                         canPlayerJump = true;
+                         if (landSound && landSound.loaded) landSound.triggerAttackRelease("C2", "8n");
+                    }
+                }
+            } else if (playerObject.position.y < targetPlayerY) { 
+                 playerObject.position.y = targetPlayerY;
+                 playerVelocityY = 0;
+                 canPlayerJump = true;
+            }
+        }
+        
+        function checkWallCollision(proposedPosition, objectRadius = playerRadius) {
+            const objectHeight = isSliding ? slideHeight : ((objectRadius === playerRadius) ? playerHeight : objectRadius * 2.2); 
+            const objectCenterY = isSliding ? slideHeight / 2 : ((objectRadius === playerRadius) ? proposedPosition.y - playerHeight/2 + objectHeight/2 : proposedPosition.y); 
+            
+            const objectCollider = new THREE.Box3().setFromCenterAndSize(
+                new THREE.Vector3(proposedPosition.x, objectCenterY, proposedPosition.z), 
+                new THREE.Vector3(objectRadius * 2, objectHeight, objectRadius * 2) 
+            );
+
+            for (const wall of walls) {
+                if (objectCollider.intersectsBox(wall.userData.boundingBox)) {
+                    return true; 
+                }
+            }
+            return false; 
+        }
+
+        function updateEnemies(delta, time) {
+            const playerPos = controls.getObject().position;
+            enemies.forEach((enemy, index) => { 
+                if (!enemy.userData || enemy.userData.health <= 0) return; 
+
+                const enemyPos = enemy.position; 
+                const directionToPlayer = playerPos.clone().sub(enemyPos);
+                const distanceToPlayer = directionToPlayer.length();
+                directionToPlayer.normalize();
+
+                const raycaster = new THREE.Raycaster(new THREE.Vector3(enemyPos.x, playerHeight * 0.8, enemyPos.z), directionToPlayer); 
+                const intersects = raycaster.intersectObjects(walls, false); 
+                enemy.userData.canSeePlayer = false;
+                if (intersects.length === 0 || intersects[0].distance > distanceToPlayer - playerRadius) { 
+                    if (distanceToPlayer < 30) { 
+                         enemy.userData.canSeePlayer = true;
+                    }
+                }
+                
+                enemy.userData.jumpCooldown -= delta;
+                if (!enemy.userData.isJumping && enemy.userData.jumpCooldown <= 0 && Math.random() < 0.01) { 
+                    enemy.userData.isJumping = true;
+                    enemy.userData.velocityY = playerJumpForce * 0.7; 
+                    enemy.userData.jumpCooldown = Math.random() * 4 + 3; 
+                }
+                if (enemy.userData.isJumping) {
+                    enemy.userData.velocityY += gravity * delta * 0.8; 
+                    enemy.position.y += enemy.userData.velocityY * delta;
+                    if (enemy.position.y <= enemy.userData.originalY) {
+                        enemy.position.y = enemy.userData.originalY;
+                        enemy.userData.isJumping = false;
+                        enemy.userData.velocityY = 0;
+                    }
+                }
+
+
+                if (enemy.userData.canSeePlayer) {
+                    const targetRotation = Math.atan2(directionToPlayer.x, directionToPlayer.z);
+                    enemy.rotation.y += (targetRotation - enemy.rotation.y) * 0.1; 
+
+                    if (distanceToPlayer > wallSize * 1.5) { 
+                        const enemyMoveSpeed = enemy.userData.speed * delta;
+                        const potentialMove = directionToPlayer.clone().multiplyScalar(enemyMoveSpeed); 
+                        
+                        const oldPos = enemy.position.clone();
+                        let canMoveX = true;
+                        let canMoveZ = true;
+                        
+                        const enemyRadiusForCollision = playerRadius * 0.7; 
+
+                        enemy.position.x += potentialMove.x;
+                        if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveX = false;
+                        if (!canMoveX) enemy.position.x = oldPos.x; 
+
+                        enemy.position.z += potentialMove.z;
+                        if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveZ = false;
+                        if (!canMoveZ) enemy.position.z = oldPos.z; 
+                    }
+                    
+                    enemy.userData.shootCooldown -= delta;
+                    if (enemy.userData.shootCooldown <= 0 && distanceToPlayer < 25) { 
+                        fireEnemyBullet(enemy, directionToPlayer.clone()); 
+                        enemy.userData.shootCooldown = enemy.userData.shootInterval;
+                    }
+                } else { 
+                    enemy.userData.moveTimer -= delta;
+                    if (enemy.userData.moveTimer <= 0) {
+                        const randomAngle = Math.random() * Math.PI * 2;
+                        const randomDist = Math.random() * wallSize * 2 + wallSize; 
+                        enemy.userData.targetPosition.set(
+                            enemyPos.x + Math.sin(randomAngle) * randomDist,
+                            enemy.userData.originalY,
+                            enemyPos.z + Math.cos(randomAngle) * randomDist
+                        );
+                        enemy.userData.isMovingToTarget = true;
+                        enemy.userData.moveTimer = Math.random() * 3 + 2; 
+                    }
+
+                    if (enemy.userData.isMovingToTarget) {
+                        const directionToTarget = enemy.userData.targetPosition.clone().sub(enemyPos).normalize();
+                        const distanceToTarget = enemy.userData.targetPosition.distanceTo(enemyPos);
+                        if (distanceToTarget > 0.5) {
+                            const enemyMoveSpeed = enemy.userData.speed * 0.7 * delta; 
+                            const potentialMove = directionToTarget.multiplyScalar(enemyMoveSpeed);
+                            
+                            const oldPos = enemy.position.clone();
+                            let canMoveX = true;
+                            let canMoveZ = true;
+                            const enemyRadiusForCollision = playerRadius * 0.7;
+
+                            enemy.position.x += potentialMove.x;
+                            if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveX = false;
+                            if (!canMoveX) enemy.position.x = oldPos.x; 
+
+                            enemy.position.z += potentialMove.z;
+                            if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveZ = false;
+                            if (!canMoveZ) enemy.position.z = oldPos.z; 
+                            
+                            const targetRotation = Math.atan2(directionToTarget.x, directionToTarget.z);
+                            enemy.rotation.y += (targetRotation - enemy.rotation.y) * 0.05; 
+                        } else {
+                            enemy.userData.isMovingToTarget = false;
+                        }
+                    }
+                }
+                enemy.userData.boundingBox.setFromObject(enemy); 
+
+                const collisionDistance = playerRadius + (playerRadius * 0.7); 
+                if (distanceToPlayer < collisionDistance && !enemy.userData.isJumping) { 
+                    takeDamage(5); 
+                    const knockbackDirection = playerPos.clone().sub(enemyPos).normalize(); 
+                    controls.getObject().position.addScaledVector(knockbackDirection, 0.2); 
+                    enemy.position.addScaledVector(knockbackDirection.negate(), 0.3); 
+                }
+            });
+        }
+        
+        function fireEnemyBullet(enemy, direction) {
+            if (enemyShootSound && enemyShootSound.loaded) {
+                enemyShootSound.start().catch(e => console.error("적 발사음 재생 오류:", e));
+            }
+
+            const bulletGeometry = new THREE.SphereGeometry(0.15, 8, 8); 
+            const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xffaa00 }); 
+            const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
+
+            const spreadAngle = Math.PI / 24; 
+            direction.applyAxisAngle(new THREE.Vector3(0,1,0), (Math.random() - 0.5) * spreadAngle);
+            direction.applyAxisAngle(new THREE.Vector3(1,0,0), (Math.random() - 0.5) * spreadAngle);
+
+
+            const bulletOffset = direction.clone().multiplyScalar(playerRadius * 1.0); 
+            bullet.position.copy(enemy.position).add(bulletOffset);
+            bullet.position.y = enemy.position.y; 
+
+            let maxDamageForRound = 5; 
+            if (currentRound > 1) {
+                for (let i = 0; i < currentRound - 1; i++) {
+                    maxDamageForRound = Math.floor(maxDamageForRound * 1.3); 
+                }
+            }
+            maxDamageForRound = Math.max(1, maxDamageForRound); 
+
+            bullet.userData = {
+                velocity: direction.normalize().multiplyScalar(baseEnemyBulletSpeed), 
+                damage: Math.max(1, Math.floor(Math.random() * maxDamageForRound) + 1),
+                spawnTime: performance.now()
+            };
+            enemyBullets.push(bullet);
+            scene.add(bullet);
+        }
+
+        function updateEnemyBullets(delta) {
+            for (let i = enemyBullets.length - 1; i >= 0; i--) {
+                const bullet = enemyBullets[i];
+                bullet.position.addScaledVector(bullet.userData.velocity, delta);
+
+                if (performance.now() - bullet.userData.spawnTime > 5000) {
+                    scene.remove(bullet);
+                    enemyBullets.splice(i, 1);
+                    continue;
+                }
+
+                const bulletSphere = new THREE.Sphere(bullet.position, 0.15);
+                if (playerBoundingBox.intersectsSphere(bulletSphere)) {
+                    takeDamage(bullet.userData.damage);
+                    scene.remove(bullet);
+                    enemyBullets.splice(i, 1);
+                    continue;
+                }
+
+                for (const wall of walls) {
+                    if (wall.userData.boundingBox.intersectsSphere(bulletSphere)) {
+                        scene.remove(bullet);
+                        enemyBullets.splice(i, 1);
+                        break; 
+                    }
+                }
+            }
+        }
+
+        function shoot() {
+            if (isReloading || !gameRunning) return;  
+            
+            let damageToDeal = currentPlayerDamage;
+
+            if (isMachineGunModeActive) {
+                if (machineGunCurrentAmmo <= 0) {
+                    isMachineGunModeActive = false; 
+                    updateHUD();
+                    if (playerAmmo < maxPlayerAmmo) handleReload(); 
+                    return;
+                }
+                machineGunCurrentAmmo--;
+                damageToDeal = 15; 
+            } else {
+                if (playerAmmo <= 0) {
+                    handleReload(); 
+                    return;
+                }
+                playerAmmo--;
+            }
+
+
+            updateHUD();
+            if (shootSound && shootSound.loaded) {
+                shootSound.start().catch(e => console.error("플레이어 발사음 재생 오류:", e));
+            }
+
+            const gunTipWorldPosition = new THREE.Vector3();
+            const cameraDirection = new THREE.Vector3();
+            camera.getWorldDirection(cameraDirection);
+            
+            gunTip.getWorldPosition(gunTipWorldPosition);
+
+
+            createMuzzleSmoke(gunTipWorldPosition, isMachineGunModeActive); 
+
+            const bulletGeometry = new THREE.SphereGeometry(0.08, 6, 6); 
+            const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 1.5 }); 
+            const playerBullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
+
+            playerBullet.position.copy(gunTipWorldPosition); 
+            playerBullet.userData = {
+                velocity: cameraDirection.clone().multiplyScalar(PLAYER_BULLET_SPEED),
+                spawnTime: performance.now(),
+                damage: damageToDeal 
+            };
+            playerBullets.push(playerBullet);
+            scene.add(playerBullet);
+        }
+
+        function updatePlayerBullets(delta) {
+            for (let i = playerBullets.length - 1; i >= 0; i--) {
+                const bullet = playerBullets[i];
+                bullet.position.addScaledVector(bullet.userData.velocity, delta);
+
+                if (performance.now() - bullet.userData.spawnTime > 2000) { 
+                    scene.remove(bullet);
+                    playerBullets.splice(i, 1);
+                    continue;
+                }
+
+                const bulletSphere = new THREE.Sphere(bullet.position, 0.08);
+                for (const wall of walls) {
+                    if (wall.userData.boundingBox.intersectsSphere(bulletSphere)) {
+                        createImpactSpark(bullet.position); 
+                        if (ricochetSound && ricochetSound.loaded) ricochetSound.triggerAttackRelease().catch(e => console.error("도탄음 재생 오류:", e));
+                        scene.remove(bullet);
+                        playerBullets.splice(i, 1);
+                        i = -1; 
+                        break;
+                    }
+                }
+                if (i === -1) continue;
+
+                for (const enemy of enemies) { 
+                    if (enemy.userData.health > 0 && enemy.userData.boundingBox.intersectsSphere(bulletSphere)) {
+                        let damageDealt = bullet.userData.damage;
+                        let scoreMultiplier = 1;
+
+                        if (damageDealt >= 60) { 
+                            showSuperCriticalHitMessage();
+                            damageDealt = enemy.userData.health; 
+                            scoreMultiplier = 2; 
+                        } else if (damageDealt >= 50) { 
+                            showCriticalHitMessage();
+                        }
+
+                        enemy.userData.health -= damageDealt;
+                        if (enemyHitSound && enemyHitSound.loaded) {
+                             enemyHitSound.triggerAttackRelease("C4", "8n").catch(e => console.error("적 피격음 재생 오류:", e));
+                        }
+
+                        if (enemy.userData.health <= 0) {
+                            createExplosionEffect(enemy.position); 
+                            if (explosionSound && explosionSound.loaded) explosionSound.start(); 
+                            
+                            scene.remove(enemy); 
+                            const enemyIndex = enemies.findIndex(e => e.userData.id === enemy.userData.id);
+                            if (enemyIndex > -1) enemies.splice(enemyIndex, 1);
+                            
+                            score += (10 * scoreMultiplier); 
+                            killedEnemiesThisRound++;
+                            totalKilledEnemies++;
+                            updateHUD();
+                            
+                            if (killedEnemiesThisRound >= enemiesToKillForNextRound) {
+                                if (currentRound < maxRounds) {
+                                    showRoundTransitionMessage(`${currentRound} 라운드 성공!`);
+                                    if(roundSuccessSound && roundSuccessSound.loaded) roundSuccessSound.triggerAttackRelease("G5", "4n");
+                                    gameRunning = false; 
+                                    setTimeout(() => {
+                                        currentRound++;
+                                        startNewRound();
+                                        if (controls.isLocked) gameRunning = true; 
+                                    }, 2000); 
+                                } else {
+                                    gameClear();
+                                }
+                            } else {
+                                const maxAdditionalSpawns = 6; 
+                                const currentEnemyCount = enemies.filter(e => e.userData.health > 0).length; 
+                                const maxAllowedEnemiesThisRound = enemiesToKillForNextRound + 10; 
+                                const enemiesToActuallySpawn = Math.min(maxAdditionalSpawns, maxAllowedEnemiesThisRound - currentEnemyCount);
+
+
+                                if (enemiesToActuallySpawn > 0) {
+                                    spawnEnemiesForRound(enemiesToActuallySpawn);
+                                }
+                            }
+                        } else {
+                             enemy.material.color.setHex(0xffffff); 
+                             setTimeout(() => {
+                                 if(enemy.material) enemy.material.color.setHex(0xff3333); 
+                             }, 100);
+                        }
+                        scene.remove(bullet);
+                        playerBullets.splice(i, 1);
+                        i = -1; 
+                        break;
+                    }
+                }
+                 if (i === -1) continue;
+            }
+        }
+
+        function showCriticalHitMessage() {
+            criticalHitMessageElement.style.display = 'block';
+            criticalHitMessageElement.style.animation = 'none'; 
+            criticalHitMessageElement.offsetHeight; 
+            criticalHitMessageElement.style.animation = 'criticalHitAnimation 0.7s ease-out forwards';
+            setTimeout(() => {
+                criticalHitMessageElement.style.display = 'none';
+            }, 700); 
+        }
+        function showSuperCriticalHitMessage() {
+            superCriticalHitMessageElement.style.display = 'block';
+            superCriticalHitMessageElement.style.animation = 'none';
+            superCriticalHitMessageElement.offsetHeight; 
+            superCriticalHitMessageElement.style.animation = 'superCriticalHitAnimation 1s ease-out forwards'; 
+            setTimeout(() => {
+                superCriticalHitMessageElement.style.display = 'none';
+            }, 1000); 
+        }
+
+
+        function showRoundTransitionMessage(message) {
+            roundTransitionMessageElement.textContent = message;
+            roundTransitionMessageElement.style.display = 'block';
+            setTimeout(() => {
+                roundTransitionMessageElement.style.display = 'none';
+            }, 1800); 
+        }
+        
+        function showShieldStatusMessage(message, duration = 1000) {
+            shieldStatusMessageElement.textContent = message;
+            shieldStatusMessageElement.style.color = "#40C4FF"; 
+            shieldStatusMessageElement.style.display = 'block';
+            setTimeout(() => {
+                shieldStatusMessageElement.style.display = 'none';
+            }, duration);
+        }
+        function showMachineGunStatusMessage(message, duration = 1500) {
+            akimboStatusMessageElement.textContent = message; 
+            akimboStatusMessageElement.style.color = "#FF00FF"; 
+            akimboStatusMessageElement.style.display = 'block';
+            setTimeout(() => {
+                akimboStatusMessageElement.style.display = 'none';
+            }, duration);
+        }
+
+
+
+        function createMuzzleSmoke(position, isMachineGun = false) {
+            const smokeColor = isMachineGun ? 0xff8800 : 0x00ffff; 
+            const smokeSize = isMachineGun ? 0.3 : 0.2;
+            const smokeLife = isMachineGun ? 0.5 : 0.4;
+            const particleCount = isMachineGun ? 10 : 7;
+
+            const smokeMaterial = new THREE.PointsMaterial({
+                color: smokeColor, size: smokeSize, transparent: true, opacity: 0.6, sizeAttenuation: true, 
+                blending: THREE.AdditiveBlending 
+            });
+            for (let i = 0; i < particleCount; i++) { 
+                const particleGeometry = new THREE.BufferGeometry();
+                particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
+                const particle = new THREE.Points(particleGeometry, smokeMaterial.clone()); 
+                particle.position.copy(position);
+                particle.userData = {
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.6, (Math.random() - 0.5) * 0.6, (Math.random() - 0.5) * 0.6 
+                    ).multiplyScalar(isMachineGun ? 0.4 : 0.3), 
+                    life: smokeLife 
+                };
+                muzzleSmokeParticles.push(particle);
+                scene.add(particle);
+            }
+        }
+
+        function updateMuzzleSmoke(delta) {
+            for (let i = muzzleSmokeParticles.length - 1; i >= 0; i--) {
+                const particle = muzzleSmokeParticles[i];
+                particle.userData.life -= delta;
+                if (particle.userData.life <= 0) {
+                    scene.remove(particle);
+                    muzzleSmokeParticles.splice(i, 1);
+                } else {
+                    particle.position.addScaledVector(particle.userData.velocity, delta);
+                    particle.material.opacity = particle.userData.life * 2.5; 
+                    particle.material.size = particle.userData.life * 0.5; 
+                }
+            }
+        }
+
+        function createImpactSpark(position) {
+            const sparkMaterial = new THREE.PointsMaterial({
+                color: 0x00ffff, size: 0.25, transparent: true, opacity: 0.9, sizeAttenuation: true,
+                blending: THREE.AdditiveBlending
+            });
+            for (let i = 0; i < 10; i++) { 
+                const particleGeometry = new THREE.BufferGeometry();
+                particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
+                const particle = new THREE.Points(particleGeometry, sparkMaterial.clone());
+                particle.position.copy(position);
+                particle.userData = {
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)
+                    ).normalize().multiplyScalar(Math.random() * 4 + 3), 
+                    life: 0.25 
+                };
+                impactSparks.push(particle);
+                scene.add(particle);
+            }
+        }
+        
+        function updateImpactSparks(delta) {
+            for (let i = impactSparks.length - 1; i >= 0; i--) {
+                const particle = impactSparks[i];
+                particle.userData.life -= delta;
+                if (particle.userData.life <= 0) {
+                    scene.remove(particle);
+                    impactSparks.splice(i, 1);
+                } else {
+                    particle.position.addScaledVector(particle.userData.velocity, delta);
+                    particle.userData.velocity.y -= 9.8 * delta * 0.1; 
+                    particle.material.opacity = particle.userData.life * 4; 
+                    particle.material.size = particle.userData.life * 0.6; 
+                }
+            }
+        }
+
+        function createExplosionEffect(position) {
+            const explosionMaterial = new THREE.PointsMaterial({
+                color: 0xff00ff, 
+                size: 0.6,
+                transparent: true,
+                opacity: 0.9,
+                sizeAttenuation: true,
+                blending: THREE.AdditiveBlending
+            });
+            for (let i = 0; i < 25; i++) { 
+                const particleGeometry = new THREE.BufferGeometry();
+                particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
+                const particle = new THREE.Points(particleGeometry, explosionMaterial.clone());
+                particle.position.copy(position);
+                particle.userData = {
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)
+                    ).normalize().multiplyScalar(Math.random() * 6 + 4), 
+                    life: 0.7 
+                };
+                explosionParticles.push(particle);
+                scene.add(particle);
+            }
+        }
+
+        function updateExplosions(delta) {
+            for (let i = explosionParticles.length - 1; i >= 0; i--) {
+                const particle = explosionParticles[i];
+                particle.userData.life -= delta;
+                if (particle.userData.life <= 0) {
+                    scene.remove(particle);
+                    explosionParticles.splice(i, 1);
+                } else {
+                    particle.position.addScaledVector(particle.userData.velocity, delta);
+                    particle.material.opacity = particle.userData.life * 1.3; 
+                    particle.material.size = particle.userData.life * 0.9; 
+                }
+            }
+        }
+        
+        function takeDamage(amount) {
+            if (!gameRunning || playerHealth <=0) return; 
+
+            let actualDamage = amount;
+            if (isShieldActive && shieldHealth > 0) {
+                if (shieldHealth >= amount) {
+                    shieldHealth -= amount;
+                    actualDamage = 0;
+                } else {
+                    actualDamage = amount - shieldHealth;
+                    shieldHealth = 0;
+                }
+                if (shieldHealth <= 0) {
+                    isShieldActive = false;
+                    if(shieldMesh) shieldMesh.visible = false;
+                    if(shieldBreakSound && shieldBreakSound.loaded) shieldBreakSound.start();
+                }
+                updateHUD();
+                if (actualDamage === 0) return; 
+            }
+
+
+            playerHealth -= actualDamage;
+            if (playerHealth < 0) playerHealth = 0;
+
+            if (playerHurtSound && playerHurtSound.loaded) {
+                playerHurtSound.start().catch(e => console.error("플레이어 피격음 재생 오류:", e));
+            }
+            updateHUD();
+
+            document.body.style.transition = 'background-color 0.05s';
+            document.body.style.backgroundColor = 'rgba(200,0,0,0.4)'; 
+            setTimeout(() => {
+                document.body.style.backgroundColor = '#0a0a1a'; 
+            }, 50);
+
+            if (playerHealth <= 0) { 
+                gameOver("사망했습니다! 게임 오버.");
+            }
+        }
+
+        function updateHUD() {
+            scoreElement.textContent = `점수: ${score}`;
+            healthElement.textContent = `체력: ${playerHealth} / ${maxPlayerHealth}`; 
+            
+            if (isMachineGunModeActive) { 
+                ammoElement.textContent = `머신건: ${machineGunCurrentAmmo} / ${machineGunTotalMaxAmmo}`;
+            } else {
+                ammoElement.textContent = `탄약: ${playerAmmo} / ${maxPlayerAmmo}`; 
+            }
+            
+            playerDamageHUDElement.textContent = `데미지: ${currentPlayerDamage}`;
+            roundInfoElement.innerHTML = `라운드: ${currentRound > maxRounds ? maxRounds : currentRound} / ${maxRounds}<br>처치 목표: ${killedEnemiesThisRound} / ${enemiesToKillForNextRound}`;
+
+            const now = performance.now();
+            if (machineGunCooldownEndTime > now) {
+                const remainingCooldown = Math.ceil((machineGunCooldownEndTime - now) / 1000);
+                machineGunInfoElement.innerHTML = `머신건: 쿨 (${remainingCooldown}초)<br>탄약: -`;
+            } else if (isMachineGunModeActive) {
+                const remainingDuration = Math.ceil((machineGunModeEndTime - now) / 1000);
+                machineGunInfoElement.innerHTML = `머신건: 활성 (${remainingDuration}초)<br>탄약: ${machineGunCurrentAmmo}`;
+            }
+            else {
+                machineGunInfoElement.innerHTML = `머신건: 준비 (H)<br>탄약: -`;
+            }
+
+            if (shieldUsedThisRound && shieldCooldownEndTime > now) { 
+                const remainingCooldown = Math.ceil((shieldCooldownEndTime - now) / 1000);
+                 shieldInfoElement.innerHTML = `방패: 쿨 (${remainingCooldown}초)<br>내구도: -`;
+            } else if (shieldUsedThisRound && shieldCooldownEndTime <= now) { 
+                 shieldInfoElement.innerHTML = `방패: 사용됨<br>내구도: -`;
+            }
+             else if (isShieldActive) {
+                shieldInfoElement.innerHTML = `방패: 활성<br>내구도: ${shieldHealth}`;
+            } else { 
+                shieldInfoElement.innerHTML = `방패: 준비 (우클릭)<br>내구도: -`;
+            }
+            
+            if (slideJumpCooldownEndTime > now) {
+                const remainingCooldown = ((slideJumpCooldownEndTime - now) / 1000).toFixed(1);
+                slideJumpInfoElement.innerHTML = `슬라이딩 점프: 쿨 (${remainingCooldown}초)`;
+            } else {
+                 slideJumpInfoElement.innerHTML = `슬라이딩 점프: 가능`;
+            }
+        }
+        
+        function updateElapsedTime(time) {
+            if (!gameStartTime) return; 
+            const elapsedSecondsTotal = Math.floor((time - gameStartTime) / 1000);
+            const minutes = Math.floor(elapsedSecondsTotal / 60);
+            const seconds = elapsedSecondsTotal % 60;
+            elapsedTimeHUDElement.textContent = `시간: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function handleReload() {
+            if (isReloading) return;
+
+            if (isMachineGunModeActive) { 
+                if (machineGunCurrentAmmo === machineGunTotalMaxAmmo) return;
+                isReloading = true;
+                if (reloadSound && reloadSound.loaded) reloadSound.triggerAttackRelease("C2", "0.1");
+                setTimeout(() => {
+                    machineGunCurrentAmmo = machineGunTotalMaxAmmo;
+                    isReloading = false;
+                    updateHUD();
+                }, 500); 
+                return;
+            }
+
+            if (playerAmmo === maxPlayerAmmo) return; 
+
+            isReloading = true;
+            if (reloadSound && reloadSound.loaded) {
+                reloadSound.triggerAttackRelease("C2", "0.1").catch(e => console.error("재장전 소리 재생 오류:", e));
+            }
+            
+            let reloadTime = 1200; 
+
+            if (playerAmmo > 0 && playerAmmo < maxPlayerAmmo) { 
+                tacticalReloadMessageElement.style.display = 'block';
+                let blinkCount = 0;
+                const blinkInterval = setInterval(() => {
+                    tacticalReloadMessageElement.style.visibility = (tacticalReloadMessageElement.style.visibility === 'hidden' ? 'visible' : 'hidden');
+                    blinkCount++;
+                    if (blinkCount >= 4) { 
+                        clearInterval(blinkInterval);
+                        tacticalReloadMessageElement.style.display = 'none';
+                        tacticalReloadMessageElement.style.visibility = 'visible';
+                    }
+                }, 125);
+                reloadTime = 500; 
+                 setTimeout(() => {
+                    playerAmmo = maxPlayerAmmo;
+                    isReloading = false;
+                    updateHUD();
+                }, reloadTime);
+            } else { 
+                 setTimeout(() => {
+                    playerAmmo = maxPlayerAmmo;
+                    isReloading = false;
+                    updateHUD();
+                }, reloadTime);
+            }
+        }
+        
+        function activateMachineGunMode() { 
+            const now = performance.now();
+            if (isMachineGunModeActive || machineGunCooldownEndTime > now) return;
+
+            isMachineGunModeActive = true;
+            machineGunModeEndTime = now + machineGunModeDuration;
+            machineGunCurrentAmmo = machineGunTotalMaxAmmo; 
+            machineGunCooldownEndTime = now + machineGunCooldown + machineGunModeDuration; 
+            
+            showMachineGunStatusMessage("MACHINE GUN MODE!", 2000);
+
+            if (machineGunActivateSound && machineGunActivateSound.loaded) {
+                machineGunActivateSound.triggerAttackRelease("E4", "0.2");
+            }
+            if (playerGunMesh) {
+                playerGunMesh.traverse((child) => {
+                    if (child.isMesh) {
+                        if (child.material === originalGunMaterial.body || child.material.color.equals(originalGunMaterial.body.color)) {
+                            child.material = new THREE.MeshStandardMaterial({ color: 0xAA00AA, metalness: 0.8, roughness: 0.2, emissive: 0x770077, emissiveIntensity: 0.9 });
+                        } else if (child.material === originalGunMaterial.accent || child.material.color.equals(originalGunMaterial.accent.color)) {
+                            child.material = new THREE.MeshStandardMaterial({ color: 0xFF00FF, metalness: 0.9, roughness: 0.1, emissive: 0xFF00FF, emissiveIntensity: 1.2 });
+                        }
+                    }
+                });
+            }
+            updateHUD();
+        }
+
+        function updateAkimbo(time) { 
+            if (isMachineGunModeActive && time >= machineGunModeEndTime) {
+                isMachineGunModeActive = false;
+                if (playerGunMesh && originalGunMaterial) {
+                    playerGunMesh.traverse((child) => {
+                        if (child.isMesh) {
+                             if (child.material.color.getHex() === 0xAA00AA) { 
+                                child.material = originalGunMaterial.body.clone();
+                            } else if (child.material.color.getHex() === 0xFF00FF) { 
+                                child.material = originalGunMaterial.accent.clone();
+                            }
+                        }
+                    });
+                }
+                updateHUD();
+            }
+        }
+        
+        function createShieldMesh() {
+            const shieldShape = new THREE.Shape();
+            const radius = playerRadius * 1.2;
+            const sides = 6; 
+            shieldShape.moveTo(radius * Math.cos(0), radius * Math.sin(0));
+            for (let i = 1; i <= sides; i++) {
+                shieldShape.lineTo(radius * Math.cos(i * 2 * Math.PI / sides), radius * Math.sin(i * 2 * Math.PI / sides));
+            }
+            const shieldGeometry = new THREE.ShapeGeometry(shieldShape);
+            const shieldMaterial = new THREE.MeshBasicMaterial({
+                color: 0x40C4FF,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.DoubleSide,
+                blending: THREE.AdditiveBlending,
+                wireframe: true 
+            });
+            shieldMesh = new THREE.Mesh(shieldGeometry, shieldMaterial);
+            shieldMesh.position.set(0, 0, -playerRadius * 1.2); 
+            shieldMesh.scale.set(1.5, 2, 1); 
+            shieldMesh.visible = false;
+            camera.add(shieldMesh); 
+        }
+
+        function activateShield() {
+            const now = performance.now();
+            if (isShieldActive || shieldCooldownEndTime > now || shieldUsedThisRound) return;
+
+            isShieldActive = true;
+            shieldHealth = maxShieldHealth;
+            if (shieldMesh) shieldMesh.visible = true;
+            if (shieldActivateSound && shieldActivateSound.loaded) shieldActivateSound.triggerAttackRelease("A4", "0.1");
+            showShieldStatusMessage("SHIELD ACTIVATED!", 1000);
+            updateHUD();
+        }
+        function deactivateShield() {
+            if (!isShieldActive) return;
+            isShieldActive = false;
+            if (shieldMesh) shieldMesh.visible = false;
+            shieldUsedThisRound = true; 
+            shieldCooldownEndTime = performance.now() + shieldCooldown; 
+            updateHUD();
+        }
+
+
+        function updateShield(time) {
+            if (isShieldActive && shieldHealth <= 0) {
+                isShieldActive = false;
+                if (shieldMesh) shieldMesh.visible = false;
+                if (shieldBreakSound && shieldBreakSound.loaded) shieldBreakSound.start();
+                shieldCooldownEndTime = time + shieldCooldown; 
+                shieldUsedThisRound = true; 
+            }
+            if (shieldMesh) { 
+                shieldMesh.material.opacity = isShieldActive ? 0.1 + (shieldHealth / maxShieldHealth) * 0.5 : 0; 
+                if (isShieldActive) { 
+                    shieldMesh.rotation.z += 0.05;
+                }
+            }
+        }
+        
+        function updateSlideJumpInfo(time) {
+            if (slideJumpCooldownEndTime > time) {
+                const remainingCooldown = ((slideJumpCooldownEndTime - time) / 1000).toFixed(1);
+                slideJumpInfoElement.innerHTML = `슬라이딩 점프: 쿨 (${remainingCooldown}초)`;
+            } else {
+                 slideJumpInfoElement.innerHTML = `슬라이딩 점프: 가능`;
+            }
+        }
+
+
+        function onWindowResize() { 
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onKeyDown(event) { 
+            switch (event.code) {
+                case 'ArrowUp': case 'KeyW': moveForward = true; break;
+                case 'ArrowLeft': case 'KeyA': moveLeft = true; break;
+                case 'ArrowDown': case 'KeyS': moveBackward = true; break;
+                case 'ArrowRight': case 'KeyD': moveRight = true; break;
+                case 'KeyR': if(gameRunning) handleReload(); break; 
+                case 'ShiftLeft': 
+                case 'ShiftRight': 
+                    if (gameRunning && !isSprinting && !isSliding) { 
+                        isSprinting = true;
+                        if (sprintWindSound && sprintWindSound.loaded) sprintWindSound.start();
+                    }
+                    break;
+                case 'Space':
+                    if (gameRunning && canPlayerJump) {
+                        if (isSliding && performance.now() > slideJumpCooldownEndTime) { 
+                            canPlayerJump = false;
+                            playerVelocityY = playerJumpForce * 1.2; 
+                            isSlideJumpBoosting = true;
+                            slideJumpBoostEndTime = performance.now() + slideJumpBoostDuration;
+                            
+                            if (slideSound && slideSound.loaded) slideSound.triggerAttackRelease("C3", "0.1s"); 
+                            slideJumpCooldownEndTime = performance.now() + slideJumpCooldownDuration;
+                            isSliding = false; 
+
+                        } else if (!isSliding) { 
+                            canPlayerJump = false;
+                            playerVelocityY = playerJumpForce;
+                            if (jumpSound && jumpSound.loaded) jumpSound.triggerAttackRelease("C5", "8n");
+                        }
+                    }
+                    break;
+                case 'KeyH':
+                    if (gameRunning) activateMachineGunMode(); 
+                    break;
+                case 'KeyC':
+                    if (gameRunning && !isSprinting && canPlayerJump) { 
+                        isSliding = true;
+                        if (slideSound && slideSound.loaded) slideSound.triggerAttackRelease("A2", "0.2s");
+                    }
+                    break;
+            }
+        }
+
+        function onKeyUp(event) { 
+            switch (event.code) {
+                case 'ArrowUp': case 'KeyW': moveForward = false; break;
+                case 'ArrowLeft': case 'KeyA': moveLeft = false; break;
+                case 'ArrowDown': case 'KeyS': moveBackward = false; break;
+                case 'ArrowRight': case 'KeyD': moveRight = false; break;
+                case 'ShiftLeft':
+                case 'ShiftRight':
+                    isSprinting = false;
+                    if (sprintWindSound && sprintWindSound.state === "started") sprintWindSound.stop();
+                    break;
+                case 'KeyC':
+                    isSliding = false;
+                    break;
+            }
+        }
+        
+        function resetGameFull() {
+            currentRound = 1;
+            maxPlayerHealth = 100; 
+            enemiesToKillForNextRound = 20; 
+            totalKilledEnemies = 0;
+            gameStartTime = performance.now(); 
+            machineGunCooldownEndTime = 0; 
+            shieldCooldownEndTime = 0;
+            slideJumpCooldownEndTime = 0;
+            resetGameRound(); 
+        }
+        
+        function resetGameRound() { 
+            playerAmmo = maxPlayerAmmo; 
+            score = totalKilledEnemies; 
+            isReloading = false; 
+            isMachineGunModeActive = false; 
+            isShieldActive = false;
+            shieldUsedThisRound = false; 
+            if(shieldMesh) shieldMesh.visible = false;
+
+
+            tacticalReloadMessageElement.style.display = 'none'; 
+            criticalHitMessageElement.style.display = 'none'; 
+            superCriticalHitMessageElement.style.display = 'none';
+
+
+            updatePlayerDamage(); 
+
+            walls.forEach(wall => scene.remove(wall)); walls = [];
+            enemies.forEach(enemy => scene.remove(enemy)); enemies = [];
+            enemyBullets.forEach(bullet => scene.remove(bullet)); enemyBullets = [];
+            playerBullets.forEach(bullet => scene.remove(bullet)); playerBullets = [];
+            muzzleSmokeParticles.forEach(p => scene.remove(p)); muzzleSmokeParticles = [];
+            impactSparks.forEach(p => scene.remove(p)); impactSparks = [];
+            explosionParticles.forEach(p => scene.remove(p)); explosionParticles = [];
+
+            startNewRound(); 
+
+            const startPos = findStartPosition(); 
+            if (controls && controls.getObject()) {
+                controls.getObject().position.set(startPos.x, playerHeight, startPos.z);
+                controls.getObject().rotation.set(0,0,0); 
+            }
+            if(camera) camera.rotation.set(0,0,0);
+
+            messageTextElement.textContent = "사이버펑크 슈터";
+            startButton.textContent = "게임 시작";
+            if (Tone.Transport.state === "stopped") { 
+                Tone.Transport.start();
+            }
+        }
+
+        function gameClear() {
+            gameRunning = false;
+            controls.unlock();
+            const playTimeSeconds = Math.floor((performance.now() - gameStartTime) / 1000);
+            const minutes = Math.floor(playTimeSeconds / 60);
+            const seconds = playTimeSeconds % 60;
+            messageTextElement.innerHTML = `생존! 모든 라운드 클리어!<br>총 처치 수: ${totalKilledEnemies}<br>플레이 시간: ${minutes}분 ${seconds}초`;
+            startButton.textContent = "다시 도전";
+            messageBoxElement.style.display = 'flex';
+            criticalHitMessageElement.style.display = 'none';
+            superCriticalHitMessageElement.style.display = 'none';
+            tacticalReloadMessageElement.style.display = 'none';
+            if(playerGunMesh) playerGunMesh.visible = false;
+            if(shieldMesh) shieldMesh.visible = false;
+            if (Tone.Transport.state === "started") Tone.Transport.stop(); 
+            if(gameClearSound && gameClearSound.loaded) gameClearSound.triggerAttackRelease("C4", "1n");
+            currentRound = maxRounds + 1; 
+        }
+
+
+        function gameOver(message) { 
+            gameRunning = false;
+            controls.unlock(); 
+            messageTextElement.textContent = message;
+            startButton.textContent = "다시 플레이";
+            messageBoxElement.style.display = 'flex';
+            crosshairElement.style.display = 'none';
+            if(playerGunMesh) playerGunMesh.visible = false;
+            if(shieldMesh) shieldMesh.visible = false;
+            if (Tone.Transport.state === "started") { 
+                 Tone.Transport.stop();
+            }
+        }
+
+        init();
+
+    </script>
+</body>
+</html>
