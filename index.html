@@ -10,77 +10,78 @@
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #0a0a1a; 
-            font-family: 'Orbitron', sans-serif; 
-            color: #00ffff; 
-            cursor: crosshair; 
+            background-color: #0a0a1a; /* Dark blue background */
+            font-family: 'Orbitron', sans-serif; /* Cyberpunk font */
+            color: #00ffff; /* Cyan text color */
+            cursor: crosshair; /* Crosshair cursor */
         }
         #gameCanvas {
             display: block;
             width: 100vw;
             height: 100vh;
         }
+        /* HUD Styling */
         .hud {
             position: absolute;
-            padding: 7px 10px; 
-            background-color: rgba(10, 20, 40, 0.8); 
-            border: 1px solid #00ffff; 
-            border-radius: 3px; 
-            font-size: 12px; 
-            text-shadow: 0 0 3px #00ffff, 0 0 5px #00ffff; 
-            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5); 
+            padding: 7px 10px; /* Smaller padding */
+            background-color: rgba(10, 20, 40, 0.8); /* Semi-transparent dark blue */
+            border: 1px solid #00ffff; /* Cyan border */
+            border-radius: 3px; /* Slightly rounded corners */
+            font-size: 12px; /* Smaller font size */
+            text-shadow: 0 0 3px #00ffff, 0 0 5px #00ffff; /* Cyan glow */
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5); /* Outer glow */
         }
-        #score { 
+        #score { /* Score HUD */
             top: 15px;
             left: 15px;
-            font-size: 14px; 
+            font-size: 14px; /* Slightly larger font */
         }
-        #health { 
+        #health { /* Health HUD */
             top: 15px;
             right: 15px;
-            color: #ff4500; 
+            color: #ff4500; /* Orange-red color for health */
             text-shadow: 0 0 3px #ff4500, 0 0 5px #ff4500;
             border-color: #ff4500;
             box-shadow: 0 0 8px rgba(255, 69, 0, 0.5);
-            font-size: 14px; 
+            font-size: 14px; /* Slightly larger font */
         }
-        #ammo { 
+        #ammo { /* Ammo HUD */
             bottom: 15px;
             left: 15px;
         }
-        #playerDamageHUD { 
-            bottom: 45px; 
+        #playerDamageHUD { /* Player Damage HUD */
+            bottom: 45px; /* Positioned above ammo */
             left: 15px;
         }
-        #roundInfo { 
-            top: 50px; 
+        #roundInfo { /* Round Info HUD */
+            top: 50px; /* Positioned below score */
             left: 15px;
         }
-        #machineGunInfo {
-            top: 95px; 
+        #machineGunInfo { /* Machine Gun HUD */
+            top: 95px; /* Positioned below round info */
             left: 15px;
-            color: #FF00FF; 
+            color: #FF00FF; /* Magenta color */
             text-shadow: 0 0 3px #FF00FF, 0 0 5px #FF00FF;
             border-color: #FF00FF;
             box-shadow: 0 0 8px rgba(255, 0, 255, 0.5);
         }
-        #shieldInfo { 
-            top: 150px; 
+        #shieldInfo { /* Shield HUD */
+            top: 150px; /* Positioned below machine gun */
             left: 15px;
-            color: #40C4FF; 
+            color: #40C4FF; /* Light blue color */
             text-shadow: 0 0 3px #40C4FF, 0 0 5px #40C4FF;
             border-color: #40C4FF;
             box-shadow: 0 0 8px rgba(64, 196, 255, 0.5);
         }
-        #slideJumpInfo { 
-            top: 200px; 
+        #slideJumpInfo { /* Slide Jump HUD */
+            top: 200px; /* Positioned below shield */
             left: 15px;
-            color: #FFFF00; 
+            color: #FFFF00; /* Yellow color */
             text-shadow: 0 0 3px #FFFF00, 0 0 5px #FFFF00;
             border-color: #FFFF00;
             box-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
         }
-        #elapsedTimeHUD { 
+        #elapsedTimeHUD { /* Elapsed Time HUD */
             top: 15px;
             left: 50%;
             transform: translateX(-50%);
@@ -88,89 +89,93 @@
             background-color: rgba(10, 20, 40, 0.6);
             border: 1px solid #00ffff;
         }
-        #messageBox { 
+        /* Message Box Styling */
+        #messageBox { /* General message box */
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             padding: 30px;
-            background-color: rgba(0,0,10,0.9);
-            border: 2px solid #FF00FF;
+            background-color: rgba(0,0,10,0.9); /* Very dark blue, almost opaque */
+            border: 2px solid #FF00FF; /* Magenta border */
             border-radius: 5px;
             text-align: center;
             font-size: 24px;
             z-index: 1000;
-            display: flex; 
+            display: flex; /* Use flexbox for centering */
             flex-direction: column;
             align-items: center;
-            box-shadow: 0 0 20px rgba(255,0,255,0.7);
+            box-shadow: 0 0 20px rgba(255,0,255,0.7); /* Magenta glow */
         }
-        #messageText { 
+        #messageText { /* Text within the message box */
             margin-bottom: 20px;
-            color: #00FF00;
+            color: #00FF00; /* Green text */
             text-shadow: 0 0 5px #00FF00;
         }
-        #roundTransitionMessage, #shieldStatusMessage, #machineGunStatusMessage { 
+        /* Temporary Message Styling */
+        #roundTransitionMessage, #shieldStatusMessage, #machineGunStatusMessage { /* Round/Shield/MG messages */
             position: absolute;
             top: 40%;
             left: 50%;
             transform: translateX(-50%);
             font-size: 32px;
-            color: #00FF00; 
-            text-shadow: 0 0 7px #00FF00, 0 0 10px #00FF00;
+            color: #00FF00; /* Green text */
+            text-shadow: 0 0 7px #00FF00, 0 0 10px #00FF00; /* Green glow */
             padding: 15px;
-            background-color: rgba(0,30,0,0.7);
+            background-color: rgba(0,30,0,0.7); /* Dark green background */
             border-radius: 5px;
             border: 1px solid #00FF00;
-            display: none;
+            display: none; /* Hidden by default */
             z-index: 1001;
         }
-        #tacticalReloadMessage { 
+        #tacticalReloadMessage { /* Tactical Reload message */
             position: absolute;
             top: 60%;
             left: 50%;
             transform: translateX(-50%);
             font-size: 28px;
             color: yellow;
-            text-shadow: 0 0 5px yellow, 0 0 8px yellow;
+            text-shadow: 0 0 5px yellow, 0 0 8px yellow; /* Yellow glow */
             padding: 10px;
-            background-color: rgba(50,50,0,0.7);
+            background-color: rgba(50,50,0,0.7); /* Dark yellow background */
             border-radius: 5px;
             border: 1px solid yellow;
-            display: none;
+            display: none; /* Hidden by default */
             z-index: 1001;
         }
-        .damage-indicator { 
+        /* Damage Indicator Styling */
+        .damage-indicator { /* Base style for damage indicators */
             position: absolute;
-            top: 30%; 
+            top: 30%; /* Position higher on screen */
             left: 50%;
             transform: translateX(-50%);
-            font-family: 'Orbitron', sans-serif; 
-            font-weight: 700; 
+            font-family: 'Orbitron', sans-serif; /* Use Orbitron font */
+            font-weight: 700; /* Bold */
             padding: 15px;
-            display: none;
+            display: none; /* Hidden by default */
             z-index: 1002;
             text-align: center;
         }
-        #criticalHitMessage { 
-            font-size: 42px; 
-            color: #FF00FF; 
-            text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF, 0 0 15px #FF00FF, 0 0 20px #FFF, 2px 2px 2px #000; 
+        #criticalHitMessage { /* Critical Hit message */
+            font-size: 42px; /* Large font size */
+            color: #FF00FF; /* Magenta color */
+            text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF, 0 0 15px #FF00FF, 0 0 20px #FFF, 2px 2px 2px #000; /* Intense magenta/white glow with drop shadow */
             animation: criticalHitAnimation 0.7s ease-out forwards;
         }
-        #superCriticalHitMessage { 
-            font-size: 52px; 
-            color: #FFD700; 
-            text-shadow: 0 0 7px #FFD700, 0 0 12px #FFD700, 0 0 18px #FFF, 0 0 25px #FFF, 3px 3px 3px #000;
-            animation: superCriticalHitAnimation 1s ease-out forwards; 
+        #superCriticalHitMessage { /* Super Critical Hit message */
+            font-size: 52px; /* Even larger font size */
+            color: #FFD700; /* Gold color */
+            text-shadow: 0 0 7px #FFD700, 0 0 12px #FFD700, 0 0 18px #FFF, 0 0 25px #FFF, 3px 3px 3px #000; /* Intense gold/white glow with drop shadow */
+            animation: superCriticalHitAnimation 1s ease-out forwards; /* Longer animation */
         }
 
-        @keyframes criticalHitAnimation { 
+        /* Keyframe Animations for Damage Indicators */
+        @keyframes criticalHitAnimation { /* Animation for critical hit */
             0% { transform: translateX(-50%) scale(0.5) rotate(-5deg); opacity: 0; }
             70% { transform: translateX(-50%) scale(1.2) rotate(5deg); opacity: 1; }
             100% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 1; }
         }
-        @keyframes superCriticalHitAnimation {
+        @keyframes superCriticalHitAnimation { /* Animation for super critical hit */
             0% { transform: translateX(-50%) scale(0.6) rotate(0deg); opacity: 0; }
             25% { transform: translateX(-50%) scale(1.3) rotate(-3deg); opacity: 1; }
             50% { transform: translateX(-50%) scale(1.1) rotate(3deg); opacity: 1; }
@@ -179,46 +184,48 @@
         }
 
 
-        .button { 
+        /* Button Styling */
+        .button { /* General button style */
             padding: 12px 25px;
-            background-color: #8A2BE2; 
-            color: #00ffff;
-            border: 2px solid #00ffff;
+            background-color: #8A2BE2; /* Blue-violet background */
+            color: #00ffff; /* Cyan text */
+            border: 2px solid #00ffff; /* Cyan border */
             border-radius: 3px;
             cursor: pointer;
             font-size: 20px;
             font-family: 'Orbitron', sans-serif;
             transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 10px rgba(0,255,255,0.5);
+            box-shadow: 0 0 10px rgba(0,255,255,0.5); /* Cyan glow */
             text-transform: uppercase;
         }
-        .button:hover {
-            background-color: #9932CC;
-            border-color: #FFF;
-            box-shadow: 0 0 15px rgba(255,255,255,0.8);
+        .button:hover { /* Button hover effect */
+            background-color: #9932CC; /* Darker orchid */
+            border-color: #FFF; /* White border */
+            box-shadow: 0 0 15px rgba(255,255,255,0.8); /* White glow */
         }
-        .button:active {
+        .button:active { /* Button active (click) effect */
             transform: translateY(2px);
             box-shadow: 0 0 5px rgba(255,255,255,0.5);
         }
-        #crosshair { 
+        /* Crosshair Styling */
+        #crosshair { /* Simple crosshair */
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 4px; 
-            height: 20px; 
-            background-color: #00ffff;
+            width: 4px; /* Vertical line width */
+            height: 20px; /* Vertical line height */
+            background-color: #00ffff; /* Cyan color */
             transform: translate(-50%, -50%);
             border-radius: 1px;
-            box-shadow: 0 0 5px #00ffff;
+            box-shadow: 0 0 5px #00ffff; /* Cyan glow */
             z-index: 999;
-            display: none; 
+            display: none; /* Hidden initially */
         }
-        #crosshair::before { 
+        #crosshair::before { /* Horizontal line of the crosshair */
             content: '';
             position: absolute;
-            width: 20px;
-            height: 4px;
+            width: 20px; /* Horizontal line width */
+            height: 4px; /* Horizontal line height */
             background-color: #00ffff;
             top: 50%;
             left: 50%;
@@ -230,6 +237,7 @@
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
+
     <div id="score" class="hud">점수: 0</div>
     <div id="health" class="hud">체력: 100 / 100</div>
     <div id="ammo" class="hud">탄약: 30 / 30</div>
@@ -239,141 +247,151 @@
     <div id="shieldInfo" class="hud">방패: 준비<br>내구도: -</div>
     <div id="slideJumpInfo" class="hud">슬라이딩 점프: 가능</div>
     <div id="elapsedTimeHUD" class="hud">시간: 00:00</div>
+
     <div id="crosshair"></div>
+
     <div id="tacticalReloadMessage">전술 재장전!</div>
     <div id="criticalHitMessage" class="damage-indicator">CRITICAL!</div>
     <div id="superCriticalHitMessage" class="damage-indicator">SUPER CRITICAL!</div>
     <div id="roundTransitionMessage"></div>
-    <div id="shieldStatusMessage"></div> 
-    <div id="machineGunStatusMessage"></div> 
-    <div id="messageBox">
+    <div id="shieldStatusMessage"></div>
+    <div id="machineGunStatusMessage"></div> <div id="messageBox">
         <div id="messageText">사이버펑크 슈터</div>
         <button id="startButton" class="button">게임 시작</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-    <script> 
-        // --- 전역 변수 ---
+
+    <script>
+        // --- Global Variables ---
         let scene, camera, renderer, controls;
-        let playerBoundingBox;
-        const playerHeight = 1.8; 
-        const playerRadius = 0.4; 
-        let walls = []; 
-        let enemies = []; 
-        let enemyBullets = []; 
-        let playerBullets = []; 
-        let muzzleSmokeParticles = []; 
-        let impactSparks = []; 
-        let explosionParticles = []; 
-        
-        let gameRunning = false; 
-        let score = 0; 
-        let maxPlayerHealth = 100; 
-        let playerHealth = maxPlayerHealth; 
-        
-        const maxPlayerAmmo = 30; 
-        let playerAmmo = maxPlayerAmmo; 
-        let isReloading = false; 
-        let isSprinting = false; 
+        let playerBoundingBox; // Player collision box
+        const playerHeight = 1.8; // Player model height
+        const playerRadius = 0.4; // Player model radius
+        let walls = []; // Array to store wall objects
+        let enemies = []; // Array to store enemy objects
+        let enemyBullets = []; // Array to store enemy bullet objects
+        let playerBullets = []; // Array to store player bullet objects
+        let muzzleSmokeParticles = []; // Array for muzzle smoke effects
+        let impactSparks = []; // Array for bullet impact sparks
+        let explosionParticles = []; // Array for enemy death explosions
 
-        const moveSpeed = 5.0; 
-        const sprintMultiplier = 1.3; 
-        let currentMoveSpeed = moveSpeed;
-        const defaultFOV = 75; 
-        const sprintFOV = 80; 
+        // Game State Variables
+        let gameRunning = false; // Is the game currently active?
+        let score = 0; // Player score
+        let maxPlayerHealth = 100; // Player maximum health
+        let playerHealth = maxPlayerHealth; // Player current health
 
-        let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false; 
-        let canPlayerJump = true; 
-        let playerVelocityY = 0; 
-        const playerJumpForce = 7; 
-        const gravity = -18; 
+        // Player Weapon Variables
+        const maxPlayerAmmo = 30; // Maximum ammo capacity
+        let playerAmmo = maxPlayerAmmo; // Current ammo count
+        let isReloading = false; // Is the player currently reloading?
+        let isSprinting = false; // Is the player sprinting?
 
-        let isSliding = false;
-        const slideHeight = playerHeight * 0.6; 
-        const slideFOV = 80;
-        const slideJumpBoost = 5; 
-        let slideJumpCooldownEndTime = 0;
-        const slideJumpCooldownDuration = 1500; 
-        let isSlideJumpBoosting = false; 
-        let slideJumpBoostEndTime = 0;
-        const slideJumpBoostDuration = 5000; 
+        // Player Movement Variables
+        const moveSpeed = 5.0; // Base movement speed
+        const sprintMultiplier = 1.3; // Speed multiplier when sprinting
+        let currentMoveSpeed = moveSpeed; // Current movement speed
+        const defaultFOV = 75; // Default camera field of view
+        const sprintFOV = 80; // FOV when sprinting
 
+        let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false; // Movement flags
+        let canPlayerJump = true; // Can the player jump?
+        let playerVelocityY = 0; // Player vertical velocity (for jumping/gravity)
+        const playerJumpForce = 7; // Force applied when jumping
+        const gravity = -18; // Gravity force
 
-        let currentPlayerDamage = 50; 
-        let lastDamageUpdateTime = 0;
-        const damageUpdateInterval = 3000; 
-
-        let playerGunMesh;
-        let gunTip; 
-        let originalGunMaterial; 
-
-        // 머신건 모드 관련 변수
-        let isMachineGunModeActive = false;
-        let machineGunModeEndTime = 0;
-        const machineGunModeDuration = 15000; 
-        const machineGunTotalMaxAmmo = 120; 
-        let machineGunCurrentAmmo = 0; 
-        let machineGunCooldownEndTime = 0;
-        const machineGunCooldown = 180000; 
-        let isMouseDown = false; 
-        let lastMachineGunShootTime = 0;
-        const machineGunShootInterval = 100; 
-        let originalCameraPosition = new THREE.Vector3(); 
+        // Sliding and Slide Jump Variables
+        let isSliding = false; // Is the player sliding?
+        const slideHeight = playerHeight * 0.6; // Player height when sliding
+        const slideFOV = 80; // FOV when sliding
+        const slideJumpBoost = 5; // Speed boost after slide jump
+        let slideJumpCooldownEndTime = 0; // Timestamp when slide jump cooldown ends
+        const slideJumpCooldownDuration = 1500; // Cooldown duration for slide jump (ms)
+        let isSlideJumpBoosting = false; // Is the player currently boosted after slide jump?
+        let slideJumpBoostEndTime = 0; // Timestamp when slide jump boost ends
+        const slideJumpBoostDuration = 5000; // Duration of the slide jump boost (ms)
 
 
-        let isShieldActive = false;
-        let shieldHealth = 0;
-        const maxShieldHealth = 15; 
-        let shieldCooldownEndTime = 0;
-        const shieldCooldown = 15000; 
-        let shieldUsedThisRound = false; 
-        let shieldMesh;
+        // Player Damage Variables
+        let currentPlayerDamage = 50; // Current damage dealt by player shots
+        let lastDamageUpdateTime = 0; // Timestamp of last damage update
+        const damageUpdateInterval = 3000; // Interval to update player damage (ms)
 
+        // Player Gun Model Variables
+        let playerGunMesh; // The 3D mesh for the player's gun
+        let gunTip; // An invisible object marking the gun's muzzle
+        let originalGunMaterial; // Store original gun materials for mode changes
 
-        let shootSound, enemyHitSound, enemyDieSound, playerHurtSound, enemyShootSound, 
-            ricochetSound, reloadSound, sprintWindSound, roundSuccessSound, gameClearSound, 
-            jumpSound, landSound, machineGunActivateSound, explosionSound, shieldActivateSound, shieldBreakSound, slideSound, cyberpunkSynth; 
-        let audioContextStarted = false; 
+        // Machine Gun Mode Variables
+        let isMachineGunModeActive = false; // Is machine gun mode active?
+        let machineGunModeEndTime = 0; // Timestamp when machine gun mode ends
+        const machineGunModeDuration = 15000; // Duration of machine gun mode (ms)
+        const machineGunTotalMaxAmmo = 120; // Max ammo in machine gun mode
+        let machineGunCurrentAmmo = 0; // Current ammo in machine gun mode
+        let machineGunCooldownEndTime = 0; // Timestamp when machine gun cooldown ends
+        const machineGunCooldown = 180000; // Cooldown for machine gun ability (ms)
+        let isMouseDown = false; // Is the left mouse button held down?
+        let lastMachineGunShootTime = 0; // Timestamp of last machine gun shot
+        const machineGunShootInterval = 100; // Firing interval for machine gun (ms)
+        let originalCameraPosition = new THREE.Vector3(); // Store original camera offset
 
-        let currentRound = 1;
-        const maxRounds = 5;
-        let enemiesToKillForNextRound = 20;
-        let killedEnemiesThisRound = 0;
-        let totalKilledEnemies = 0;
-        let gameStartTime = 0;
-        
-        // 적 속도 관련 변수 추가
-        const baseEnemySpeedInitial = 1.2; // 라운드 1의 적 기본 속도
-        let currentGlobalEnemySpeed = baseEnemySpeedInitial; // 현재 라운드의 적 실제 속도 (startNewRound에서 업데이트됨)
-        let baseEnemyBulletSpeed = 15; // 적 총알 기본 속도 (startNewRound에서 업데이트됨)
+        // Shield Ability Variables
+        let isShieldActive = false; // Is the shield active?
+        let shieldHealth = 0; // Current shield health
+        const maxShieldHealth = 15; // Maximum shield health
+        let shieldCooldownEndTime = 0; // Timestamp when shield cooldown ends
+        const shieldCooldown = 15000; // Cooldown for shield ability (ms)
+        let shieldUsedThisRound = false; // Has the shield been used in the current round?
+        let shieldMesh; // The 3D mesh for the shield effect
 
+        // Audio Variables (Tone.js Synths)
+        let shootSound, enemyHitSound, enemyDieSound, playerHurtSound, enemyShootSound,
+            ricochetSound, reloadSound, sprintWindSound, roundSuccessSound, gameClearSound,
+            jumpSound, landSound, machineGunActivateSound, explosionSound, shieldActivateSound, shieldBreakSound, slideSound, cyberpunkSynth, backgroundMusicLoop; // Added backgroundMusicLoop
+        let audioContextStarted = false; // Has the Tone.js audio context been started?
 
+        // Round and Game Progression Variables
+        let currentRound = 1; // Current game round
+        const maxRounds = 5; // Maximum number of rounds
+        let enemiesToKillForNextRound = 20; // Number of enemies to kill to advance
+        let killedEnemiesThisRound = 0; // Enemies killed in the current round
+        let totalKilledEnemies = 0; // Total enemies killed in the game
+        let gameStartTime = 0; // Timestamp when the game started
+
+        // Enemy Variables
+        const baseEnemySpeedInitial = 1.2; // Base enemy speed in round 1
+        let currentGlobalEnemySpeed = baseEnemySpeedInitial; // Current enemy speed for the round
+        let baseEnemyBulletSpeed = 15; // Base enemy bullet speed for the round
+
+        // DOM Element References
         const scoreElement = document.getElementById('score');
         const healthElement = document.getElementById('health');
         const ammoElement = document.getElementById('ammo');
         const playerDamageHUDElement = document.getElementById('playerDamageHUD');
         const roundInfoElement = document.getElementById('roundInfo');
         const machineGunInfoElement = document.getElementById('machineGunInfo');
-        const shieldInfoElement = document.getElementById('shieldInfo'); 
+        const shieldInfoElement = document.getElementById('shieldInfo');
         const slideJumpInfoElement = document.getElementById('slideJumpInfo');
         const elapsedTimeHUDElement = document.getElementById('elapsedTimeHUD');
         const messageBoxElement = document.getElementById('messageBox');
         const messageTextElement = document.getElementById('messageText');
         const roundTransitionMessageElement = document.getElementById('roundTransitionMessage');
-        const shieldStatusMessageElement = document.getElementById('shieldStatusMessage'); 
-        const machineGunStatusMessageElement = document.getElementById('machineGunStatusMessage'); // 변수명 변경됨
+        const shieldStatusMessageElement = document.getElementById('shieldStatusMessage');
+        const machineGunStatusMessageElement = document.getElementById('machineGunStatusMessage'); // Changed ID
         const tacticalReloadMessageElement = document.getElementById('tacticalReloadMessage');
-        const criticalHitMessageElement = document.getElementById('criticalHitMessage'); 
+        const criticalHitMessageElement = document.getElementById('criticalHitMessage');
         const superCriticalHitMessageElement = document.getElementById('superCriticalHitMessage');
         const startButton = document.getElementById('startButton');
         const crosshairElement = document.getElementById('crosshair');
         const gameCanvas = document.getElementById('gameCanvas');
 
-        let initialMapLayout = [ 
+        // Initial Map Layout (0 = empty, 1 = wall)
+        let initialMapLayout = [ // A simple grid representing the map
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1], 
+            [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1], // Example row with walls and empty spaces
             [1,0,1,0,1,0,1,1,1,0,1,0,1,0,1],
             [1,0,1,0,0,0,0,0,0,0,0,0,1,0,1],
             [1,0,1,1,1,1,0,1,1,1,1,0,1,0,1],
@@ -382,141 +400,160 @@
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
         ];
-        initialMapLayout = initialMapLayout.map(row => 
+        // Ensure no legacy special values (2, 3) exist from previous versions
+        initialMapLayout = initialMapLayout.map(row =>
             row.map(cell => (cell === 2 || cell === 3 ? 0 : cell))
         );
 
-        let currentMapData = []; 
+        let currentMapData = []; // Holds the map data for the current round
 
-        const wallSize = 4; 
-        const ENEMY_BULLET_SPEED_BASE = 15; 
-        const PLAYER_BULLET_SPEED = 50; 
+        // Constants
+        const wallSize = 4; // Size of each wall block
+        const ENEMY_BULLET_SPEED_BASE = 15; // Base speed for enemy bullets
+        const PLAYER_BULLET_SPEED = 50; // Speed for player bullets
 
-        // --- 초기화 함수 ---
+        // --- Initialization Function ---
         function init() {
+            // Scene setup
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0a0a2a); 
-            scene.fog = new THREE.Fog(0x0a0a2a, 15, 65); 
+            scene.background = new THREE.Color(0x0a0a2a); // Dark blue background
+            scene.fog = new THREE.Fog(0x0a0a2a, 15, 65); // Fog effect
 
+            // Camera setup
             camera = new THREE.PerspectiveCamera(defaultFOV, window.innerWidth / window.innerHeight, 0.1, 1000);
 
+            // Renderer setup
             renderer = new THREE.WebGLRenderer({ canvas: gameCanvas, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.shadowMap.enabled = true; 
-            renderer.toneMapping = THREE.ACESFilmicToneMapping; 
-            renderer.toneMappingExposure = 1.0;
+            renderer.shadowMap.enabled = true; // Enable shadows
+            renderer.toneMapping = THREE.ACESFilmicToneMapping; // Use filmic tone mapping for better colors
+            renderer.toneMappingExposure = 1.0; // Adjust exposure
 
-
-            const ambientLight = new THREE.AmbientLight(0x404080, 0.6); 
+            // Lighting setup
+            const ambientLight = new THREE.AmbientLight(0x404080, 0.6); // Soft ambient light
             scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0x8888ff, 0.4); 
+            const directionalLight = new THREE.DirectionalLight(0x8888ff, 0.4); // Main directional light
             directionalLight.position.set(30, 50, 20);
-            directionalLight.castShadow = true;
-            directionalLight.shadow.mapSize.width = 2048; 
+            directionalLight.castShadow = true; // Allow casting shadows
+            directionalLight.shadow.mapSize.width = 2048; // Shadow map resolution
             directionalLight.shadow.mapSize.height = 2048;
             scene.add(directionalLight);
 
-            const neonLight1 = new THREE.PointLight(0x00ffff, 0.8, 40, 2); 
+            // Neon lights for atmosphere
+            const neonLight1 = new THREE.PointLight(0x00ffff, 0.8, 40, 2); // Cyan point light
             neonLight1.position.set(wallSize * 2.5, wallSize * 0.8, wallSize * 3.5);
             scene.add(neonLight1);
-            const neonLight2 = new THREE.PointLight(0xff00ff, 0.8, 40, 2); 
+            const neonLight2 = new THREE.PointLight(0xff00ff, 0.8, 40, 2); // Magenta point light
             neonLight2.position.set(-wallSize * 3.5, wallSize * 0.8, -wallSize * 2.5);
             scene.add(neonLight2);
-            const neonLight3 = new THREE.RectAreaLight(0x00ff00, 5, wallSize*2, wallSize*0.2); 
+            const neonLight3 = new THREE.RectAreaLight(0x00ff00, 5, wallSize*2, wallSize*0.2); // Green area light
             neonLight3.position.set(0, wallSize * 1.4, -wallSize * 4);
             neonLight3.lookAt(0,0, -wallSize*4);
             scene.add(neonLight3);
 
 
-            controls = new THREE.PointerLockControls(camera, document.body); 
-            scene.add(controls.getObject()); 
-            controls.getObject().position.y = playerHeight; 
+            // Pointer Lock Controls setup
+            controls = new THREE.PointerLockControls(camera, document.body);
+            scene.add(controls.getObject()); // Add the camera controller to the scene
+            controls.getObject().position.y = playerHeight; // Set initial player height
 
-            controls.addEventListener('lock', () => { 
+            // Event listeners for Pointer Lock
+            controls.addEventListener('lock', () => { // When pointer is locked (game active)
                 messageBoxElement.style.display = 'none';
                 crosshairElement.style.display = 'block';
-                if (playerGunMesh) playerGunMesh.visible = true; 
-                if (!gameRunning && (!startButton.textContent.includes("도전") && !startButton.textContent.includes("플레이"))) { 
+                if (playerGunMesh) playerGunMesh.visible = true; // Show gun
+                if (!gameRunning && (!startButton.textContent.includes("도전") && !startButton.textContent.includes("플레이"))) { // If starting fresh
                     startGameFlow();
-                } else if (startButton.textContent.includes("계속하기")) { 
+                } else if (startButton.textContent.includes("계속하기")) { // If resuming from pause
                      gameRunning = true;
-                     if (Tone.Transport.state !== "started") Tone.Transport.start();
+                     if (Tone.Transport.state !== "started" && audioContextStarted) Tone.Transport.start(); // Resume music
                 }
             });
-            controls.addEventListener('unlock', () => { 
-                if (playerHealth > 0 && currentRound <= maxRounds) { 
+            controls.addEventListener('unlock', () => { // When pointer is unlocked (game paused or ended)
+                if (playerHealth > 0 && currentRound <= maxRounds) { // If paused mid-game
                     messageTextElement.textContent = "일시정지됨. 클릭하여 계속하기.";
                     startButton.textContent = "계속하기";
                     messageBoxElement.style.display = 'flex';
                 }
                 crosshairElement.style.display = 'none';
-                if (playerGunMesh) playerGunMesh.visible = false; 
-                if (shieldMesh) shieldMesh.visible = false; 
-                gameRunning = false; 
-                isMouseDown = false; 
-                if (Tone.Transport.state === "started") Tone.Transport.pause(); 
+                if (playerGunMesh) playerGunMesh.visible = false; // Hide gun
+                if (shieldMesh) shieldMesh.visible = false; // Hide shield
+                gameRunning = false; // Pause game logic
+                isMouseDown = false; // Reset mouse down state
+                if (Tone.Transport.state === "started" && audioContextStarted) Tone.Transport.pause(); // Pause music
             });
 
+            // Player collision box setup
             playerBoundingBox = new THREE.Box3();
-            generateMapForRound(currentRound); 
-            const startPos = findStartPosition();
-            controls.getObject().position.set(startPos.x, playerHeight, startPos.z);
-            originalCameraPosition.copy(camera.position); 
+            // Generate the initial map layout
+            generateMapForRound(currentRound);
+            const startPos = findStartPosition(); // Find a valid starting position
+            controls.getObject().position.set(startPos.x, playerHeight, startPos.z); // Place player at start
+            originalCameraPosition.copy(camera.position); // Store initial camera offset
 
 
-            createPlayerGun(); 
-            createShieldMesh(); 
-            updateHUD(); 
-            lastDamageUpdateTime = performance.now(); 
-            updatePlayerDamage(); 
+            // Create game elements
+            createPlayerGun(); // Create the gun model
+            createShieldMesh(); // Create the shield effect mesh
+            updateHUD(); // Initialize HUD display
+            lastDamageUpdateTime = performance.now(); // Set initial damage update time
+            updatePlayerDamage(); // Set initial player damage value
 
-            window.addEventListener('resize', onWindowResize, false); 
-            document.addEventListener('keydown', onKeyDown, false); 
-            document.addEventListener('keyup', onKeyUp, false); 
-            
+            // Add global event listeners
+            window.addEventListener('resize', onWindowResize, false); // Handle window resize
+            document.addEventListener('keydown', onKeyDown, false); // Handle key presses
+            document.addEventListener('keyup', onKeyUp, false); // Handle key releases
+
+            // Mouse click listeners
             window.addEventListener('mousedown', (event) => {
-                if (!controls.isLocked) {
+                if (!controls.isLocked) { // If pointer not locked, lock it
                     controls.lock();
-                } else if (gameRunning) {
-                    if (event.button === 0) { 
+                } else if (gameRunning) { // If game is running
+                    if (event.button === 0) { // Left click
                         isMouseDown = true;
-                        if (!isMachineGunModeActive) shoot(); 
-                    } else if (event.button === 2) { 
-                        activateShield();
+                        if (!isMachineGunModeActive) shoot(); // Shoot standard weapon
+                    } else if (event.button === 2) { // Right click
+                        activateShield(); // Activate shield
                     }
                 }
             });
-             window.addEventListener('mouseup', (event) => { 
-                if (event.button === 0) {
+             window.addEventListener('mouseup', (event) => { // Mouse button release
+                if (event.button === 0) { // Left click release
                     isMouseDown = false;
                 }
-                if (gameRunning && event.button === 2) {
-                    deactivateShield();
+                if (gameRunning && event.button === 2) { // Right click release
+                    deactivateShield(); // Deactivate shield
                 }
             });
+            // Prevent context menu on right click
             gameCanvas.addEventListener('contextmenu', (event) => event.preventDefault());
 
 
-            startButton.addEventListener('click', () => { 
-                if (!audioContextStarted) { 
-                     initAudio().then(proceedWithStartButton);
-                } else { 
+            // Start button listener
+            startButton.addEventListener('click', () => {
+                if (!audioContextStarted) { // If audio not started yet
+                     initAudio().then(proceedWithStartButton); // Initialize audio first
+                } else { // If audio already started
                     proceedWithStartButton();
                 }
             });
 
+            // Initial message box setup
             messageTextElement.textContent = "사이버펑크 슈터";
             messageBoxElement.style.display = 'flex';
             messageBoxElement.style.flexDirection = 'column';
             messageBoxElement.style.alignItems = 'center';
 
+            // Initial render
             renderer.render(scene, camera);
         }
 
+        // Finds a valid empty spot (0) on the map to spawn the player
         function findStartPosition() {
-            for (let r = 0; r < currentMapData.length; r++) { 
+            for (let r = 0; r < currentMapData.length; r++) {
                 for (let c = 0; c < currentMapData[r].length; c++) {
-                    if (currentMapData[r][c] === 0) { 
+                    if (currentMapData[r][c] === 0) { // Found an empty cell
+                        // Calculate world coordinates from grid coordinates
                         return {
                             x: (c - currentMapData[r].length / 2) * wallSize + wallSize / 2,
                             z: (r - currentMapData.length / 2) * wallSize + wallSize / 2
@@ -525,21 +562,24 @@
                 }
             }
             console.warn("유효한 시작 위치(0)를 찾지 못했습니다. 중앙에 배치합니다.");
-            return { x: 0, z: 0 }; 
+            return { x: 0, z: 0 }; // Fallback to center if no spot found
         }
 
+        // Initializes Tone.js audio components
         async function initAudio() {
+            // Start Tone.js context if not running (requires user interaction)
             if (typeof Tone !== 'undefined' && Tone.context.state !== 'running') {
-                await Tone.start(); 
+                await Tone.start();
                 audioContextStarted = true;
                 console.log("오디오 컨텍스트 시작됨.");
             }
 
             if (audioContextStarted) {
+                // Define various sound effects using Tone.js synths
                 shootSound = new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 }, volume: -15 }).toDestination();
                 enemyHitSound = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -18 }).toDestination();
-                enemyDieSound = new Tone.NoiseSynth({ noise: {type: "brown"}, envelope: {attack: 0.01, decay: 0.3, sustain: 0.1, release: 0.2}, volume: -12}).toDestination(); 
-                explosionSound = new Tone.NoiseSynth({ noise: {type: "pink", playbackRate: 0.5}, envelope: {attack: 0.005, decay: 0.4, sustain: 0.01, release: 0.3}, volume: -10}).toDestination(); 
+                enemyDieSound = new Tone.NoiseSynth({ noise: {type: "brown"}, envelope: {attack: 0.01, decay: 0.3, sustain: 0.1, release: 0.2}, volume: -12}).toDestination();
+                explosionSound = new Tone.NoiseSynth({ noise: {type: "pink", playbackRate: 0.5}, envelope: {attack: 0.005, decay: 0.4, sustain: 0.01, release: 0.3}, volume: -10}).toDestination();
                 playerHurtSound = new Tone.NoiseSynth({ noise: { type: 'brown' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0 }, volume: -12 }).toDestination();
                 enemyShootSound = new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.002, decay: 0.06, sustain: 0 }, volume: -20 }).toDestination();
                 ricochetSound = new Tone.MetalSynth({ frequency: 100, envelope: { attack: 0.001, decay: 0.1, release: 0.05 }, harmonicity: 3.1, modulationIndex: 16, resonance: 2000, octaves: 0.5, volume: -18 }).toDestination();
@@ -554,26 +594,30 @@
                 shieldBreakSound = new Tone.NoiseSynth({ noise: { type: "white" }, envelope: { attack: 0.001, decay: 0.2, sustain: 0 }, volume: -12 }).toDestination();
                 slideSound = new Tone.NoiseSynth({ noise: { type: 'white', playbackRate: 0.8 }, envelope: { attack: 0.005, decay: 0.15, sustain: 0.05, release: 0.1 }, volume: -22 }).toDestination();
 
+                // Background Music Synth
                 cyberpunkSynth = new Tone.PolySynth(Tone.Synth, {
                     oscillator: { type: "fatsawtooth", count: 3, spread: 30 },
                     envelope: { attack: 0.01, decay: 1.5, sustain: 0.3, release: 1 },
-                    volume: -18, 
+                    volume: -22, // Lower volume for background music
                 }).toDestination();
                 cyberpunkSynth.set({
                     "filter" : { "type" : "lowpass", "frequency": 1500, "Q": 2 },
                     "filterEnvelope" : { "attack" : 0.5, "decay" : 1, "sustain" : 0.1, "release" : 1.5, "baseFrequency" : 300, "octaves" : 3 }
                 });
+                // Simple repeating note pattern for background music
                 const cyberpunkNotes = [
                     ["C2", "G2", "A#2"], null, ["F2", "C3"], null,
                     ["G#2", "D#3"], null, ["D2", "A2"], null
                 ];
-                new Tone.Sequence((time, noteGroup) => {
+                // Create a Tone.Sequence to loop the music
+                backgroundMusicLoop = new Tone.Sequence((time, noteGroup) => {
                     if (noteGroup) cyberpunkSynth.triggerAttackRelease(noteGroup, "2n", time);
-                }, cyberpunkNotes, "1n").start(0);
-                Tone.Transport.bpm.value = 90; 
-                
+                }, cyberpunkNotes, "1n").start(0); // Start the sequence immediately
+                backgroundMusicLoop.loop = true; // Ensure it loops
+                Tone.Transport.bpm.value = 90; // Set tempo
+
                 try {
-                    await Tone.loaded(); 
+                    await Tone.loaded(); // Wait for any buffer-based sounds (though synths are usually ready)
                     console.log("모든 사운드 로드 완료 (Note: Tone.loaded()는 주로 버퍼 기반 에셋용입니다. 신디사이저는 즉시 사용 가능합니다.)");
                 } catch (error) {
                     console.error("사운드 로딩 중 오류 발생:", error);
@@ -582,51 +626,66 @@
                 console.warn("Tone.js가 로드되지 않았거나 오디오 컨텍스트 시작에 실패했습니다. 사운드 효과가 비활성화됩니다.");
             }
         }
-        
+
+        // Logic executed when the start button is clicked
         function proceedWithStartButton() {
-            if ((playerHealth <= 0 || currentRound > maxRounds) && (startButton.textContent.includes("도전") || startButton.textContent.includes("플레이") )) { 
-                resetGameFull(); 
+            // If game over or cleared, and button shows "다시 도전" or "다시 플레이", reset the game fully
+            if ((playerHealth <= 0 || currentRound > maxRounds) && (startButton.textContent.includes("도전") || startButton.textContent.includes("플레이") )) {
+                resetGameFull(); // Reset everything for a new game
+                 // Don't immediately lock controls here, let lock event handle startGameFlow
             }
-            controls.lock(); 
+            controls.lock(); // Request pointer lock
         }
 
+        // Starts the actual game flow (called after pointer lock)
         function startGameFlow() {
-            if (!gameStartTime) gameStartTime = performance.now(); 
-            if (Tone.Transport.state !== "started") { 
+            if (!gameStartTime) gameStartTime = performance.now(); // Record start time if not set
+            // Start background music transport if not already started
+            if (Tone.Transport.state !== "started" && audioContextStarted) {
                 Tone.Transport.start();
             }
-            gameRunning = true;
-            lastDamageUpdateTime = performance.now(); 
-            updatePlayerDamage(); 
-            startNewRound(); 
-            animate(); 
+            gameRunning = true; // Set game state to running
+            lastDamageUpdateTime = performance.now(); // Reset damage update timer
+            updatePlayerDamage(); // Set initial damage
+            startNewRound(); // Begin the first round
+            animate(); // Start the main game loop
         }
 
+        // Sets up a new round
         function startNewRound() {
+            // Increase max health slightly after round 1 (optional balancing)
             if (currentRound > 1) {
-                maxPlayerHealth *= 2; // 플레이어 최대 체력 증가 (밸런스 조절 가능)
+                maxPlayerHealth = Math.min(200, maxPlayerHealth + 20); // Cap health increase
             } else {
-                maxPlayerHealth = 100;
+                maxPlayerHealth = 100; // Reset to base health for round 1
             }
-            playerHealth = maxPlayerHealth; 
+            playerHealth = maxPlayerHealth; // Restore health to full
 
-            isReloading = false; 
-            machineGunCooldownEndTime = 0; 
-            isMachineGunModeActive = false; 
-            shieldCooldownEndTime = 0; 
-            shieldUsedThisRound = false; 
+            // Reset round-specific states
+            isReloading = false;
+            // Don't reset cooldowns between rounds, let them persist
+            // machineGunCooldownEndTime = 0;
+            isMachineGunModeActive = false;
+            // shieldCooldownEndTime = 0;
+            shieldUsedThisRound = false;
             isShieldActive = false;
-            if (shieldMesh) shieldMesh.visible = false;
+            if (shieldMesh) shieldMesh.visible = false; // Hide shield mesh
 
 
+            // --- Clean up objects from the previous round ---
+            // Remove walls
             walls.forEach(wall => scene.remove(wall));
             walls = [];
+            // Remove enemies
             enemies.forEach(enemy => scene.remove(enemy));
             enemies = [];
+            // Remove enemy bullets
             enemyBullets.forEach(bullet => scene.remove(bullet));
             enemyBullets = [];
+            // Remove player bullets
             playerBullets.forEach(bullet => scene.remove(bullet));
             playerBullets = [];
+            // Remove particle effects
             muzzleSmokeParticles.forEach(p => scene.remove(p));
             muzzleSmokeParticles = [];
             impactSparks.forEach(p => scene.remove(p));
@@ -635,122 +694,159 @@
             explosionParticles = [];
 
 
-            generateMapForRound(currentRound); 
-            createEnvironmentFromMapData(); 
+            // Generate and create the map for the new round
+            generateMapForRound(currentRound);
+            createEnvironmentFromMapData();
 
+            // Reset round kill count and determine target kills
             killedEnemiesThisRound = 0;
             if (currentRound > 1) {
-                 enemiesToKillForNextRound = Math.max(enemiesToKillForNextRound + 2, Math.floor(enemiesToKillForNextRound * 1.6)); 
+                 // Increase kill target for subsequent rounds
+                 enemiesToKillForNextRound = Math.max(enemiesToKillForNextRound + 5, Math.floor(enemiesToKillForNextRound * 1.3));
             } else {
-                enemiesToKillForNextRound = 20; 
+                enemiesToKillForNextRound = 20; // Target for round 1
             }
-            
-            // 현재 라운드 적 속도 및 총알 속도 설정
-            currentGlobalEnemySpeed = baseEnemySpeedInitial * (1 + (currentRound - 1) * 0.15); // 예: 라운드마다 15%씩 증가
-            const bulletSpeedMultiplier = 1 + (currentRound - 1) * 0.25; 
+
+            // Adjust enemy speed and bullet speed based on the current round
+            currentGlobalEnemySpeed = baseEnemySpeedInitial * (1 + (currentRound - 1) * 0.15); // Increase speed by 15% per round
+            const bulletSpeedMultiplier = 1 + (currentRound - 1) * 0.25; // Increase bullet speed by 25% per round
             baseEnemyBulletSpeed = ENEMY_BULLET_SPEED_BASE * bulletSpeedMultiplier;
 
-            spawnEnemiesForRound(enemiesToKillForNextRound + Math.floor(Math.random() * 11)); 
-            updateHUD();
+            // Spawn enemies for the round
+            spawnEnemiesForRound(enemiesToKillForNextRound + Math.floor(Math.random() * 11)); // Spawn target + some extra
+            updateHUD(); // Update display
         }
-        
-        function generateMapForRound(round) {
-            currentMapData = JSON.parse(JSON.stringify(initialMapLayout)); 
 
-            const changes = Math.min(round * 3, 15); 
-            let attempts = 0; 
+        // Generates a new map layout for the given round by modifying the initial layout
+        function generateMapForRound(round) {
+            // Start with a fresh copy of the initial layout
+            currentMapData = JSON.parse(JSON.stringify(initialMapLayout));
+
+            // Introduce random changes to the map based on the round number
+            const changes = Math.min(round * 3, 15); // More changes in later rounds, capped
+            let attempts = 0; // Prevent infinite loops
             for (let i = 0; i < changes && attempts < 100; attempts++) {
-                const r = Math.floor(Math.random() * (currentMapData.length - 2)) + 1; 
+                // Pick a random inner cell (not edges)
+                const r = Math.floor(Math.random() * (currentMapData.length - 2)) + 1;
                 const c = Math.floor(Math.random() * (currentMapData[0].length - 2)) + 1;
-                if (currentMapData[r][c] !== 0) { 
-                    currentMapData[r][c] = Math.random() < 0.4 ? 1 : 0; 
-                    i++; 
+                // If the cell is currently a wall (1)
+                if (currentMapData[r][c] === 1) {
+                    // Randomly decide whether to turn it into an empty space (0)
+                    currentMapData[r][c] = Math.random() < 0.6 ? 0 : 1; // 60% chance to remove wall
+                    i++; // Increment change counter only if a change was made
+                } else if (currentMapData[r][c] === 0) { // If it's an empty space
+                     // Randomly decide whether to turn it into a wall (1)
+                    currentMapData[r][c] = Math.random() < 0.1 ? 1 : 0; // 10% chance to add wall
+                    i++;
                 }
             }
         }
 
+        // Creates the 3D environment (floor, ceiling, walls) based on currentMapData
         function createEnvironmentFromMapData() {
-            const floorGeometry = new THREE.PlaneGeometry(200, 200);
-            const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a3a, roughness: 0.7, metalness: 0.3 }); 
+            // Floor
+            const floorGeometry = new THREE.PlaneGeometry(200, 200); // Large plane
+            const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a3a, roughness: 0.7, metalness: 0.3 });
             const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-            floor.rotation.x = -Math.PI / 2; 
-            floor.receiveShadow = true; 
+            floor.rotation.x = -Math.PI / 2; // Rotate to be horizontal
+            floor.receiveShadow = true; // Allow receiving shadows
             scene.add(floor);
 
-            const ceilingMaterial = new THREE.MeshStandardMaterial({ color: 0x050515, roughness: 0.9 }); 
+            // Ceiling
+            const ceilingMaterial = new THREE.MeshStandardMaterial({ color: 0x050515, roughness: 0.9 }); // Darker ceiling
             const ceiling = new THREE.Mesh(floorGeometry, ceilingMaterial);
-            ceiling.rotation.x = Math.PI / 2;
-            ceiling.position.y = wallSize * 1.5; 
+            ceiling.rotation.x = Math.PI / 2; // Rotate opposite to floor
+            ceiling.position.y = wallSize * 1.5; // Position above walls
             scene.add(ceiling);
 
-            const wallGeometry = new THREE.BoxGeometry(wallSize, wallSize * 1.5, wallSize); 
-            const wallTexture = createCyberWallTexture(); 
-            const wallMaterial = new THREE.MeshStandardMaterial({ map: wallTexture, roughness: 0.6, metalness: 0.4 }); 
+            // Walls
+            const wallGeometry = new THREE.BoxGeometry(wallSize, wallSize * 1.5, wallSize); // Geometry for walls
+            const wallTexture = createCyberWallTexture(); // Generate procedural texture
+            const wallMaterial = new THREE.MeshStandardMaterial({ map: wallTexture, roughness: 0.6, metalness: 0.4 });
 
+            // Iterate through the map data
             for (let r = 0; r < currentMapData.length; r++) {
                 for (let c = 0; c < currentMapData[r].length; c++) {
-                    if (currentMapData[r][c] === 1) { 
+                    if (currentMapData[r][c] === 1) { // If it's a wall cell
                         const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+                        // Calculate world position based on grid position
                         wall.position.x = (c - currentMapData[r].length / 2 + 0.5) * wallSize;
-                        wall.position.y = (wallSize * 1.5) / 2; 
+                        wall.position.y = (wallSize * 1.5) / 2; // Center vertically
                         wall.position.z = (r - currentMapData.length / 2 + 0.5) * wallSize;
-                        wall.castShadow = true;
-                        wall.receiveShadow = true;
-                        wall.userData.boundingBox = new THREE.Box3().setFromObject(wall); 
-                        walls.push(wall);
-                        scene.add(wall);
+                        wall.castShadow = true; // Walls cast shadows
+                        wall.receiveShadow = true; // Walls receive shadows
+                        // Pre-calculate and store bounding box for collision detection
+                        wall.userData.boundingBox = new THREE.Box3().setFromObject(wall);
+                        walls.push(wall); // Add to walls array
+                        scene.add(wall); // Add to scene
                     }
                 }
             }
         }
-        
+
+        // Spawns a specified number of enemies at valid locations
         function spawnEnemiesForRound(count) {
-            const spawnPoints = getValidSpawnPoints(count); 
-            const numToSpawn = Math.min(count, spawnPoints.length); 
+            const spawnPoints = getValidSpawnPoints(count); // Get valid locations
+            const numToSpawn = Math.min(count, spawnPoints.length); // Spawn up to the number of available points
             console.log(`Spawning ${numToSpawn} enemies for round ${currentRound}. Target: ${enemiesToKillForNextRound}, Available points: ${spawnPoints.length}`);
             for (let i = 0; i < numToSpawn; i++) {
+                // Pick a random spawn point and remove it from the list
                 const pointIndex = Math.floor(Math.random() * spawnPoints.length);
-                const point = spawnPoints.splice(pointIndex, 1)[0]; 
-                spawnSingleEnemy(point.x, point.z);
+                const point = spawnPoints.splice(pointIndex, 1)[0];
+                spawnSingleEnemy(point.x, point.z); // Spawn an enemy at the chosen point
             }
         }
 
+        // Finds valid empty spots on the map suitable for spawning enemies
         function getValidSpawnPoints(neededPoints) {
             const points = [];
             const playerPos = controls.getObject().position;
+            const minSpawnDistSq = (wallSize * 2.5) * (wallSize * 2.5); // Minimum distance from player (squared)
+
             for (let r = 0; r < currentMapData.length; r++) {
                 for (let c = 0; c < currentMapData[r].length; c++) {
-                    if (currentMapData[r][c] === 0) { 
+                    if (currentMapData[r][c] === 0) { // If it's an empty cell
+                        // Calculate potential spawn coordinates
                         const x = (c - currentMapData[r].length / 2 + 0.5) * wallSize;
                         const z = (r - currentMapData.length / 2 + 0.5) * wallSize;
-                        
+                        const spawnPos = new THREE.Vector3(x, playerHeight * 0.5, z); // Check at mid-height
+
+                        // Check distance from player
+                        if (playerPos.distanceToSquared(spawnPos) < minSpawnDistSq) {
+                            continue; // Too close to player, skip
+                        }
+
+                        // Check collision with existing walls at the potential spawn point
                         let overlapsWithWall = false;
                         const enemyRadius = playerRadius * 0.7;
                         const enemyHeight = playerRadius * 2.2;
-                        const tempEnemyPos = new THREE.Vector3(x, enemyHeight / 2, z); 
                         const tempEnemyCollider = new THREE.Box3().setFromCenterAndSize(
-                            tempEnemyPos,
+                            new THREE.Vector3(x, enemyHeight / 2, z),
                             new THREE.Vector3(enemyRadius * 2, enemyHeight, enemyRadius * 2)
                         );
-                        for (const wall of walls) { 
+                        for (const wall of walls) {
                             if (tempEnemyCollider.intersectsBox(wall.userData.boundingBox)) {
                                 overlapsWithWall = true;
                                 break;
                             }
                         }
 
-                        if (!overlapsWithWall && playerPos.distanceTo(new THREE.Vector3(x, playerHeight, z)) > wallSize * 2.5) { 
+                        // If it's a valid spot (empty, not too close, not inside a wall)
+                        if (!overlapsWithWall) {
                             points.push({ x, z });
                         }
                     }
                 }
             }
-            if (points.length < neededPoints && points.length > 0) { 
+
+            // Handle cases where not enough points are found
+            if (points.length < neededPoints && points.length > 0) {
                 console.warn(`요청한 스폰 포인트(${neededPoints})보다 적은 수(${points.length})의 유효 지점만 찾았습니다.`);
                 return points;
-            } else if (points.length === 0) { 
+            } else if (points.length === 0) {
                 console.error("유효한 스폰 지점을 전혀 찾을 수 없습니다! 맵 데이터 또는 로직 확인 필요. 임의 위치에 스폰합니다.");
-                for(let i=0; i<neededPoints; i++){ 
+                // Fallback: generate random points if absolutely no valid spots found
+                for(let i=0; i<neededPoints; i++){
                     points.push({x: (Math.random()-0.5) * wallSize * (currentMapData[0].length/2 - 2), z: (Math.random()-0.5) * wallSize * (currentMapData.length/2 - 2)});
                 }
             }
@@ -758,38 +854,47 @@
         }
 
 
+        // Creates the visual model for the player's gun
         function createPlayerGun() {
-            playerGunMesh = new THREE.Group();
+            playerGunMesh = new THREE.Group(); // Use a group to hold gun parts
+
+            // Define materials for the gun
             const gunBodyMaterial = new THREE.MeshStandardMaterial({ color: 0x222233, metalness: 0.7, roughness: 0.3, emissive: 0x111122, emissiveIntensity: 0.5 });
             const gunAccentMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff, metalness: 0.8, roughness: 0.2, emissive: 0x00ffff, emissiveIntensity: 0.8 });
 
 
+            // Barrel
             const barrelGeometry = new THREE.CylinderGeometry(0.03, 0.03, 0.6, 16);
             const barrel = new THREE.Mesh(barrelGeometry, gunBodyMaterial);
             barrel.position.set(0, -0.05, -0.4);
             barrel.rotation.x = Math.PI / 2;
             playerGunMesh.add(barrel);
 
+            // Gun Tip (invisible object for muzzle flash/bullet origin)
             gunTip = new THREE.Object3D();
-            gunTip.position.set(0, -0.05, -0.7); 
+            gunTip.position.set(0, -0.05, -0.7); // Position at the end of the barrel
             playerGunMesh.add(gunTip);
 
+            // Main Body
             const bodyGeometry = new THREE.BoxGeometry(0.1, 0.12, 0.4);
             const body = new THREE.Mesh(bodyGeometry, gunBodyMaterial);
             body.position.set(0, -0.1, 0);
             playerGunMesh.add(body);
 
+            // Stock
             const stockGeometry = new THREE.BoxGeometry(0.08, 0.1, 0.3);
             const stock = new THREE.Mesh(stockGeometry, gunBodyMaterial);
             stock.position.set(0, -0.08, 0.3);
             playerGunMesh.add(stock);
-            
+
+            // Grip
             const gripGeometry = new THREE.BoxGeometry(0.06, 0.2, 0.06);
-            const grip = new THREE.Mesh(gripGeometry, new THREE.MeshStandardMaterial({color: 0x111118, metalness:0.4, roughness: 0.6}));
+            const grip = new THREE.Mesh(gripGeometry, new THREE.MeshStandardMaterial({color: 0x111118, metalness:0.4, roughness: 0.6})); // Slightly different grip material
             grip.position.set(0, -0.2, -0.05);
-            grip.rotation.x = -0.2; 
+            grip.rotation.x = -0.2; // Slight angle
             playerGunMesh.add(grip);
 
+            // Accent Lines
             const lineGeo = new THREE.BoxGeometry(0.01, 0.01, 0.35);
             const line1 = new THREE.Mesh(lineGeo, gunAccentMaterial);
             line1.position.set(0.04, -0.05, -0.1);
@@ -798,181 +903,215 @@
             line2.position.set(-0.04, -0.05, -0.1);
             playerGunMesh.add(line2);
 
-            originalGunMaterial = { 
+            // Store original materials to revert after machine gun mode
+            originalGunMaterial = {
                 body: gunBodyMaterial.clone(),
                 accent: gunAccentMaterial.clone()
             };
 
 
-            playerGunMesh.position.set(0.25, -0.3, -0.7); 
-            playerGunMesh.rotation.y = -0.1; 
-            playerGunMesh.visible = false; 
-            camera.add(playerGunMesh); 
+            // Position the gun relative to the camera
+            playerGunMesh.position.set(0.25, -0.3, -0.7); // Offset from camera center
+            playerGunMesh.rotation.y = -0.1; // Slight rotation
+            playerGunMesh.visible = false; // Initially hidden
+            camera.add(playerGunMesh); // Attach gun to camera
         }
-        
+
+        // Creates a procedural texture for the cyber-style walls
         function createCyberWallTexture() {
             const canvas = document.createElement('canvas');
-            canvas.width = 128; 
+            canvas.width = 128; // Texture resolution
             canvas.height = 128;
             const context = canvas.getContext('2d');
-            context.fillStyle = '#1a1a2a'; 
+
+            // Base color
+            context.fillStyle = '#1a1a2a'; // Dark blue
             context.fillRect(0, 0, 128, 128);
 
-            context.strokeStyle = '#0055aa'; 
+            // Circuit-like lines
+            context.strokeStyle = '#0055aa'; // Darker cyan
             context.lineWidth = 1;
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < 8; i++) { // Draw several random lines
                 context.beginPath();
                 context.moveTo(Math.random() * 128, Math.random() * 128);
                 context.lineTo(Math.random() * 128, Math.random() * 128);
                 context.stroke();
-                if (Math.random() < 0.5) { 
+                // Occasionally add a second segment
+                if (Math.random() < 0.5) {
                     context.lineTo(Math.random() * 128, Math.random() * 128);
                     context.stroke();
                 }
             }
-            context.fillStyle = '#00aaff';
-            for (let i = 0; i < 30; i++) {
+
+            // Small glowing dots
+            context.fillStyle = '#00aaff'; // Brighter cyan
+            for (let i = 0; i < 30; i++) { // Draw several small squares
                 context.fillRect(Math.random() * 128, Math.random() * 128, 2, 2);
             }
+
+            // Create texture from canvas
             const texture = new THREE.CanvasTexture(canvas);
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(1, 1); 
+            texture.wrapS = THREE.RepeatWrapping; // Repeat texture horizontally
+            texture.wrapT = THREE.RepeatWrapping; // Repeat texture vertically
+            texture.repeat.set(1, 1); // How many times to repeat (adjust for scaling)
             return texture;
         }
-        
-        function spawnSingleEnemy(x, z) {
-            const enemyRadius = playerRadius * 0.7; 
-            const enemyHeight = playerRadius * 2.2; 
-            let enemyGeometry;
-            let enemyColor = 0xff3333; 
-            let enemyEmissive = 0x550000;
 
+        // Spawns a single enemy at the specified world coordinates
+        function spawnSingleEnemy(x, z) {
+            const enemyRadius = playerRadius * 0.7; // Enemy size relative to player
+            const enemyHeight = playerRadius * 2.2;
+            let enemyGeometry; // Geometry will vary by round
+            let enemyColor = 0xff3333; // Default color (red)
+            let enemyEmissive = 0x550000; // Default emissive color
+
+            // Choose enemy shape and color based on the current round
             switch (currentRound) {
                 case 1:
                     enemyGeometry = new THREE.CylinderGeometry(enemyRadius, enemyRadius, enemyHeight, 12);
-                    enemyColor = 0xff3333; enemyEmissive = 0x550000; 
+                    enemyColor = 0xff3333; enemyEmissive = 0x550000; // Red
                     break;
                 case 2:
                     enemyGeometry = new THREE.BoxGeometry(enemyRadius * 1.5, enemyHeight, enemyRadius * 1.5);
-                    enemyColor = 0x33ff33; enemyEmissive = 0x005500; 
+                    enemyColor = 0x33ff33; enemyEmissive = 0x005500; // Green
                     break;
                 case 3:
                     enemyGeometry = new THREE.SphereGeometry(enemyRadius * 1.2, 16, 12);
-                    enemyColor = 0x3333ff; enemyEmissive = 0x000055; 
+                    enemyColor = 0x3333ff; enemyEmissive = 0x000055; // Blue
                     break;
                 case 4:
                     enemyGeometry = new THREE.ConeGeometry(enemyRadius, enemyHeight, 16);
-                    enemyColor = 0xffff33; enemyEmissive = 0x555500; 
+                    enemyColor = 0xffff33; enemyEmissive = 0x555500; // Yellow
                     break;
-                case 5:
+                case 5: // Final round boss-like enemy
                     enemyGeometry = new THREE.TorusKnotGeometry(enemyRadius * 0.8, enemyRadius * 0.3, 64, 8);
-                    enemyColor = 0xff00ff; enemyEmissive = 0x550055; 
+                    enemyColor = 0xff00ff; enemyEmissive = 0x550055; // Magenta
                     break;
-                default: // 만약 maxRounds를 초과하는 라운드가 있다면 기본형으로
+                default: // Fallback for rounds beyond maxRounds (if any)
                     enemyGeometry = new THREE.CylinderGeometry(enemyRadius, enemyRadius, enemyHeight, 12);
             }
 
-            const enemyMaterial = new THREE.MeshStandardMaterial({ 
-                color: enemyColor, 
-                emissive: enemyEmissive, 
-                roughness: 0.4, 
-                metalness: 0.3 
-            }); 
+            // Create enemy material
+            const enemyMaterial = new THREE.MeshStandardMaterial({
+                color: enemyColor,
+                emissive: enemyEmissive, // Make it glow slightly
+                roughness: 0.4,
+                metalness: 0.3
+            });
 
+            // Create enemy mesh
             const enemy = new THREE.Mesh(enemyGeometry, enemyMaterial);
-            enemy.position.set(x, enemyHeight / 2, z); 
-            enemy.castShadow = true;
-            enemy.userData = { 
-                health: 80, 
-                speed: currentGlobalEnemySpeed, // 수정됨: 현재 라운드에 맞는 적 속도 사용
-                originalSpeed: currentGlobalEnemySpeed, // 수정됨
-                boundingBox: new THREE.Box3(), 
-                id: `enemy_${Math.random().toString(36).substring(2,15)}`, 
-                shootCooldown: Math.random() * 1 + 1.5, 
-                shootInterval: Math.max(1.0, (3.5 - currentRound * 0.2)), 
-                canSeePlayer: false,
-                targetPosition: new THREE.Vector3(x, enemyHeight / 2, z), 
-                isMovingToTarget: false,
-                moveTimer: 0,
-                jumpCooldown: Math.random() * 3 + 2, 
-                isJumping: false,
-                velocityY: 0,
-                originalY: enemyHeight / 2,
+            enemy.position.set(x, enemyHeight / 2, z); // Position at ground level
+            enemy.castShadow = true; // Enemy casts shadows
+
+            // Store enemy-specific data in userData
+            enemy.userData = {
+                health: 80 + (currentRound - 1) * 20, // Increase health per round
+                speed: currentGlobalEnemySpeed, // Use round-specific speed
+                originalSpeed: currentGlobalEnemySpeed,
+                boundingBox: new THREE.Box3(), // Bounding box for collisions
+                id: `enemy_${Math.random().toString(36).substring(2,15)}`, // Unique ID
+                shootCooldown: Math.random() * 1 + 1.5, // Time until next shot
+                shootInterval: Math.max(0.5, (2.5 - currentRound * 0.2)), // Time between shots (decreases per round)
+                canSeePlayer: false, // Can the enemy see the player?
+                targetPosition: new THREE.Vector3(x, enemyHeight / 2, z), // Target position for wandering
+                isMovingToTarget: false, // Is the enemy currently wandering?
+                moveTimer: 0, // Timer for wandering behavior
+                jumpCooldown: Math.random() * 3 + 2, // Cooldown for jumping
+                isJumping: false, // Is the enemy currently jumping?
+                velocityY: 0, // Vertical velocity for jumping
+                originalY: enemyHeight / 2, // Original Y position
             };
-            enemy.userData.boundingBox.setFromObject(enemy); 
-            enemies.push(enemy);
-            scene.add(enemy);
+            enemy.userData.boundingBox.setFromObject(enemy); // Calculate initial bounding box
+            enemies.push(enemy); // Add to enemies array
+            scene.add(enemy); // Add to scene
         }
-        
+
+        // Updates the player's damage value randomly within ranges
         function updatePlayerDamage() {
             const rand = Math.random() * 100;
-            if (rand < 70) { 
-                currentPlayerDamage = Math.floor(Math.random() * 49) + 1; 
-            } else if (rand < 90) { 
-                currentPlayerDamage = Math.floor(Math.random() * 10) + 50; 
-            } else { 
-                currentPlayerDamage = Math.floor(Math.random() * 11) + 60; 
+            if (rand < 70) { // 70% chance for low damage
+                currentPlayerDamage = Math.floor(Math.random() * 49) + 1; // 1-49
+            } else if (rand < 90) { // 20% chance for medium damage
+                currentPlayerDamage = Math.floor(Math.random() * 10) + 50; // 50-59 (Critical base)
+            } else { // 10% chance for high damage
+                currentPlayerDamage = Math.floor(Math.random() * 11) + 60; // 60-70 (Super Critical base)
             }
-            playerDamageHUDElement.textContent = `데미지: ${currentPlayerDamage}`;
+            playerDamageHUDElement.textContent = `데미지: ${currentPlayerDamage}`; // Update HUD
         }
 
-        let prevTime = performance.now(); 
+        // --- Main Game Loop ---
+        let prevTime = performance.now(); // Timestamp of the previous frame
         function animate() {
-            if (!gameRunning && playerHealth > 0 && !startButton.textContent.includes("도전") && !startButton.textContent.includes("플레이")) { 
-                requestAnimationFrame(animate); 
-                renderer.render(scene, camera); 
-                return;
-            }
-             if (!gameRunning && (playerHealth <= 0 || currentRound > maxRounds)) { 
-                return;
-            }
+            // Stop loop if game is over or cleared and not waiting for restart
+             if (!gameRunning && (playerHealth <= 0 || currentRound > maxRounds)) {
+                 // Check if message box is displayed, if so, keep rendering for the message
+                 if (messageBoxElement.style.display === 'flex') {
+                      requestAnimationFrame(animate);
+                      renderer.render(scene, camera);
+                 }
+                 return; // Otherwise, stop the loop
+             }
+             // If paused mid-game, keep rendering but don't update game logic
+             if (!gameRunning) {
+                 requestAnimationFrame(animate);
+                 renderer.render(scene, camera);
+                 return;
+             }
 
 
-            requestAnimationFrame(animate); 
+            // Request the next frame
+            requestAnimationFrame(animate);
 
+            // Calculate delta time (time since last frame in seconds)
             const time = performance.now();
-            const delta = (time - prevTime) / 1000; 
+            const delta = (time - prevTime) / 1000;
 
+            // Update player damage periodically
             if (time - lastDamageUpdateTime > damageUpdateInterval) {
                 updatePlayerDamage();
                 lastDamageUpdateTime = time;
             }
 
+            // Apply gravity to the player
             applyPlayerGravity(delta);
 
+            // Determine current movement speed based on sprint/slide/boost
             currentMoveSpeed = isSprinting ? moveSpeed * sprintMultiplier : moveSpeed;
             if (isMachineGunModeActive) {
-                currentMoveSpeed *= 0.7; 
+                currentMoveSpeed *= 0.7; // Slower when machine gun is active
             }
             if (isSlideJumpBoosting && time < slideJumpBoostEndTime) {
-                currentMoveSpeed = moveSpeed + slideJumpBoost;
+                currentMoveSpeed = moveSpeed + slideJumpBoost; // Apply boost speed
             } else if (isSlideJumpBoosting && time >= slideJumpBoostEndTime) {
-                isSlideJumpBoosting = false;
+                isSlideJumpBoosting = false; // Boost ended
             }
 
 
+            // Adjust camera FOV smoothly based on state (sliding/sprinting)
             let currentFOV = isSliding ? slideFOV : (isSprinting ? sprintFOV : defaultFOV);
-            camera.fov += (currentFOV - camera.fov) * 0.1; 
-            camera.updateProjectionMatrix();
+            camera.fov += (currentFOV - camera.fov) * 0.1; // Smooth transition
+            camera.updateProjectionMatrix(); // Update camera projection
 
 
-            const playerObject = controls.getObject(); 
-            
-            let intendedDeltaX = 0;
-            let intendedDeltaZ = 0;
-            const camDirection = new THREE.Vector3();
+            // --- Player Movement and Collision ---
+            const playerObject = controls.getObject(); // Get the player's camera/control object
+            let intendedDeltaX = 0; // Intended movement change in X
+            let intendedDeltaZ = 0; // Intended movement change in Z
+            const camDirection = new THREE.Vector3(); // Camera's forward direction
             camera.getWorldDirection(camDirection);
-            
-            if (!isSliding) {
+
+            if (!isSliding) { // Don't use Y component unless sliding (for simplicity)
                 camDirection.y = 0;
             }
             camDirection.normalize();
 
 
+            // Calculate right direction relative to camera
             const rightDirection = new THREE.Vector3();
-            rightDirection.crossVectors(camDirection, camera.up); 
+            rightDirection.crossVectors(camera.up, camDirection).normalize(); // Corrected cross product order
 
+            // Calculate intended movement based on input flags
             if (moveForward) {
                 intendedDeltaX += camDirection.x * currentMoveSpeed * delta;
                 intendedDeltaZ += camDirection.z * currentMoveSpeed * delta;
@@ -981,130 +1120,161 @@
                 intendedDeltaX -= camDirection.x * currentMoveSpeed * delta;
                 intendedDeltaZ -= camDirection.z * currentMoveSpeed * delta;
             }
-            if (moveLeft) { 
-                intendedDeltaX -= rightDirection.x * currentMoveSpeed * delta; 
+            if (moveLeft) {
+                intendedDeltaX -= rightDirection.x * currentMoveSpeed * delta;
                 intendedDeltaZ -= rightDirection.z * currentMoveSpeed * delta;
             }
-            if (moveRight) { 
+            if (moveRight) {
                 intendedDeltaX += rightDirection.x * currentMoveSpeed * delta;
                 intendedDeltaZ += rightDirection.z * currentMoveSpeed * delta;
             }
-            
-            const tempPlayerPos = playerObject.position.clone();
-            const prevPlayerPos = playerObject.position.clone(); 
 
+            // --- Collision Detection (Simplified Axis Separation) ---
+            const tempPlayerPos = playerObject.position.clone(); // Store current position
+            const prevPlayerPos = playerObject.position.clone(); // Store previous position for correction
 
+            // Check X-axis movement
             tempPlayerPos.x += intendedDeltaX;
             if (!checkWallCollision(tempPlayerPos)) {
-                playerObject.position.x = tempPlayerPos.x;
-            } else { 
-                playerObject.position.x = prevPlayerPos.x + Math.sign(intendedDeltaX) * 0.01; 
+                playerObject.position.x = tempPlayerPos.x; // Move if no collision
+            } else {
+                // If collision, try moving a tiny bit to avoid getting stuck
+                playerObject.position.x = prevPlayerPos.x + Math.sign(intendedDeltaX) * 0.01;
             }
-            tempPlayerPos.x = playerObject.position.x; 
+            tempPlayerPos.x = playerObject.position.x; // Update temp position
 
+            // Check Z-axis movement
             tempPlayerPos.z += intendedDeltaZ;
             if (!checkWallCollision(tempPlayerPos)) {
-                playerObject.position.z = tempPlayerPos.z;
-            } else { 
-                 playerObject.position.z = prevPlayerPos.z + Math.sign(intendedDeltaZ) * 0.01; 
+                playerObject.position.z = tempPlayerPos.z; // Move if no collision
+            } else {
+                // If collision, try moving a tiny bit
+                 playerObject.position.z = prevPlayerPos.z + Math.sign(intendedDeltaZ) * 0.01;
             }
-            
+
+            // Update player's bounding box based on new position
             playerBoundingBox.setFromCenterAndSize(
                 playerObject.position,
                 new THREE.Vector3(playerRadius * 2, playerHeight, playerRadius * 2)
             );
 
+            // --- Update Game Objects and Effects ---
+            // Handle continuous machine gun fire if mouse is held down
             if (isMouseDown && isMachineGunModeActive && !isReloading && gameRunning) {
                 if (time - lastMachineGunShootTime > machineGunShootInterval) {
-                    shoot(); 
+                    shoot(); // Fire machine gun
                     lastMachineGunShootTime = time;
                 }
             }
-            
 
-            updateEnemies(delta, time); 
-            updateEnemyBullets(delta);
-            updatePlayerBullets(delta); 
-            updateMuzzleSmoke(delta); 
-            updateImpactSparks(delta); 
-            updateExplosions(delta); 
-            updateMachineGunMode(time); // 함수명 변경됨: updateAkimbo -> updateMachineGunMode
-            updateShield(time); 
-            updateElapsedTime(time); 
-            updateSlideJumpInfo(time);
 
-            prevTime = time;
-            renderer.render(scene, camera);
+            updateEnemies(delta, time); // Update enemy AI and movement
+            updateEnemyBullets(delta); // Update enemy bullets
+            updatePlayerBullets(delta); // Update player bullets
+            updateMuzzleSmoke(delta); // Update smoke particles
+            updateImpactSparks(delta); // Update spark particles
+            updateExplosions(delta); // Update explosion particles
+            updateMachineGunMode(time); // Check machine gun mode duration/cooldown
+            updateShield(time); // Update shield status/cooldown
+            updateElapsedTime(time); // Update game timer display
+            updateSlideJumpInfo(time); // Update slide jump cooldown display
+
+            // --- Render ---
+            prevTime = time; // Store time for next frame's delta calculation
+            renderer.render(scene, camera); // Render the scene
         }
 
+        // Applies gravity to the player and handles landing
         function applyPlayerGravity(delta) {
             const playerObject = controls.getObject();
+            // Target Y position depends on whether sliding or standing
             const targetPlayerY = isSliding ? slideHeight : playerHeight;
 
-            if (!canPlayerJump || playerObject.position.y > targetPlayerY) { 
-                playerVelocityY += gravity * delta;
-                playerObject.position.y += playerVelocityY * delta;
+            // If player is in the air (not on ground or jumping allowed)
+            if (!canPlayerJump || playerObject.position.y > targetPlayerY) {
+                playerVelocityY += gravity * delta; // Apply gravity to vertical velocity
+                playerObject.position.y += playerVelocityY * delta; // Update position based on velocity
 
-                if (playerObject.position.y <= targetPlayerY) { 
-                    playerObject.position.y = targetPlayerY;
-                    playerVelocityY = 0;
-                    if (!isSliding) { 
-                         canPlayerJump = true;
-                         if (landSound && audioContextStarted) landSound.triggerAttackRelease("C2", "8n");
+                // Check if player has landed
+                if (playerObject.position.y <= targetPlayerY) {
+                    playerObject.position.y = targetPlayerY; // Snap to ground level
+                    playerVelocityY = 0; // Reset vertical velocity
+                    if (!isSliding) { // Only allow jumping again if not sliding
+                         canPlayerJump = true; // Allow jumping again
+                         // Play landing sound if not sliding
+                         if (landSound && audioContextStarted && Math.abs(playerVelocityY) < 0.1) { // Avoid sound on tiny adjustments
+                             landSound.triggerAttackRelease("C2", "8n");
+                         }
                     }
                 }
-            } else if (playerObject.position.y < targetPlayerY) { 
+            } else if (playerObject.position.y < targetPlayerY) { // If somehow below ground, snap up
                  playerObject.position.y = targetPlayerY;
                  playerVelocityY = 0;
                  canPlayerJump = true;
             }
         }
-        
+
+        // Checks collision between a proposed position and the walls
         function checkWallCollision(proposedPosition, objectRadius = playerRadius) {
-            const objectHeight = isSliding ? slideHeight : ((objectRadius === playerRadius) ? playerHeight : objectRadius * 2.2); 
-            const objectCenterY = isSliding ? slideHeight / 2 : ((objectRadius === playerRadius) ? proposedPosition.y - playerHeight/2 + objectHeight/2 : proposedPosition.y); 
-            
+            // Determine object height based on sliding state or if it's an enemy
+            const objectHeight = isSliding ? slideHeight : ((objectRadius === playerRadius) ? playerHeight : objectRadius * 2.2);
+            // Calculate the center Y position of the collider
+            const objectCenterY = isSliding ? slideHeight / 2 : ((objectRadius === playerRadius) ? proposedPosition.y - playerHeight/2 + objectHeight/2 : proposedPosition.y);
+
+            // Create a bounding box for the object at the proposed position
             const objectCollider = new THREE.Box3().setFromCenterAndSize(
-                new THREE.Vector3(proposedPosition.x, objectCenterY, proposedPosition.z), 
-                new THREE.Vector3(objectRadius * 2, objectHeight, objectRadius * 2) 
+                new THREE.Vector3(proposedPosition.x, objectCenterY, proposedPosition.z),
+                new THREE.Vector3(objectRadius * 2, objectHeight, objectRadius * 2) // Use diameter for width/depth
             );
 
+            // Check intersection with each wall's bounding box
             for (const wall of walls) {
                 if (objectCollider.intersectsBox(wall.userData.boundingBox)) {
-                    return true; 
+                    return true; // Collision detected
                 }
             }
-            return false; 
+            return false; // No collision
         }
 
+        // Updates enemy behavior (movement, shooting, AI)
         function updateEnemies(delta, time) {
             const playerPos = controls.getObject().position;
-            enemies.forEach((enemy, index) => { 
-                if (!enemy.userData || enemy.userData.health <= 0) return; 
+            enemies.forEach((enemy, index) => {
+                if (!enemy.userData || enemy.userData.health <= 0) return; // Skip dead enemies
 
-                const enemyPos = enemy.position; 
+                const enemyPos = enemy.position;
                 const directionToPlayer = playerPos.clone().sub(enemyPos);
-                const distanceToPlayer = directionToPlayer.length();
+                const distanceToPlayerSq = directionToPlayer.lengthSq(); // Use squared distance for performance
+                const distanceToPlayer = Math.sqrt(distanceToPlayerSq);
                 directionToPlayer.normalize();
 
-                const raycaster = new THREE.Raycaster(new THREE.Vector3(enemyPos.x, playerHeight * 0.8, enemyPos.z), directionToPlayer); 
-                const intersects = raycaster.intersectObjects(walls, false); 
-                enemy.userData.canSeePlayer = false;
-                if (intersects.length === 0 || intersects[0].distance > distanceToPlayer - playerRadius) { 
-                    if (distanceToPlayer < 30) { 
+                // --- Line of Sight Check ---
+                const raycaster = new THREE.Raycaster(
+                    new THREE.Vector3(enemyPos.x, playerHeight * 0.8, enemyPos.z), // Ray origin slightly above enemy feet
+                    directionToPlayer // Direction towards player
+                );
+                const intersects = raycaster.intersectObjects(walls, false); // Check intersection with walls only
+                enemy.userData.canSeePlayer = false; // Assume cannot see initially
+                // If no walls intersected, or the first intersected wall is further than the player
+                if (intersects.length === 0 || intersects[0].distance > distanceToPlayer - playerRadius) {
+                    if (distanceToPlayer < 30) { // Check if within visual range
                          enemy.userData.canSeePlayer = true;
                     }
                 }
-                
+
+                // --- Enemy Jumping ---
                 enemy.userData.jumpCooldown -= delta;
-                if (!enemy.userData.isJumping && enemy.userData.jumpCooldown <= 0 && Math.random() < 0.01) { 
+                // Random chance to jump if cooldown is ready
+                if (!enemy.userData.isJumping && enemy.userData.jumpCooldown <= 0 && Math.random() < 0.01) {
                     enemy.userData.isJumping = true;
-                    enemy.userData.velocityY = playerJumpForce * 0.7; 
-                    enemy.userData.jumpCooldown = Math.random() * 4 + 3; 
+                    enemy.userData.velocityY = playerJumpForce * 0.7; // Jump with less force than player
+                    enemy.userData.jumpCooldown = Math.random() * 4 + 3; // Reset jump cooldown
                 }
+                // Apply gravity/velocity if jumping
                 if (enemy.userData.isJumping) {
-                    enemy.userData.velocityY += gravity * delta * 0.8; 
+                    enemy.userData.velocityY += gravity * delta * 0.8; // Apply gravity (slightly less than player)
                     enemy.position.y += enemy.userData.velocityY * delta;
+                    // Landed
                     if (enemy.position.y <= enemy.userData.originalY) {
                         enemy.position.y = enemy.userData.originalY;
                         enemy.userData.isJumping = false;
@@ -1113,55 +1283,64 @@
                 }
 
 
-                if (enemy.userData.canSeePlayer) {
+                // --- AI Behavior ---
+                if (enemy.userData.canSeePlayer) { // If enemy sees the player
+                    // Look at player
                     const targetRotation = Math.atan2(directionToPlayer.x, directionToPlayer.z);
-                    enemy.rotation.y += (targetRotation - enemy.rotation.y) * 0.1; 
+                    enemy.rotation.y += (targetRotation - enemy.rotation.y) * 0.1; // Smooth rotation
 
-                    if (distanceToPlayer > wallSize * 1.5) { 
+                    // Move towards player if not too close
+                    if (distanceToPlayer > wallSize * 1.5) {
                         const enemyMoveSpeed = enemy.userData.speed * delta;
-                        const potentialMove = directionToPlayer.clone().multiplyScalar(enemyMoveSpeed); 
-                        
+                        const potentialMove = directionToPlayer.clone().multiplyScalar(enemyMoveSpeed);
+
+                        // Simple collision avoidance (move along axes separately)
                         const oldPos = enemy.position.clone();
                         let canMoveX = true;
                         let canMoveZ = true;
-                        
-                        const enemyRadiusForCollision = playerRadius * 0.7; 
+                        const enemyRadiusForCollision = playerRadius * 0.7;
 
+                        // Try moving X
                         enemy.position.x += potentialMove.x;
                         if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveX = false;
-                        if (!canMoveX) enemy.position.x = oldPos.x; 
+                        if (!canMoveX) enemy.position.x = oldPos.x; // Revert if collision
 
+                        // Try moving Z
                         enemy.position.z += potentialMove.z;
                         if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveZ = false;
-                        if (!canMoveZ) enemy.position.z = oldPos.z; 
+                        if (!canMoveZ) enemy.position.z = oldPos.z; // Revert if collision
                     }
-                    
+
+                    // Shooting logic
                     enemy.userData.shootCooldown -= delta;
-                    if (enemy.userData.shootCooldown <= 0 && distanceToPlayer < 25) { 
-                        fireEnemyBullet(enemy, directionToPlayer.clone()); 
-                        enemy.userData.shootCooldown = enemy.userData.shootInterval;
+                    if (enemy.userData.shootCooldown <= 0 && distanceToPlayer < 25) { // If cooldown ready and within range
+                        fireEnemyBullet(enemy, directionToPlayer.clone()); // Fire a bullet
+                        enemy.userData.shootCooldown = enemy.userData.shootInterval; // Reset cooldown
                     }
-                } else { 
+                } else { // If enemy cannot see the player (Wandering behavior)
                     enemy.userData.moveTimer -= delta;
+                    // If wander timer is up, pick a new random target position
                     if (enemy.userData.moveTimer <= 0) {
                         const randomAngle = Math.random() * Math.PI * 2;
-                        const randomDist = Math.random() * wallSize * 2 + wallSize; 
+                        const randomDist = Math.random() * wallSize * 2 + wallSize; // Random distance within a range
                         enemy.userData.targetPosition.set(
                             enemyPos.x + Math.sin(randomAngle) * randomDist,
                             enemy.userData.originalY,
                             enemyPos.z + Math.cos(randomAngle) * randomDist
                         );
                         enemy.userData.isMovingToTarget = true;
-                        enemy.userData.moveTimer = Math.random() * 3 + 2; 
+                        enemy.userData.moveTimer = Math.random() * 3 + 2; // Reset wander timer
                     }
 
+                    // Move towards the wander target
                     if (enemy.userData.isMovingToTarget) {
                         const directionToTarget = enemy.userData.targetPosition.clone().sub(enemyPos).normalize();
                         const distanceToTarget = enemy.userData.targetPosition.distanceTo(enemyPos);
-                        if (distanceToTarget > 0.5) {
-                            const enemyMoveSpeed = enemy.userData.speed * 0.7 * delta; 
+                        if (distanceToTarget > 0.5) { // If not yet at target
+                            const enemyMoveSpeed = enemy.userData.speed * 0.7 * delta; // Wander slower
                             const potentialMove = directionToTarget.multiplyScalar(enemyMoveSpeed);
-                            
+
+                            // Collision avoidance while wandering
                             const oldPos = enemy.position.clone();
                             let canMoveX = true;
                             let canMoveZ = true;
@@ -1169,289 +1348,351 @@
 
                             enemy.position.x += potentialMove.x;
                             if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveX = false;
-                            if (!canMoveX) enemy.position.x = oldPos.x; 
+                            if (!canMoveX) enemy.position.x = oldPos.x;
 
                             enemy.position.z += potentialMove.z;
                             if(checkWallCollision(enemy.position, enemyRadiusForCollision)) canMoveZ = false;
-                            if (!canMoveZ) enemy.position.z = oldPos.z; 
-                            
+                            if (!canMoveZ) enemy.position.z = oldPos.z;
+
+                            // Slowly turn towards wander direction
                             const targetRotation = Math.atan2(directionToTarget.x, directionToTarget.z);
-                            enemy.rotation.y += (targetRotation - enemy.rotation.y) * 0.05; 
-                        } else {
+                            enemy.rotation.y += (targetRotation - enemy.rotation.y) * 0.05;
+                        } else { // Reached wander target
                             enemy.userData.isMovingToTarget = false;
                         }
                     }
                 }
-                enemy.userData.boundingBox.setFromObject(enemy); 
+                // Update enemy bounding box after moving
+                enemy.userData.boundingBox.setFromObject(enemy);
 
-                const collisionDistance = playerRadius + (playerRadius * 0.7); 
-                if (distanceToPlayer < collisionDistance && !enemy.userData.isJumping) { 
-                    takeDamage(5); 
-                    const knockbackDirection = playerPos.clone().sub(enemyPos).normalize(); 
-                    controls.getObject().position.addScaledVector(knockbackDirection, 0.2); 
-                    enemy.position.addScaledVector(knockbackDirection.negate(), 0.3); 
+                // --- Player-Enemy Collision (Melee Damage) ---
+                const collisionDistance = playerRadius + (playerRadius * 0.7); // Collision radius sum
+                // If player and enemy are close enough and enemy is on the ground
+                if (distanceToPlayer < collisionDistance && !enemy.userData.isJumping) {
+                    takeDamage(5); // Player takes small damage
+                    // Knockback effect
+                    const knockbackDirection = playerPos.clone().sub(enemyPos).normalize();
+                    controls.getObject().position.addScaledVector(knockbackDirection, 0.2); // Push player back slightly
+                    enemy.position.addScaledVector(knockbackDirection.negate(), 0.3); // Push enemy back more
                 }
             });
         }
-        
+
+        // Creates and fires a bullet from an enemy
         function fireEnemyBullet(enemy, direction) {
-            if (enemyShootSound && audioContextStarted) { // 수정됨: .loaded 제거
-                enemyShootSound.start().catch(e => console.error("적 발사음 재생 오류:", e));
+            // Play shooting sound
+            if (enemyShootSound && audioContextStarted) {
+                enemyShootSound.triggerAttackRelease("C3", "0.05").catch(e => console.error("적 발사음 재생 오류:", e));
             }
 
-            const bulletGeometry = new THREE.SphereGeometry(0.15, 8, 8); 
-            const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xffaa00 }); 
+            // Create bullet mesh
+            const bulletGeometry = new THREE.SphereGeometry(0.15, 8, 8); // Small sphere
+            const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xffaa00 }); // Orange color
             const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
 
-            const spreadAngle = Math.PI / 24; 
-            direction.applyAxisAngle(new THREE.Vector3(0,1,0), (Math.random() - 0.5) * spreadAngle);
-            direction.applyAxisAngle(new THREE.Vector3(1,0,0), (Math.random() - 0.5) * spreadAngle);
+            // Add slight inaccuracy (spread)
+            const spreadAngle = Math.PI / 24; // Small angle for spread
+            direction.applyAxisAngle(new THREE.Vector3(0,1,0), (Math.random() - 0.5) * spreadAngle); // Horizontal spread
+            direction.applyAxisAngle(new THREE.Vector3(1,0,0), (Math.random() - 0.5) * spreadAngle); // Vertical spread
 
 
-            const bulletOffset = direction.clone().multiplyScalar(playerRadius * 1.0); 
+            // Position bullet slightly in front of the enemy
+            const bulletOffset = direction.clone().multiplyScalar(playerRadius * 1.0);
             bullet.position.copy(enemy.position).add(bulletOffset);
-            bullet.position.y = enemy.position.y; 
+            bullet.position.y = enemy.position.y; // Fire from enemy's center height
 
-            let maxDamageForRound = 5; 
+            // Calculate bullet damage based on round
+            let maxDamageForRound = 5;
             if (currentRound > 1) {
                 for (let i = 0; i < currentRound - 1; i++) {
-                    maxDamageForRound = Math.floor(maxDamageForRound * 1.3); 
+                    maxDamageForRound = Math.floor(maxDamageForRound * 1.3); // Increase damage potential per round
                 }
             }
-            maxDamageForRound = Math.max(1, maxDamageForRound); 
+            maxDamageForRound = Math.max(1, maxDamageForRound); // Ensure minimum damage of 1
 
+            // Store bullet data
             bullet.userData = {
-                velocity: direction.normalize().multiplyScalar(baseEnemyBulletSpeed), 
-                damage: Math.max(1, Math.floor(Math.random() * maxDamageForRound) + 1),
-                spawnTime: performance.now()
+                velocity: direction.normalize().multiplyScalar(baseEnemyBulletSpeed), // Use round-specific speed
+                damage: Math.max(1, Math.floor(Math.random() * maxDamageForRound) + 1), // Random damage within round range
+                spawnTime: performance.now() // Record spawn time for lifespan
             };
-            enemyBullets.push(bullet);
-            scene.add(bullet);
+            enemyBullets.push(bullet); // Add to bullet array
+            scene.add(bullet); // Add to scene
         }
 
+        // Updates the position and checks collisions for enemy bullets
         function updateEnemyBullets(delta) {
-            for (let i = enemyBullets.length - 1; i >= 0; i--) {
+            for (let i = enemyBullets.length - 1; i >= 0; i--) { // Iterate backwards for safe removal
                 const bullet = enemyBullets[i];
+                // Move bullet based on velocity and delta time
                 bullet.position.addScaledVector(bullet.userData.velocity, delta);
 
-                if (performance.now() - bullet.userData.spawnTime > 5000) {
+                // Remove bullet if it's too old (lifespan)
+                if (performance.now() - bullet.userData.spawnTime > 5000) { // 5 second lifespan
                     scene.remove(bullet);
                     enemyBullets.splice(i, 1);
-                    continue;
+                    continue; // Skip to next bullet
                 }
 
-                const bulletSphere = new THREE.Sphere(bullet.position, 0.15);
+                // --- Collision Checks ---
+                // Create a sphere collider for the bullet
+                const bulletSphere = new THREE.Sphere(bullet.position, 0.15); // Radius matches geometry
+
+                // Check collision with player
                 if (playerBoundingBox.intersectsSphere(bulletSphere)) {
-                    takeDamage(bullet.userData.damage);
-                    scene.remove(bullet);
+                    takeDamage(bullet.userData.damage); // Damage the player
+                    scene.remove(bullet); // Remove bullet
                     enemyBullets.splice(i, 1);
-                    continue;
+                    continue; // Skip to next bullet
                 }
 
+                // Check collision with walls
                 for (const wall of walls) {
                     if (wall.userData.boundingBox.intersectsSphere(bulletSphere)) {
-                        scene.remove(bullet);
+                        scene.remove(bullet); // Remove bullet
                         enemyBullets.splice(i, 1);
-                        break; 
+                        i = -1; // Exit inner loop (bullet is gone)
+                        break; // Exit wall loop
                     }
                 }
+                 if (i === -1) continue; // Skip to next bullet if removed
             }
         }
 
+        // Handles player shooting action
         function shoot() {
-            if (isReloading || !gameRunning) return;  
-            
-            let damageToDeal = currentPlayerDamage;
+            if (isReloading || !gameRunning) return; // Can't shoot if reloading or game not running
 
+            let damageToDeal = currentPlayerDamage; // Base damage for this shot
+
+            // Handle Machine Gun Mode specifics
             if (isMachineGunModeActive) {
-                if (machineGunCurrentAmmo <= 0) {
-                    isMachineGunModeActive = false; 
+                if (machineGunCurrentAmmo <= 0) { // Out of machine gun ammo
+                    isMachineGunModeActive = false; // Deactivate mode
                     updateHUD();
-                    if (playerAmmo < maxPlayerAmmo) handleReload(); 
+                    if (playerAmmo < maxPlayerAmmo) handleReload(); // Reload standard weapon if needed
                     return;
                 }
-                machineGunCurrentAmmo--;
-                damageToDeal = 15; 
-            } else {
-                if (playerAmmo <= 0) {
-                    handleReload(); 
+                machineGunCurrentAmmo--; // Consume machine gun ammo
+                damageToDeal = 15; // Fixed lower damage for machine gun
+            } else { // Standard weapon
+                if (playerAmmo <= 0) { // Out of standard ammo
+                    handleReload(); // Initiate reload
                     return;
                 }
-                playerAmmo--;
+                playerAmmo--; // Consume standard ammo
             }
 
 
-            updateHUD();
-            if (shootSound && audioContextStarted) { // 수정됨: .loaded 제거
-                shootSound.start().catch(e => console.error("플레이어 발사음 재생 오류:", e));
+            updateHUD(); // Update ammo display
+            // Play shooting sound
+            if (shootSound && audioContextStarted) {
+                shootSound.triggerAttackRelease(0.05).catch(e => console.error("플레이어 발사음 재생 오류:", e));
             }
 
+            // Get world position of the gun tip and camera direction
             const gunTipWorldPosition = new THREE.Vector3();
             const cameraDirection = new THREE.Vector3();
             camera.getWorldDirection(cameraDirection);
-            
-            gunTip.getWorldPosition(gunTipWorldPosition);
+            gunTip.getWorldPosition(gunTipWorldPosition); // Get world coords of the invisible gun tip
 
 
-            createMuzzleSmoke(gunTipWorldPosition, isMachineGunModeActive); 
+            // Create muzzle flash effect
+            createMuzzleSmoke(gunTipWorldPosition, isMachineGunModeActive);
 
-            const bulletGeometry = new THREE.SphereGeometry(0.08, 6, 6); 
-            const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 1.5 }); 
+            // Create bullet mesh
+            const bulletGeometry = new THREE.SphereGeometry(0.08, 6, 6); // Smaller bullet
+            const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 1.5 }); // Cyan, glowing
             const playerBullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
 
-            playerBullet.position.copy(gunTipWorldPosition); 
+            // Position bullet at gun tip
+            playerBullet.position.copy(gunTipWorldPosition);
+            // Store bullet data
             playerBullet.userData = {
-                velocity: cameraDirection.clone().multiplyScalar(PLAYER_BULLET_SPEED),
-                spawnTime: performance.now(),
-                damage: damageToDeal 
+                velocity: cameraDirection.clone().multiplyScalar(PLAYER_BULLET_SPEED), // Set velocity based on camera direction
+                spawnTime: performance.now(), // Record spawn time for lifespan
+                damage: damageToDeal // Store damage for this bullet
             };
-            playerBullets.push(playerBullet);
-            scene.add(playerBullet);
+            playerBullets.push(playerBullet); // Add to bullet array
+            scene.add(playerBullet); // Add to scene
         }
 
+        // Updates the position and checks collisions for player bullets
         function updatePlayerBullets(delta) {
-            for (let i = playerBullets.length - 1; i >= 0; i--) {
+            for (let i = playerBullets.length - 1; i >= 0; i--) { // Iterate backwards
                 const bullet = playerBullets[i];
+                // Move bullet
                 bullet.position.addScaledVector(bullet.userData.velocity, delta);
 
-                if (performance.now() - bullet.userData.spawnTime > 2000) { 
+                // Remove old bullets
+                if (performance.now() - bullet.userData.spawnTime > 2000) { // 2 second lifespan
                     scene.remove(bullet);
                     playerBullets.splice(i, 1);
                     continue;
                 }
 
-                const bulletSphere = new THREE.Sphere(bullet.position, 0.08);
+                // --- Collision Checks ---
+                const bulletSphere = new THREE.Sphere(bullet.position, 0.08); // Bullet collider
+
+                // Check collision with walls
                 for (const wall of walls) {
                     if (wall.userData.boundingBox.intersectsSphere(bulletSphere)) {
-                        createImpactSpark(bullet.position); 
-                        if (ricochetSound && audioContextStarted) ricochetSound.triggerAttackRelease().catch(e => console.error("도탄음 재생 오류:", e)); // 수정됨
-                        scene.remove(bullet);
+                        createImpactSpark(bullet.position); // Create spark effect
+                        // Play ricochet sound
+                        if (ricochetSound && audioContextStarted) ricochetSound.triggerAttackRelease().catch(e => console.error("도탄음 재생 오류:", e));
+                        scene.remove(bullet); // Remove bullet
                         playerBullets.splice(i, 1);
-                        i = -1; 
-                        break;
+                        i = -1; // Mark bullet as removed
+                        break; // Exit wall loop
                     }
                 }
-                if (i === -1) continue;
+                if (i === -1) continue; // Go to next bullet if removed
 
-                for (const enemy of enemies) { 
+                // Check collision with enemies
+                for (const enemy of enemies) {
+                    // Check only alive enemies and if bounding box intersects bullet sphere
+                    // NOTE: This bounding box check inherently includes the torso.
                     if (enemy.userData.health > 0 && enemy.userData.boundingBox.intersectsSphere(bulletSphere)) {
-                        let damageDealt = bullet.userData.damage;
-                        let scoreMultiplier = 1;
+                        let damageDealt = bullet.userData.damage; // Get damage from bullet
+                        let scoreMultiplier = 1; // Base score multiplier
 
-                        if (damageDealt >= 60) { 
+                        // Check for Critical / Super Critical Hits based on damage roll
+                        if (damageDealt >= 60) { // Super Critical
                             showSuperCriticalHitMessage();
-                            damageDealt = enemy.userData.health; 
-                            scoreMultiplier = 2; 
-                        } else if (damageDealt >= 50) { 
+                            damageDealt = enemy.userData.health; // Insta-kill (or deal massive damage)
+                            scoreMultiplier = 2; // Double score
+                        } else if (damageDealt >= 50) { // Critical
                             showCriticalHitMessage();
+                            // Optional: Increase damage slightly for criticals
+                            // damageDealt *= 1.5;
                         }
 
+                        // Apply damage to enemy
                         enemy.userData.health -= damageDealt;
-                        if (enemyHitSound && audioContextStarted) { // 수정됨
+                        // Play enemy hit sound
+                        if (enemyHitSound && audioContextStarted) {
                              enemyHitSound.triggerAttackRelease("C4", "8n").catch(e => console.error("적 피격음 재생 오류:", e));
                         }
 
+                        // --- Enemy Death Logic ---
                         if (enemy.userData.health <= 0) {
-                            createExplosionEffect(enemy.position); 
-                            if (explosionSound && audioContextStarted) explosionSound.start(); // 수정됨
-                            
-                            scene.remove(enemy); 
+                            createExplosionEffect(enemy.position); // Create death explosion
+                            // Play enemy death sound
+                            if (enemyDieSound && audioContextStarted) enemyDieSound.triggerAttackRelease("0.3");
+
+                            // Remove enemy object from scene and array
+                            scene.remove(enemy);
                             const enemyIndex = enemies.findIndex(e => e.userData.id === enemy.userData.id);
                             if (enemyIndex > -1) enemies.splice(enemyIndex, 1);
-                            
-                            score += (10 * scoreMultiplier); 
+
+                            // Update score and kill counts
+                            score += (10 * scoreMultiplier); // Add score
                             killedEnemiesThisRound++;
                             totalKilledEnemies++;
                             updateHUD();
-                            
-                            if (killedEnemiesThisRound >= enemiesToKillForNextRound) {
-                                if (currentRound < maxRounds) {
+
+                            // --- Round Progression Logic ---
+                            if (killedEnemiesThisRound >= enemiesToKillForNextRound) { // Round target met
+                                if (currentRound < maxRounds) { // If not the final round
                                     showRoundTransitionMessage(`${currentRound} 라운드 성공!`);
-                                    if(roundSuccessSound && audioContextStarted) roundSuccessSound.triggerAttackRelease("G5", "4n"); // 수정됨
-                                    gameRunning = false; 
+                                    if(roundSuccessSound && audioContextStarted) roundSuccessSound.triggerAttackRelease("G5", "4n");
+                                    gameRunning = false; // Temporarily pause game logic
+                                    // Start next round after a delay
                                     setTimeout(() => {
                                         currentRound++;
                                         startNewRound();
-                                        if (controls.isLocked) gameRunning = true; 
-                                    }, 2000); 
-                                } else {
-                                    gameClear();
+                                        if (controls.isLocked) gameRunning = true; // Resume if still locked
+                                    }, 2000); // 2 second delay
+                                } else { // Final round completed
+                                    gameClear(); // Trigger game clear sequence
                                 }
-                            } else {
-                                const maxAdditionalSpawns = 6; 
-                                const currentEnemyCount = enemies.filter(e => e.userData.health > 0).length; 
-                                const maxAllowedEnemiesThisRound = enemiesToKillForNextRound + 10; 
-                                const enemiesToActuallySpawn = Math.min(maxAdditionalSpawns, maxAllowedEnemiesThisRound - currentEnemyCount);
-
+                            } else { // Round target not met, potentially spawn more enemies
+                                const maxAdditionalSpawns = 6; // Max enemies to spawn at once after a kill
+                                const currentEnemyCount = enemies.filter(e => e.userData.health > 0).length; // Count remaining live enemies
+                                const maxAllowedEnemiesThisRound = enemiesToKillForNextRound + 10; // Cap total enemies on map
+                                // Calculate how many new enemies to spawn
+                                const enemiesToActuallySpawn = Math.min(maxAdditionalSpawns, maxAllowedEnemiesThisRound - currentEnemyCount, 1); // Spawn at most 1 per kill to avoid overcrowding
 
                                 if (enemiesToActuallySpawn > 0) {
-                                    spawnEnemiesForRound(enemiesToActuallySpawn);
+                                    spawnEnemiesForRound(enemiesToActuallySpawn); // Spawn reinforcements
                                 }
                             }
-                        } else {
-                             enemy.material.color.setHex(0xffffff); 
+                        } else { // Enemy hit but not killed
+                             // Flash enemy white briefly on hit
+                             enemy.material.color.setHex(0xffffff);
                              setTimeout(() => {
-                                 if(enemy.material) { // 적의 원래 색상으로 되돌리는 로직 (개선 필요)
-                                    let originalColor = 0xff3333; // 기본값
-                                    switch (currentRound) { // 라운드별 색상 다시 적용
+                                 if(enemy.material && enemy.userData.health > 0) { // Check if enemy still exists and alive
+                                    // Revert to original color based on round
+                                    let originalColor = 0xff3333; // Default
+                                    switch (currentRound) {
+                                        case 1: originalColor = 0xff3333; break;
                                         case 2: originalColor = 0x33ff33; break;
                                         case 3: originalColor = 0x3333ff; break;
                                         case 4: originalColor = 0xffff33; break;
                                         case 5: originalColor = 0xff00ff; break;
                                     }
-                                    enemy.material.color.setHex(originalColor); 
+                                    enemy.material.color.setHex(originalColor);
                                  }
-                             }, 100);
+                             }, 100); // Flash duration
                         }
+                        // Remove the bullet after hit
                         scene.remove(bullet);
                         playerBullets.splice(i, 1);
-                        i = -1; 
-                        break;
+                        i = -1; // Mark bullet as removed
+                        break; // Exit enemy loop (bullet hit one enemy)
                     }
                 }
-                 if (i === -1) continue;
+                 if (i === -1) continue; // Go to next bullet if removed
             }
         }
 
+        // --- Visual Effect Functions ---
+
+        // Shows the "CRITICAL!" message with animation
         function showCriticalHitMessage() {
             criticalHitMessageElement.style.display = 'block';
-            criticalHitMessageElement.style.animation = 'none'; 
-            criticalHitMessageElement.offsetHeight; 
+            // Reset animation by removing and re-adding class or setting animation to none
+            criticalHitMessageElement.style.animation = 'none';
+            criticalHitMessageElement.offsetHeight; // Trigger reflow to reset animation
             criticalHitMessageElement.style.animation = 'criticalHitAnimation 0.7s ease-out forwards';
+            // Hide after animation duration
             setTimeout(() => {
                 criticalHitMessageElement.style.display = 'none';
-            }, 700); 
+            }, 700);
         }
+        // Shows the "SUPER CRITICAL!" message with animation
         function showSuperCriticalHitMessage() {
             superCriticalHitMessageElement.style.display = 'block';
             superCriticalHitMessageElement.style.animation = 'none';
-            superCriticalHitMessageElement.offsetHeight; 
-            superCriticalHitMessageElement.style.animation = 'superCriticalHitAnimation 1s ease-out forwards'; 
+            superCriticalHitMessageElement.offsetHeight; // Trigger reflow
+            superCriticalHitMessageElement.style.animation = 'superCriticalHitAnimation 1s ease-out forwards';
             setTimeout(() => {
                 superCriticalHitMessageElement.style.display = 'none';
-            }, 1000); 
+            }, 1000);
         }
 
-
+        // Shows messages like "Round Cleared"
         function showRoundTransitionMessage(message) {
             roundTransitionMessageElement.textContent = message;
             roundTransitionMessageElement.style.display = 'block';
             setTimeout(() => {
                 roundTransitionMessageElement.style.display = 'none';
-            }, 1800); 
+            }, 1800); // Display duration
         }
-        
+
+        // Shows messages related to shield status
         function showShieldStatusMessage(message, duration = 1000) {
             shieldStatusMessageElement.textContent = message;
-            shieldStatusMessageElement.style.color = "#40C4FF"; 
+            shieldStatusMessageElement.style.color = "#40C4FF"; // Shield color
             shieldStatusMessageElement.style.display = 'block';
             setTimeout(() => {
                 shieldStatusMessageElement.style.display = 'none';
             }, duration);
         }
-        function showMachineGunStatusMessage(message, duration = 1500) { 
-            machineGunStatusMessageElement.textContent = message; 
-            machineGunStatusMessageElement.style.color = "#FF00FF"; 
+        // Shows messages related to machine gun status
+        function showMachineGunStatusMessage(message, duration = 1500) {
+            machineGunStatusMessageElement.textContent = message;
+            machineGunStatusMessageElement.style.color = "#FF00FF"; // Machine gun color
             machineGunStatusMessageElement.style.display = 'block';
             setTimeout(() => {
                 machineGunStatusMessageElement.style.display = 'none';
@@ -1459,69 +1700,76 @@
         }
 
 
-
+        // Creates muzzle smoke particles at the gun tip
         function createMuzzleSmoke(position, isMachineGun = false) {
-            const smokeColor = isMachineGun ? 0xff8800 : 0x00ffff; 
+            // Different effect for machine gun
+            const smokeColor = isMachineGun ? 0xff8800 : 0x00ffff; // Orange for MG, Cyan for standard
             const smokeSize = isMachineGun ? 0.3 : 0.2;
             const smokeLife = isMachineGun ? 0.5 : 0.4;
             const particleCount = isMachineGun ? 10 : 7;
 
             const smokeMaterial = new THREE.PointsMaterial({
-                color: smokeColor, size: smokeSize, transparent: true, opacity: 0.6, sizeAttenuation: true, 
-                blending: THREE.AdditiveBlending 
+                color: smokeColor, size: smokeSize, transparent: true, opacity: 0.6, sizeAttenuation: true,
+                blending: THREE.AdditiveBlending // Brighter where particles overlap
             });
-            for (let i = 0; i < particleCount; i++) { 
+            for (let i = 0; i < particleCount; i++) {
+                // Use BufferGeometry for single points (more efficient than SphereGeometry)
                 const particleGeometry = new THREE.BufferGeometry();
                 particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
-                const particle = new THREE.Points(particleGeometry, smokeMaterial.clone()); 
+                const particle = new THREE.Points(particleGeometry, smokeMaterial.clone()); // Clone material for opacity changes
                 particle.position.copy(position);
+                // Give each particle a random velocity and lifespan
                 particle.userData = {
                     velocity: new THREE.Vector3(
-                        (Math.random() - 0.5) * 0.6, (Math.random() - 0.5) * 0.6, (Math.random() - 0.5) * 0.6 
-                    ).multiplyScalar(isMachineGun ? 0.4 : 0.3), 
-                    life: smokeLife 
+                        (Math.random() - 0.5) * 0.6, (Math.random() - 0.5) * 0.6, (Math.random() - 0.5) * 0.6
+                    ).multiplyScalar(isMachineGun ? 0.4 : 0.3), // Slower velocity
+                    life: smokeLife * (0.8 + Math.random() * 0.4) // Randomize lifespan slightly
                 };
                 muzzleSmokeParticles.push(particle);
                 scene.add(particle);
             }
         }
 
+        // Updates the position and opacity of muzzle smoke particles
         function updateMuzzleSmoke(delta) {
             for (let i = muzzleSmokeParticles.length - 1; i >= 0; i--) {
                 const particle = muzzleSmokeParticles[i];
-                particle.userData.life -= delta;
-                if (particle.userData.life <= 0) {
+                particle.userData.life -= delta; // Decrease lifespan
+                if (particle.userData.life <= 0) { // Remove if life ended
                     scene.remove(particle);
                     muzzleSmokeParticles.splice(i, 1);
-                } else {
+                } else { // Update position and appearance
                     particle.position.addScaledVector(particle.userData.velocity, delta);
-                    particle.material.opacity = particle.userData.life * 2.5; 
-                    particle.material.size = particle.userData.life * 0.5; 
+                    particle.material.opacity = particle.userData.life * 2.5; // Fade out
+                    particle.material.size = particle.userData.life * 0.5; // Shrink
                 }
             }
         }
 
+        // Creates impact spark particles where bullets hit walls
         function createImpactSpark(position) {
             const sparkMaterial = new THREE.PointsMaterial({
                 color: 0x00ffff, size: 0.25, transparent: true, opacity: 0.9, sizeAttenuation: true,
                 blending: THREE.AdditiveBlending
             });
-            for (let i = 0; i < 10; i++) { 
+            for (let i = 0; i < 10; i++) { // Create multiple sparks
                 const particleGeometry = new THREE.BufferGeometry();
                 particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
                 const particle = new THREE.Points(particleGeometry, sparkMaterial.clone());
                 particle.position.copy(position);
+                // Give sparks random outward velocity and short lifespan
                 particle.userData = {
                     velocity: new THREE.Vector3(
                         (Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)
-                    ).normalize().multiplyScalar(Math.random() * 4 + 3), 
-                    life: 0.25 
+                    ).normalize().multiplyScalar(Math.random() * 4 + 3), // Faster velocity than smoke
+                    life: 0.25 * (0.8 + Math.random() * 0.4) // Short, slightly variable life
                 };
                 impactSparks.push(particle);
                 scene.add(particle);
             }
         }
-        
+
+        // Updates the position and appearance of impact sparks
         function updateImpactSparks(delta) {
             for (let i = impactSparks.length - 1; i >= 0; i--) {
                 const particle = impactSparks[i];
@@ -1531,38 +1779,41 @@
                     impactSparks.splice(i, 1);
                 } else {
                     particle.position.addScaledVector(particle.userData.velocity, delta);
-                    particle.userData.velocity.y -= 9.8 * delta * 0.1; 
-                    particle.material.opacity = particle.userData.life * 4; 
-                    particle.material.size = particle.userData.life * 0.6; 
+                    particle.userData.velocity.y -= 9.8 * delta * 0.1; // Apply slight gravity to sparks
+                    particle.material.opacity = particle.userData.life * 4; // Fade out quickly
+                    particle.material.size = particle.userData.life * 0.6; // Shrink
                 }
             }
         }
 
+        // Creates explosion particles when an enemy dies
         function createExplosionEffect(position) {
             const explosionMaterial = new THREE.PointsMaterial({
-                color: 0xff00ff, 
+                color: 0xff00ff, // Magenta explosion
                 size: 0.6,
                 transparent: true,
                 opacity: 0.9,
                 sizeAttenuation: true,
                 blending: THREE.AdditiveBlending
             });
-            for (let i = 0; i < 25; i++) { 
+            for (let i = 0; i < 25; i++) { // More particles for explosion
                 const particleGeometry = new THREE.BufferGeometry();
                 particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
                 const particle = new THREE.Points(particleGeometry, explosionMaterial.clone());
                 particle.position.copy(position);
+                // Random outward velocity, longer life than sparks
                 particle.userData = {
                     velocity: new THREE.Vector3(
                         (Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)
-                    ).normalize().multiplyScalar(Math.random() * 6 + 4), 
-                    life: 0.7 
+                    ).normalize().multiplyScalar(Math.random() * 6 + 4), // Wider range of speeds
+                    life: 0.7 * (0.7 + Math.random() * 0.6) // Longer, variable life
                 };
                 explosionParticles.push(particle);
                 scene.add(particle);
             }
         }
 
+        // Updates the position and appearance of explosion particles
         function updateExplosions(delta) {
             for (let i = explosionParticles.length - 1; i >= 0; i--) {
                 const particle = explosionParticles[i];
@@ -1572,149 +1823,167 @@
                     explosionParticles.splice(i, 1);
                 } else {
                     particle.position.addScaledVector(particle.userData.velocity, delta);
-                    particle.material.opacity = particle.userData.life * 1.3; 
-                    particle.material.size = particle.userData.life * 0.9; 
+                    // Optional: Add slight drag/slowdown
+                    // particle.userData.velocity.multiplyScalar(1 - delta * 0.5);
+                    particle.material.opacity = particle.userData.life * 1.3; // Fade out over lifespan
+                    particle.material.size = particle.userData.life * 0.9; // Shrink
                 }
             }
         }
-        
+
+        // --- Player State Functions ---
+
+        // Applies damage to the player, considering the shield
         function takeDamage(amount) {
-            if (!gameRunning || playerHealth <=0) return; 
+            if (!gameRunning || playerHealth <=0) return; // Don't take damage if game isn't running or already dead
 
             let actualDamage = amount;
+            // Check if shield is active and has health
             if (isShieldActive && shieldHealth > 0) {
-                if (shieldHealth >= amount) {
+                if (shieldHealth >= amount) { // Shield absorbs all damage
                     shieldHealth -= amount;
                     actualDamage = 0;
-                } else {
-                    actualDamage = amount - shieldHealth;
-                    shieldHealth = 0;
+                } else { // Shield absorbs partial damage
+                    actualDamage = amount - shieldHealth; // Calculate remaining damage
+                    shieldHealth = 0; // Shield breaks
                 }
+                // If shield broke
                 if (shieldHealth <= 0) {
                     isShieldActive = false;
-                    if(shieldMesh) shieldMesh.visible = false;
-                    if(shieldBreakSound && audioContextStarted) shieldBreakSound.start(); 
+                    if(shieldMesh) shieldMesh.visible = false; // Hide shield mesh
+                    if(shieldBreakSound && audioContextStarted) shieldBreakSound.triggerAttackRelease("0.2"); // Play break sound
+                    // Start cooldown immediately when shield breaks or is manually deactivated
+                    shieldUsedThisRound = true;
+                    shieldCooldownEndTime = performance.now() + shieldCooldown;
                 }
-                updateHUD();
-                if (actualDamage === 0) return; 
+                updateHUD(); // Update shield health display
+                if (actualDamage === 0) return; // No health damage taken
             }
 
 
+            // Apply remaining damage to player health
             playerHealth -= actualDamage;
-            if (playerHealth < 0) playerHealth = 0;
+            if (playerHealth < 0) playerHealth = 0; // Clamp health at 0
 
-            if (playerHurtSound && audioContextStarted) { 
-                playerHurtSound.start().catch(e => console.error("플레이어 피격음 재생 오류:", e));
+            // Play hurt sound
+            if (playerHurtSound && audioContextStarted) {
+                playerHurtSound.triggerAttackRelease("0.2").catch(e => console.error("플레이어 피격음 재생 오류:", e));
             }
-            updateHUD();
+            updateHUD(); // Update health display
 
+            // Visual feedback for taking damage (screen flash)
             document.body.style.transition = 'background-color 0.05s';
-            document.body.style.backgroundColor = 'rgba(200,0,0,0.4)'; 
+            document.body.style.backgroundColor = 'rgba(200,0,0,0.4)'; // Red flash
             setTimeout(() => {
-                document.body.style.backgroundColor = '#0a0a1a'; 
+                document.body.style.backgroundColor = '#0a0a1a'; // Revert to original background
             }, 50);
 
-            if (playerHealth <= 0) { 
+            // Check for game over
+            if (playerHealth <= 0) {
                 gameOver("사망했습니다! 게임 오버.");
             }
         }
 
+        // Updates all HUD elements with current game state
         function updateHUD() {
             scoreElement.textContent = `점수: ${score}`;
-            healthElement.textContent = `체력: ${playerHealth} / ${maxPlayerHealth}`; 
-            
-            if (isMachineGunModeActive) { 
+            healthElement.textContent = `체력: ${playerHealth} / ${maxPlayerHealth}`;
+
+            // Update Ammo display based on weapon mode
+            if (isMachineGunModeActive) {
                 ammoElement.textContent = `머신건: ${machineGunCurrentAmmo} / ${machineGunTotalMaxAmmo}`;
             } else {
-                ammoElement.textContent = `탄약: ${playerAmmo} / ${maxPlayerAmmo}`; 
+                ammoElement.textContent = `탄약: ${playerAmmo} / ${maxPlayerAmmo}`;
             }
-            
+
             playerDamageHUDElement.textContent = `데미지: ${currentPlayerDamage}`;
             roundInfoElement.innerHTML = `라운드: ${currentRound > maxRounds ? maxRounds : currentRound} / ${maxRounds}<br>처치 목표: ${killedEnemiesThisRound} / ${enemiesToKillForNextRound}`;
 
+            // Update Machine Gun HUD info
             const now = performance.now();
-            if (machineGunCooldownEndTime > now) {
+            if (machineGunCooldownEndTime > now) { // On cooldown
                 const remainingCooldown = Math.ceil((machineGunCooldownEndTime - now) / 1000);
                 machineGunInfoElement.innerHTML = `머신건: 쿨 (${remainingCooldown}초)<br>탄약: -`;
-            } else if (isMachineGunModeActive) {
+            } else if (isMachineGunModeActive) { // Active
                 const remainingDuration = Math.ceil((machineGunModeEndTime - now) / 1000);
                 machineGunInfoElement.innerHTML = `머신건: 활성 (${remainingDuration}초)<br>탄약: ${machineGunCurrentAmmo}`;
             }
-            else {
+            else { // Ready
                 machineGunInfoElement.innerHTML = `머신건: 준비 (H)<br>탄약: -`;
             }
 
-            if (shieldUsedThisRound && shieldCooldownEndTime > now) { 
+            // Update Shield HUD info
+            if (shieldUsedThisRound && shieldCooldownEndTime > now) { // Used and on cooldown
                 const remainingCooldown = Math.ceil((shieldCooldownEndTime - now) / 1000);
                  shieldInfoElement.innerHTML = `방패: 쿨 (${remainingCooldown}초)<br>내구도: -`;
-            } else if (shieldUsedThisRound && shieldCooldownEndTime <= now) { 
-                 shieldInfoElement.innerHTML = `방패: 사용됨<br>내구도: -`; 
+            } else if (shieldUsedThisRound && shieldCooldownEndTime <= now) { // Used but cooldown finished (still unavailable this round)
+                 shieldInfoElement.innerHTML = `방패: 사용됨<br>내구도: -`;
             }
-             else if (isShieldActive) {
+             else if (isShieldActive) { // Active
                 shieldInfoElement.innerHTML = `방패: 활성<br>내구도: ${shieldHealth}`;
-            } else { 
+            } else { // Ready
                 shieldInfoElement.innerHTML = `방패: 준비 (우클릭)<br>내구도: -`;
             }
-            
-            if (slideJumpCooldownEndTime > now) {
-                const remainingCooldown = ((slideJumpCooldownEndTime - now) / 1000).toFixed(1);
-                slideJumpInfoElement.innerHTML = `슬라이딩 점프: 쿨 (${remainingCooldown}초)`;
-            } else {
-                 slideJumpInfoElement.innerHTML = `슬라이딩 점프: 가능`;
-            }
+
+            // Update Slide Jump HUD info (handled in updateSlideJumpInfo)
         }
-        
+
+        // Updates the elapsed time HUD element
         function updateElapsedTime(time) {
-            if (!gameStartTime) return; 
+            if (!gameStartTime) return; // Don't update if game hasn't started
             const elapsedSecondsTotal = Math.floor((time - gameStartTime) / 1000);
             const minutes = Math.floor(elapsedSecondsTotal / 60);
             const seconds = elapsedSecondsTotal % 60;
+            // Format as MM:SS
             elapsedTimeHUDElement.textContent = `시간: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
+        // Handles the reload action
         function handleReload() {
-            if (isReloading) return;
+            if (isReloading) return; // Don't reload if already reloading
 
-            if (isMachineGunModeActive) { 
-                if (machineGunCurrentAmmo === machineGunTotalMaxAmmo) return;
-                isReloading = true;
-                if (reloadSound && audioContextStarted) reloadSound.triggerAttackRelease("C2", "0.1"); 
-                setTimeout(() => {
-                    machineGunCurrentAmmo = machineGunTotalMaxAmmo;
-                    isReloading = false;
-                    updateHUD();
-                }, 500); 
-                return;
+            // Machine Gun reload (instant, just resets ammo) - No separate reload needed usually
+            if (isMachineGunModeActive) {
+                // Could potentially add a short delay here if desired
+                // machineGunCurrentAmmo = machineGunTotalMaxAmmo;
+                // updateHUD();
+                return; // Don't proceed with standard reload
             }
 
-            if (playerAmmo === maxPlayerAmmo) return; 
+            // Standard weapon reload
+            if (playerAmmo === maxPlayerAmmo) return; // Don't reload if full
 
             isReloading = true;
-            if (reloadSound && audioContextStarted) { 
+            // Play reload sound
+            if (reloadSound && audioContextStarted) {
                 reloadSound.triggerAttackRelease("C2", "0.1").catch(e => console.error("재장전 소리 재생 오류:", e));
             }
-            
-            let reloadTime = 1200; 
 
-            if (playerAmmo > 0 && playerAmmo < maxPlayerAmmo) { 
+            let reloadTime = 1200; // Default reload time (ms)
+
+            // Tactical Reload (faster if ammo > 0)
+            if (playerAmmo > 0 && playerAmmo < maxPlayerAmmo) {
+                // Show tactical reload message with blinking effect
                 tacticalReloadMessageElement.style.display = 'block';
                 let blinkCount = 0;
                 const blinkInterval = setInterval(() => {
                     tacticalReloadMessageElement.style.visibility = (tacticalReloadMessageElement.style.visibility === 'hidden' ? 'visible' : 'hidden');
                     blinkCount++;
-                    if (blinkCount >= 4) { 
+                    if (blinkCount >= 4) { // Blink twice
                         clearInterval(blinkInterval);
                         tacticalReloadMessageElement.style.display = 'none';
-                        tacticalReloadMessageElement.style.visibility = 'visible';
+                        tacticalReloadMessageElement.style.visibility = 'visible'; // Ensure visible at the end
                     }
-                }, 125);
-                reloadTime = 500; 
+                }, 125); // Blink interval
+                reloadTime = 500; // Faster reload time
+                 // Set timeout to finish reload
                  setTimeout(() => {
-                    playerAmmo = maxPlayerAmmo;
-                    isReloading = false;
+                    playerAmmo = maxPlayerAmmo; // Refill ammo
+                    isReloading = false; // Finish reloading state
                     updateHUD();
                 }, reloadTime);
-            } else { 
+            } else { // Standard reload (empty clip)
+                 // Set timeout to finish reload
                  setTimeout(() => {
                     playerAmmo = maxPlayerAmmo;
                     isReloading = false;
@@ -1722,279 +1991,402 @@
                 }, reloadTime);
             }
         }
-        
-        function activateMachineGunMode() { 
+
+        // Activates the Machine Gun mode
+        function activateMachineGunMode() {
             const now = performance.now();
+            // Check if already active or on cooldown
             if (isMachineGunModeActive || machineGunCooldownEndTime > now) return;
 
             isMachineGunModeActive = true;
-            machineGunModeEndTime = now + machineGunModeDuration;
-            machineGunCurrentAmmo = machineGunTotalMaxAmmo; 
-            machineGunCooldownEndTime = now + machineGunCooldown + machineGunModeDuration; 
-            
-            showMachineGunStatusMessage("MACHINE GUN MODE!", 2000);
+            machineGunModeEndTime = now + machineGunModeDuration; // Set end time
+            machineGunCurrentAmmo = machineGunTotalMaxAmmo; // Refill MG ammo
+            machineGunCooldownEndTime = now + machineGunCooldown + machineGunModeDuration; // Set cooldown end time
 
-            if (machineGunActivateSound && audioContextStarted) { 
+            showMachineGunStatusMessage("MACHINE GUN MODE!", 2000); // Show activation message
+
+            // Play activation sound
+            if (machineGunActivateSound && audioContextStarted) {
                 machineGunActivateSound.triggerAttackRelease("E4", "0.2");
             }
-            if (playerGunMesh) {
-                playerGunMesh.traverse((child) => {
+            // Change gun appearance to indicate mode change
+            if (playerGunMesh && originalGunMaterial) { // Check if gun and materials exist
+                playerGunMesh.traverse((child) => { // Iterate through gun parts
                     if (child.isMesh) {
-                        if (child.material === originalGunMaterial.body || child.material.color.equals(originalGunMaterial.body.color)) {
+                        // Check material based on original color to avoid issues if material was already changed
+                        if (child.material.color.equals(originalGunMaterial.body.color)) {
+                            // Apply MG body material (more emissive/different color)
                             child.material = new THREE.MeshStandardMaterial({ color: 0xAA00AA, metalness: 0.8, roughness: 0.2, emissive: 0x770077, emissiveIntensity: 0.9 });
-                        } else if (child.material === originalGunMaterial.accent || child.material.color.equals(originalGunMaterial.accent.color)) {
+                        } else if (child.material.color.equals(originalGunMaterial.accent.color)) {
+                            // Apply MG accent material
                             child.material = new THREE.MeshStandardMaterial({ color: 0xFF00FF, metalness: 0.9, roughness: 0.1, emissive: 0xFF00FF, emissiveIntensity: 1.2 });
                         }
                     }
                 });
             }
-            updateHUD();
+            updateHUD(); // Update display
         }
 
-        function updateMachineGunMode(time) { 
-            if (isMachineGunModeActive && time >= machineGunModeEndTime) {
-                isMachineGunModeActive = false;
+        // Checks if Machine Gun mode duration has ended
+        function updateMachineGunMode(time) {
+            if (isMachineGunModeActive && time >= machineGunModeEndTime) { // If mode is active and time is up
+                isMachineGunModeActive = false; // Deactivate mode
+                // Revert gun appearance to original materials
                 if (playerGunMesh && originalGunMaterial) {
                     playerGunMesh.traverse((child) => {
                         if (child.isMesh) {
-                             if (child.material.color.getHex() === 0xAA00AA) { 
-                                child.material = originalGunMaterial.body.clone();
-                            } else if (child.material.color.getHex() === 0xFF00FF) { 
-                                child.material = originalGunMaterial.accent.clone();
+                             // Check current material color to apply the correct original material
+                             if (child.material.color.getHex() === 0xAA00AA) { // If it's the MG body color
+                                child.material = originalGunMaterial.body.clone(); // Revert to original body material
+                            } else if (child.material.color.getHex() === 0xFF00FF) { // If it's the MG accent color
+                                child.material = originalGunMaterial.accent.clone(); // Revert to original accent material
                             }
                         }
                     });
                 }
-                updateHUD();
+                updateHUD(); // Update display
+            }
+            // Update HUD periodically even if mode not ending (for cooldown timer)
+            if (!isMachineGunModeActive && machineGunCooldownEndTime > time && time % 1000 < 50) { // Update roughly once per second
+                 updateHUD();
             }
         }
-        
+
+        // Creates the visual mesh for the shield effect
         function createShieldMesh() {
             const shieldShape = new THREE.Shape();
-            const radius = playerRadius * 1.2;
-            const sides = 6; 
+            const radius = playerRadius * 1.2; // Shield slightly larger than player
+            const sides = 6; // Hexagonal shape
+            // Create hexagonal shape vertices
             shieldShape.moveTo(radius * Math.cos(0), radius * Math.sin(0));
             for (let i = 1; i <= sides; i++) {
                 shieldShape.lineTo(radius * Math.cos(i * 2 * Math.PI / sides), radius * Math.sin(i * 2 * Math.PI / sides));
             }
             const shieldGeometry = new THREE.ShapeGeometry(shieldShape);
             const shieldMaterial = new THREE.MeshBasicMaterial({
-                color: 0x40C4FF,
+                color: 0x40C4FF, // Light blue
                 transparent: true,
-                opacity: 0.3,
-                side: THREE.DoubleSide,
-                blending: THREE.AdditiveBlending,
-                wireframe: true 
+                opacity: 0.3, // Semi-transparent
+                side: THREE.DoubleSide, // Visible from both sides
+                blending: THREE.AdditiveBlending, // Glow effect
+                wireframe: true // Wireframe style
             });
             shieldMesh = new THREE.Mesh(shieldGeometry, shieldMaterial);
-            shieldMesh.position.set(0, 0, -playerRadius * 1.2); 
-            shieldMesh.scale.set(1.5, 2, 1); 
-            shieldMesh.visible = false;
-            camera.add(shieldMesh); 
+            // Position shield in front of the camera
+            shieldMesh.position.set(0, 0, -playerRadius * 1.2);
+            shieldMesh.scale.set(1.5, 2, 1); // Scale to cover player view
+            shieldMesh.visible = false; // Initially hidden
+            camera.add(shieldMesh); // Attach to camera
         }
 
+        // Activates the shield ability
         function activateShield() {
             const now = performance.now();
+            // Check if already active, on cooldown, or already used this round
             if (isShieldActive || shieldCooldownEndTime > now || shieldUsedThisRound) return;
 
             isShieldActive = true;
-            shieldHealth = maxShieldHealth;
-            if (shieldMesh) shieldMesh.visible = true;
-            if (shieldActivateSound && audioContextStarted) shieldActivateSound.triggerAttackRelease("A4", "0.1"); 
-            showShieldStatusMessage("SHIELD ACTIVATED!", 1000);
-            updateHUD();
+            shieldHealth = maxShieldHealth; // Restore shield health
+            if (shieldMesh) shieldMesh.visible = true; // Show shield mesh
+            // Play activation sound
+            if (shieldActivateSound && audioContextStarted) shieldActivateSound.triggerAttackRelease("A4", "0.1");
+            showShieldStatusMessage("SHIELD ACTIVATED!", 1000); // Show message
+            updateHUD(); // Update display
         }
+        // Deactivates the shield ability (when right mouse button is released)
         function deactivateShield() {
-            if (!isShieldActive) return;
+            if (!isShieldActive) return; // Only deactivate if active
             isShieldActive = false;
-            if (shieldMesh) shieldMesh.visible = false;
-            shieldUsedThisRound = true; 
-            shieldCooldownEndTime = performance.now() + shieldCooldown; 
-            updateHUD();
+            if (shieldMesh) shieldMesh.visible = false; // Hide mesh
+            // Start cooldown only when deactivated manually or broken
+            if (!shieldUsedThisRound) { // Avoid resetting cooldown if already broken
+                shieldUsedThisRound = true; // Mark as used for the round
+                shieldCooldownEndTime = performance.now() + shieldCooldown; // Start cooldown
+            }
+            updateHUD(); // Update display
         }
 
 
+        // Updates shield status (checks for breaking, updates visuals, cooldown)
         function updateShield(time) {
+            // If shield is active but health dropped to 0
             if (isShieldActive && shieldHealth <= 0) {
                 isShieldActive = false;
                 if (shieldMesh) shieldMesh.visible = false;
-                if (shieldBreakSound && audioContextStarted) shieldBreakSound.start(); 
-                shieldCooldownEndTime = time + shieldCooldown; 
-                shieldUsedThisRound = true; 
+                if (shieldBreakSound && audioContextStarted) shieldBreakSound.triggerAttackRelease("0.2");
+                // Start cooldown if it hasn't already started (e.g., from manual deactivation)
+                if (!shieldUsedThisRound) {
+                    shieldUsedThisRound = true;
+                    shieldCooldownEndTime = time + shieldCooldown;
+                }
+                 updateHUD(); // Update immediately when broken
             }
-            if (shieldMesh) { 
-                shieldMesh.material.opacity = isShieldActive ? 0.1 + (shieldHealth / maxShieldHealth) * 0.5 : 0; 
-                if (isShieldActive) { 
-                    shieldMesh.rotation.z += 0.05;
+            // Update shield visual opacity and rotation if active
+            if (shieldMesh) {
+                shieldMesh.material.opacity = isShieldActive ? 0.1 + (shieldHealth / maxShieldHealth) * 0.5 : 0; // Opacity based on health
+                if (isShieldActive) {
+                    shieldMesh.rotation.z += 0.05; // Slow rotation effect
                 }
             }
+             // Update HUD periodically for cooldown timer
+            if (shieldUsedThisRound && shieldCooldownEndTime > time && time % 1000 < 50) { // Update roughly once per second
+                 updateHUD();
+            }
         }
-        
+
+        // Updates the slide jump cooldown display in the HUD
         function updateSlideJumpInfo(time) {
-            if (slideJumpCooldownEndTime > time) {
-                const remainingCooldown = ((slideJumpCooldownEndTime - time) / 1000).toFixed(1);
+            const now = performance.now(); // Use consistent time
+            if (slideJumpCooldownEndTime > now) { // If on cooldown
+                const remainingCooldown = ((slideJumpCooldownEndTime - now) / 1000).toFixed(1); // Calculate remaining seconds
                 slideJumpInfoElement.innerHTML = `슬라이딩 점프: 쿨 (${remainingCooldown}초)`;
-            } else {
+            } else { // If ready
                  slideJumpInfoElement.innerHTML = `슬라이딩 점프: 가능`;
             }
         }
 
+        // --- Event Handlers ---
 
-        function onWindowResize() { 
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        // Handles window resize event
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight; // Update aspect ratio
+            camera.updateProjectionMatrix(); // Apply changes
+            renderer.setSize(window.innerWidth, window.innerHeight); // Resize renderer
         }
 
-        function onKeyDown(event) { 
+        // Handles key down events
+        function onKeyDown(event) {
             switch (event.code) {
+                // Movement
                 case 'ArrowUp': case 'KeyW': moveForward = true; break;
                 case 'ArrowLeft': case 'KeyA': moveLeft = true; break;
                 case 'ArrowDown': case 'KeyS': moveBackward = true; break;
                 case 'ArrowRight': case 'KeyD': moveRight = true; break;
-                case 'KeyR': if(gameRunning) handleReload(); break; 
-                case 'ShiftLeft': 
-                case 'ShiftRight': 
-                    if (gameRunning && !isSprinting && !isSliding) { 
+                // Reload
+                case 'KeyR': if(gameRunning) handleReload(); break;
+                // Sprint
+                case 'ShiftLeft':
+                case 'ShiftRight':
+                    if (gameRunning && !isSprinting && !isSliding) { // Can sprint if running, not already sprinting, and not sliding
                         isSprinting = true;
-                        if (sprintWindSound && audioContextStarted) sprintWindSound.start(); 
+                        // Play sprint sound
+                        if (sprintWindSound && audioContextStarted) sprintWindSound.triggerAttackRelease("0.1");
                     }
                     break;
+                // Jump / Slide Jump
                 case 'Space':
-                    if (gameRunning && canPlayerJump) {
-                        if (isSliding && performance.now() > slideJumpCooldownEndTime) { 
-                            canPlayerJump = false;
-                            playerVelocityY = playerJumpForce * 1.2; 
+                    if (gameRunning && canPlayerJump) { // Can jump if running and allowed
+                        if (isSliding && performance.now() > slideJumpCooldownEndTime) { // Slide Jump
+                            canPlayerJump = false; // Prevent double jump
+                            playerVelocityY = playerJumpForce * 1.2; // Higher jump force for slide jump
+                            // Activate speed boost
                             isSlideJumpBoosting = true;
                             slideJumpBoostEndTime = performance.now() + slideJumpBoostDuration;
-                            
-                            if (slideSound && audioContextStarted) slideSound.triggerAttackRelease("C3", "0.1s"); 
-                            slideJumpCooldownEndTime = performance.now() + slideJumpCooldownDuration;
-                            isSliding = false; 
 
-                        } else if (!isSliding) { 
+                            // Play slide jump sound (reuse slide sound?)
+                            if (slideSound && audioContextStarted) slideSound.triggerAttackRelease("C3", "0.1s");
+                            // Start slide jump cooldown
+                            slideJumpCooldownEndTime = performance.now() + slideJumpCooldownDuration;
+                            isSliding = false; // Stop sliding after jump
+
+                        } else if (!isSliding) { // Normal Jump
                             canPlayerJump = false;
                             playerVelocityY = playerJumpForce;
-                            if (jumpSound && audioContextStarted) jumpSound.triggerAttackRelease("C5", "8n"); 
+                            // Play jump sound
+                            if (jumpSound && audioContextStarted) jumpSound.triggerAttackRelease("C5", "8n");
                         }
+                         updateSlideJumpInfo(performance.now()); // Update HUD immediately
                     }
                     break;
+                // Activate Machine Gun
                 case 'KeyH':
-                    if (gameRunning) activateMachineGunMode(); 
+                    if (gameRunning) activateMachineGunMode();
                     break;
+                // Slide
                 case 'KeyC':
-                    if (gameRunning && !isSprinting && canPlayerJump) { 
+                    // Can slide if running, not sprinting, and on the ground
+                    if (gameRunning && !isSprinting && canPlayerJump && !isSliding) {
                         isSliding = true;
-                        if (slideSound && audioContextStarted) slideSound.triggerAttackRelease("A2", "0.2s"); 
+                        // Play slide sound
+                        if (slideSound && audioContextStarted) slideSound.triggerAttackRelease("A2", "0.2s");
                     }
                     break;
             }
         }
 
-        function onKeyUp(event) { 
+        // Handles key up events
+        function onKeyUp(event) {
             switch (event.code) {
+                // Stop movement
                 case 'ArrowUp': case 'KeyW': moveForward = false; break;
                 case 'ArrowLeft': case 'KeyA': moveLeft = false; break;
                 case 'ArrowDown': case 'KeyS': moveBackward = false; break;
                 case 'ArrowRight': case 'KeyD': moveRight = false; break;
+                // Stop sprinting
                 case 'ShiftLeft':
                 case 'ShiftRight':
                     isSprinting = false;
-                    if (sprintWindSound && sprintWindSound.state === "started" && audioContextStarted) sprintWindSound.stop(); 
+                    // Stop sprint sound (if playing)
+                    if (sprintWindSound && sprintWindSound.state === "started" && audioContextStarted) sprintWindSound.stop();
                     break;
+                // Stop sliding
                 case 'KeyC':
                     isSliding = false;
                     break;
             }
         }
-        
+
+        // --- Game State Management Functions ---
+
+        // Resets the entire game state for a new game (after game over or clear)
         function resetGameFull() {
+            console.log("Resetting game fully...");
+            // Reset core game variables
             currentRound = 1;
-            maxPlayerHealth = 100; 
-            enemiesToKillForNextRound = 20; 
-            totalKilledEnemies = 0; 
-            score = 0; 
-            gameStartTime = performance.now(); 
-            machineGunCooldownEndTime = 0; 
+            maxPlayerHealth = 100; // Reset max health
+            enemiesToKillForNextRound = 20; // Reset kill target
+            totalKilledEnemies = 0; // Reset total kills
+            score = 0; // Reset score
+            gameStartTime = 0; // Reset timer (will be set in startGameFlow)
+            // Reset ability cooldowns
+            machineGunCooldownEndTime = 0;
             shieldCooldownEndTime = 0;
             slideJumpCooldownEndTime = 0;
-            resetGameRound(); 
+
+            // Reset states specific to a round/player status
+            resetGameRound(); // Call the round reset logic
+             // Ensure message box shows the initial start message
+            messageTextElement.textContent = "사이버펑크 슈터";
+            startButton.textContent = "게임 시작";
+            messageBoxElement.style.display = 'flex'; // Show message box
+
+            // Stop background music transport if it's running
+            if (Tone.Transport.state === "started" && audioContextStarted) {
+                 Tone.Transport.stop();
+                 // Reset transport time if needed, though starting again should handle it
+                 // Tone.Transport.seconds = 0;
+            }
+            console.log("Full reset complete.");
         }
-        
-        function resetGameRound() { 
-            isReloading = false; 
-            isMachineGunModeActive = false; 
+
+        // Resets states necessary for starting a new round (or restarting after death)
+        function resetGameRound() {
+            console.log("Resetting round state...");
+            // Reset player status flags
+            isReloading = false;
+            isMachineGunModeActive = false;
             isShieldActive = false;
-            shieldUsedThisRound = false; 
-            if(shieldMesh) shieldMesh.visible = false;
+            shieldUsedThisRound = false; // Allow shield use again
+            if(shieldMesh) shieldMesh.visible = false; // Hide shield mesh
+            playerAmmo = maxPlayerAmmo; // Refill ammo
+            machineGunCurrentAmmo = 0; // Reset MG ammo
 
 
-            tacticalReloadMessageElement.style.display = 'none'; 
-            criticalHitMessageElement.style.display = 'none'; 
+            // Hide temporary messages
+            tacticalReloadMessageElement.style.display = 'none';
+            criticalHitMessageElement.style.display = 'none';
             superCriticalHitMessageElement.style.display = 'none';
+            roundTransitionMessageElement.style.display = 'none';
+            shieldStatusMessageElement.style.display = 'none';
+            machineGunStatusMessageElement.style.display = 'none';
 
 
-            updatePlayerDamage(); 
+            // Reset player damage value
+            updatePlayerDamage();
 
+            // --- Clear existing game objects ---
+            // Clear walls (will be regenerated)
             walls.forEach(wall => scene.remove(wall)); walls = [];
+            // Clear enemies
             enemies.forEach(enemy => scene.remove(enemy)); enemies = [];
+            // Clear bullets
             enemyBullets.forEach(bullet => scene.remove(bullet)); enemyBullets = [];
             playerBullets.forEach(bullet => scene.remove(bullet)); playerBullets = [];
+            // Clear particles
             muzzleSmokeParticles.forEach(p => scene.remove(p)); muzzleSmokeParticles = [];
             impactSparks.forEach(p => scene.remove(p)); impactSparks = [];
             explosionParticles.forEach(p => scene.remove(p)); explosionParticles = [];
 
-            startNewRound(); 
+            // Restore player health (done in startNewRound)
+            // playerHealth = maxPlayerHealth;
 
-            const startPos = findStartPosition(); 
+            // Reset player position and rotation
+            const startPos = findStartPosition(); // Find a new start position based on potentially new map
             if (controls && controls.getObject()) {
                 controls.getObject().position.set(startPos.x, playerHeight, startPos.z);
-                controls.getObject().rotation.set(0,0,0); 
+                // Reset camera rotation (important!)
+                controls.getObject().rotation.set(0,0,0);
+                if(camera) {
+                     camera.rotation.set(0,0,0);
+                     camera.fov = defaultFOV; // Reset FOV
+                     camera.updateProjectionMatrix();
+                }
             }
-            if(camera) camera.rotation.set(0,0,0); 
 
-            messageTextElement.textContent = "사이버펑크 슈터";
-            startButton.textContent = "게임 시작";
-            if (Tone.Transport.state === "stopped" && audioContextStarted) { 
-                Tone.Transport.start();
-            }
+
+            // Update HUD to reflect reset state
+            updateHUD();
+            console.log("Round reset complete.");
+            // Note: startNewRound() will be called after this in the normal flow or restart flow
         }
 
+        // Handles the game clear condition (all rounds completed)
         function gameClear() {
-            gameRunning = false;
-            controls.unlock();
-            const playTimeSeconds = Math.floor((performance.now() - gameStartTime) / 1000);
+            gameRunning = false; // Stop game logic
+            controls.unlock(); // Release pointer lock
+
+            // Calculate final play time
+            const playTimeSeconds = gameStartTime ? Math.floor((performance.now() - gameStartTime) / 1000) : 0;
             const minutes = Math.floor(playTimeSeconds / 60);
             const seconds = playTimeSeconds % 60;
-            messageTextElement.innerHTML = `생존! 모든 라운드 클리어!<br>총 처치 수: ${totalKilledEnemies}<br>플레이 시간: ${minutes}분 ${seconds}초`;
-            startButton.textContent = "다시 도전";
-            messageBoxElement.style.display = 'flex';
+
+            // Display game clear message
+            messageTextElement.innerHTML = `생존! 모든 라운드 클리어!<br>총 처치 수: ${totalKilledEnemies}<br>플레이 시간: ${minutes}분 ${seconds}초<br>최종 점수: ${score}`; // Added score
+            startButton.textContent = "다시 도전"; // Change button text
+            messageBoxElement.style.display = 'flex'; // Show message box
+
+            // Hide temporary messages and elements
             criticalHitMessageElement.style.display = 'none';
             superCriticalHitMessageElement.style.display = 'none';
             tacticalReloadMessageElement.style.display = 'none';
             if(playerGunMesh) playerGunMesh.visible = false;
             if(shieldMesh) shieldMesh.visible = false;
-            if (Tone.Transport.state === "started" && audioContextStarted) Tone.Transport.stop(); 
-            if(gameClearSound && audioContextStarted) gameClearSound.triggerAttackRelease("C4", "1n"); 
-            currentRound = maxRounds + 1; 
+            crosshairElement.style.display = 'none';
+
+            // Stop background music
+            if (Tone.Transport.state === "started" && audioContextStarted) Tone.Transport.stop();
+            // Play game clear sound
+            if(gameClearSound && audioContextStarted) gameClearSound.triggerAttackRelease("C4", "1n");
+
+            // Set round beyond max to prevent accidental restart into non-existent round
+            currentRound = maxRounds + 1;
         }
 
 
-        function gameOver(message) { 
-            gameRunning = false;
-            controls.unlock(); 
-            messageTextElement.textContent = message;
-            startButton.textContent = "다시 플레이";
-            messageBoxElement.style.display = 'flex';
+        // Handles the game over condition (player health <= 0)
+        function gameOver(message) {
+            gameRunning = false; // Stop game logic
+            controls.unlock(); // Release pointer lock
+
+            // Display game over message
+            messageTextElement.textContent = message + ` (라운드 ${currentRound}, 점수: ${score})`; // Add round/score info
+            startButton.textContent = "다시 플레이"; // Change button text
+            messageBoxElement.style.display = 'flex'; // Show message box
+
+            // Hide game elements
             crosshairElement.style.display = 'none';
             if(playerGunMesh) playerGunMesh.visible = false;
             if(shieldMesh) shieldMesh.visible = false;
-            if (Tone.Transport.state === "started" && audioContextStarted) { 
+
+            // Stop background music
+            if (Tone.Transport.state === "started" && audioContextStarted) {
                  Tone.Transport.stop();
             }
+            // Optional: Play game over sound
+            // if(gameOverSound && audioContextStarted) gameOverSound.triggerAttackRelease("C3", "1n");
         }
 
-        // --- 초기화 실행 ---
+        // --- Initialize Game ---
         init();
 
     </script>
