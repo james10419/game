@@ -337,17 +337,16 @@
         let lastMachineGunShootTime = 0; // Timestamp of last machine gun shot
         const machineGunShootInterval = 100; // Firing interval for machine gun (ms)
         let originalCameraPosition = new THREE.Vector3(); // Store original camera offset
-        const baseMachineGunDamage = 30; // *** 머신건 기본 데미지 ***
-        let currentMachineGunDamage = baseMachineGunDamage; // *** 현재 라운드 머신건 데미지 ***
+        const baseMachineGunDamage = 30;
+        let currentMachineGunDamage = baseMachineGunDamage;
 
         // Shield Ability Variables
         let isShieldActive = false; // Is the shield active?
         let shieldHealth = 0; // Current shield health
-        const baseMaxShieldHealth = 15; // *** 방패 기본 최대 내구도 ***
-        let maxShieldHealth = baseMaxShieldHealth; // *** 현재 라운드 방패 최대 내구도 ***
+        const baseMaxShieldHealth = 15;
+        let maxShieldHealth = baseMaxShieldHealth;
         let shieldCooldownEndTime = 0; // Timestamp when shield cooldown ends
         const shieldCooldown = 15000; // Cooldown for shield ability (ms)
-        // let shieldUsedThisRound = false; // *** 방패 라운드당 사용 여부 제거 ***
         let shieldMesh; // The 3D mesh for the shield effect
 
         // Audio Variables (Tone.js Synths)
@@ -624,21 +623,18 @@
         function startNewRound() {
             if (currentRound > 1) {
                 maxPlayerHealth = Math.min(200, maxPlayerHealth + 20);
-                // *** 방패 최대 내구도 라운드별 증가 ***
                 maxShieldHealth = Math.floor(baseMaxShieldHealth * (1 + (currentRound - 1) * 0.15));
-                // *** 머신건 데미지 라운드별 증가 ***
                 currentMachineGunDamage = Math.floor(baseMachineGunDamage * (1 + (currentRound - 1) * 0.10));
             } else {
                 maxPlayerHealth = 100;
-                maxShieldHealth = baseMaxShieldHealth; // 라운드 1 방패 내구도
-                currentMachineGunDamage = baseMachineGunDamage; // 라운드 1 머신건 데미지
+                maxShieldHealth = baseMaxShieldHealth;
+                currentMachineGunDamage = baseMachineGunDamage;
             }
             playerHealth = maxPlayerHealth;
 
             isReloading = false;
             isMachineGunModeActive = false;
             isShieldActive = false;
-            // shieldUsedThisRound = false; // *** 제거됨 ***
             if (shieldMesh) shieldMesh.visible = false;
 
 
@@ -994,11 +990,11 @@
                 intendedDeltaX -= camDirection.x * currentMoveSpeed * delta;
                 intendedDeltaZ -= camDirection.z * currentMoveSpeed * delta;
             }
-            if (moveLeft) { // D 키 (왼쪽 이동)
+            if (moveLeft) { // A 키로 왼쪽 이동 (수정됨)
                 intendedDeltaX -= rightDirection.x * currentMoveSpeed * delta;
                 intendedDeltaZ -= rightDirection.z * currentMoveSpeed * delta;
             }
-            if (moveRight) { // A 키 (오른쪽 이동)
+            if (moveRight) { // D 키로 오른쪽 이동 (수정됨)
                 intendedDeltaX += rightDirection.x * currentMoveSpeed * delta;
                 intendedDeltaZ += rightDirection.z * currentMoveSpeed * delta;
             }
@@ -1273,7 +1269,7 @@
         function shoot() {
             if (isReloading || !gameRunning) return;
 
-            let damageToDeal; // *** damageToDeal 선언 위치 변경 ***
+            let damageToDeal;
 
             if (isMachineGunModeActive) {
                 if (machineGunCurrentAmmo <= 0) {
@@ -1283,14 +1279,14 @@
                     return;
                 }
                 machineGunCurrentAmmo--;
-                damageToDeal = currentMachineGunDamage; // *** 머신건 현재 라운드 데미지 사용 ***
+                damageToDeal = currentMachineGunDamage;
             } else {
                 if (playerAmmo <= 0) {
                     handleReload();
                     return;
                 }
                 playerAmmo--;
-                damageToDeal = currentPlayerDamage; // *** 일반 무기 데미지 사용 ***
+                damageToDeal = currentPlayerDamage;
             }
 
             updateHUD();
@@ -1348,11 +1344,11 @@
                         let damageDealt = bullet.userData.damage;
                         let scoreMultiplier = 1;
 
-                        if (damageDealt >= 60 && !isMachineGunModeActive) { // *** 머신건 아닐 때만 슈퍼 크리티컬 적용 (선택 사항) ***
+                        if (damageDealt >= 60 && !isMachineGunModeActive) {
                             showSuperCriticalHitMessage();
                             damageDealt = enemy.userData.health;
                             scoreMultiplier = 2;
-                        } else if (damageDealt >= 50 && !isMachineGunModeActive) { // *** 머신건 아닐 때만 크리티컬 적용 (선택 사항) ***
+                        } else if (damageDealt >= 50 && !isMachineGunModeActive) {
                             showCriticalHitMessage();
                         }
 
@@ -1571,7 +1567,6 @@
                     isShieldActive = false;
                     if(shieldMesh) shieldMesh.visible = false;
                     if(shieldBreakSound && audioContextStarted) shieldBreakSound.triggerAttackRelease("0.2");
-                    // *** 방패 파괴 시 즉시 쿨타임 시작 (재사용 가능 로직) ***
                     shieldCooldownEndTime = performance.now() + shieldCooldown;
                 }
                 updateHUD();
@@ -1618,10 +1613,9 @@
                 machineGunInfoElement.innerHTML = `머신건: 준비 (H)<br>탄약: -`;
             }
 
-            // *** 방패 HUD 업데이트 수정 ***
             if (shieldCooldownEndTime > now) {
                 const remainingCooldown = Math.ceil((shieldCooldownEndTime - now) / 1000);
-                 shieldInfoElement.innerHTML = `방패: 쿨 (${remainingCooldown}초)<br>내구도: ${maxShieldHealth}`; // 현재 라운드 최대 내구도 표시
+                 shieldInfoElement.innerHTML = `방패: 쿨 (${remainingCooldown}초)<br>내구도: ${maxShieldHealth}`;
             } else if (isShieldActive) {
                 shieldInfoElement.innerHTML = `방패: 활성<br>내구도: ${shieldHealth} / ${maxShieldHealth}`;
             } else {
@@ -1740,11 +1734,10 @@
 
         function activateShield() {
             const now = performance.now();
-            // *** shieldUsedThisRound 조건 제거 ***
             if (isShieldActive || shieldCooldownEndTime > now) return;
 
             isShieldActive = true;
-            shieldHealth = maxShieldHealth; // *** 현재 라운드의 최대 내구도로 설정 ***
+            shieldHealth = maxShieldHealth;
             if (shieldMesh) shieldMesh.visible = true;
             if (shieldActivateSound && audioContextStarted) shieldActivateSound.triggerAttackRelease("A4", "0.1");
             showShieldStatusMessage("SHIELD ACTIVATED!", 1000);
@@ -1755,7 +1748,6 @@
             if (!isShieldActive) return;
             isShieldActive = false;
             if (shieldMesh) shieldMesh.visible = false;
-            // *** shieldUsedThisRound 관련 로직 제거, 쿨타임은 항상 적용 ***
             shieldCooldownEndTime = performance.now() + shieldCooldown;
             updateHUD();
         }
@@ -1765,7 +1757,7 @@
                 isShieldActive = false;
                 if (shieldMesh) shieldMesh.visible = false;
                 if (shieldBreakSound && audioContextStarted) shieldBreakSound.triggerAttackRelease("0.2");
-                shieldCooldownEndTime = time + shieldCooldown; // 파괴 시에도 쿨타임 적용
+                shieldCooldownEndTime = time + shieldCooldown;
                  updateHUD();
             }
             if (shieldMesh) {
@@ -1774,7 +1766,6 @@
                     shieldMesh.rotation.z += 0.05;
                 }
             }
-            // *** shieldUsedThisRound 관련 HUD 업데이트 조건 제거 ***
             if (shieldCooldownEndTime > time && time % 1000 < 50) {
                  updateHUD();
             }
@@ -1799,9 +1790,9 @@
         function onKeyDown(event) {
             switch (event.code) {
                 case 'KeyW': moveForward = true; break;
-                case 'KeyA': moveRight = true; break; // A 키 오른쪽
+                case 'KeyA': moveLeft = true; break;  // *** A 키 왼쪽으로 수정 ***
                 case 'KeyS': moveBackward = true; break;
-                case 'KeyD': moveLeft = true; break;  // D 키 왼쪽
+                case 'KeyD': moveRight = true; break; // *** D 키 오른쪽으로 수정 ***
                 case 'KeyR': if(gameRunning) handleReload(); break;
                 case 'ShiftLeft':
                 case 'ShiftRight':
@@ -1843,9 +1834,9 @@
         function onKeyUp(event) {
             switch (event.code) {
                 case 'KeyW': moveForward = false; break;
-                case 'KeyA': moveRight = false; break;
+                case 'KeyA': moveLeft = false; break;  // *** A 키 왼쪽 중지 수정 ***
                 case 'KeyS': moveBackward = false; break;
-                case 'KeyD': moveLeft = false; break;
+                case 'KeyD': moveRight = false; break; // *** D 키 오른쪽 중지 수정 ***
                 case 'ShiftLeft':
                 case 'ShiftRight':
                     isSprinting = false;
@@ -1868,7 +1859,6 @@
             machineGunCooldownEndTime = 0;
             shieldCooldownEndTime = 0;
             slideJumpCooldownEndTime = 0;
-            // *** 방패 및 머신건 스탯 초기화 추가 ***
             maxShieldHealth = baseMaxShieldHealth;
             currentMachineGunDamage = baseMachineGunDamage;
 
@@ -1888,7 +1878,6 @@
             isReloading = false;
             isMachineGunModeActive = false;
             isShieldActive = false;
-            // shieldUsedThisRound = false; // *** 제거됨 ***
             if(shieldMesh) shieldMesh.visible = false;
             playerAmmo = maxPlayerAmmo;
             machineGunCurrentAmmo = 0;
@@ -1961,3 +1950,4 @@
     </script>
     </body>
 </html>
+
