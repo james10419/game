@@ -980,7 +980,8 @@
             camDirection.normalize();
 
             const rightDirection = new THREE.Vector3();
-            rightDirection.crossVectors(camera.up, camDirection).normalize();
+            // *** 올바른 외적 순서로 수정: camDirection.cross(camera.up) ***
+            rightDirection.crossVectors(camDirection, camera.up).normalize();
 
             if (moveForward) {
                 intendedDeltaX += camDirection.x * currentMoveSpeed * delta;
@@ -990,11 +991,11 @@
                 intendedDeltaX -= camDirection.x * currentMoveSpeed * delta;
                 intendedDeltaZ -= camDirection.z * currentMoveSpeed * delta;
             }
-            if (moveLeft) { // A 키로 왼쪽 이동 (수정됨)
+            if (moveLeft) { // A 키 (이제 실제로 왼쪽으로 이동)
                 intendedDeltaX -= rightDirection.x * currentMoveSpeed * delta;
                 intendedDeltaZ -= rightDirection.z * currentMoveSpeed * delta;
             }
-            if (moveRight) { // D 키로 오른쪽 이동 (수정됨)
+            if (moveRight) { // D 키 (이제 실제로 오른쪽으로 이동)
                 intendedDeltaX += rightDirection.x * currentMoveSpeed * delta;
                 intendedDeltaZ += rightDirection.z * currentMoveSpeed * delta;
             }
@@ -1790,9 +1791,9 @@
         function onKeyDown(event) {
             switch (event.code) {
                 case 'KeyW': moveForward = true; break;
-                case 'KeyA': moveLeft = true; break;  // *** A 키 왼쪽으로 수정 ***
+                case 'KeyA': moveLeft = true; break;
                 case 'KeyS': moveBackward = true; break;
-                case 'KeyD': moveRight = true; break; // *** D 키 오른쪽으로 수정 ***
+                case 'KeyD': moveRight = true; break;
                 case 'KeyR': if(gameRunning) handleReload(); break;
                 case 'ShiftLeft':
                 case 'ShiftRight':
@@ -1834,9 +1835,9 @@
         function onKeyUp(event) {
             switch (event.code) {
                 case 'KeyW': moveForward = false; break;
-                case 'KeyA': moveLeft = false; break;  // *** A 키 왼쪽 중지 수정 ***
+                case 'KeyA': moveLeft = false; break;
                 case 'KeyS': moveBackward = false; break;
-                case 'KeyD': moveRight = false; break; // *** D 키 오른쪽 중지 수정 ***
+                case 'KeyD': moveRight = false; break;
                 case 'ShiftLeft':
                 case 'ShiftRight':
                     isSprinting = false;
@@ -1950,4 +1951,3 @@
     </script>
     </body>
 </html>
-
